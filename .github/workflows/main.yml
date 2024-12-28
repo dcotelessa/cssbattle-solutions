@@ -39,8 +39,8 @@ jobs:
           
       - name: Commit changes
         run: |
-          git config --local user.email "${GIT_USER_EMAIL}"
-          git config --local user.name "${GIT_USER_NAME}"
+          git config --local user.email "${GIT_USER_EMAIL:-"dcotelessa@github.com"}"
+          git config --local user.name "${GIT_USER_NAME:-"dcotelessa"}"
           git add .
           git commit -m "Version 1 $FORMATTED_DATE"
           git push
