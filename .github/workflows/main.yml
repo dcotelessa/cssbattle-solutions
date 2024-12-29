@@ -16,7 +16,7 @@ permissions:
   
 jobs:
   create-solutions-file:
-    runs-on: blacksmith-2vcpu-ubuntu-2204-arm
+    runs-on: ubuntu-latest
     
     env:
       GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
