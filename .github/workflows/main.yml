@@ -28,7 +28,7 @@ jobs:
       - name: Create dated folder and solutions file
         run: |
           # Convert date format once to store
-          FORMATTED_DATE=$(echo "${{ github.event.inputs.date }}" | awk -F'/' '{print $3"-"$2"-"$1}')
+          FORMATTED_DATE=$(echo "${{ github.event.inputs.date }}" | awk -F'/' '{printf "%s-%02d-%02d\n", $3, $2, $1}')
           mkdir -p "daily-targets/$FORMATTED_DATE"
           
           # Create solutions.html with template (TODO)
