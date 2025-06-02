@@ -1,0 +1,4 @@
+```css
+<style>&{background:radial-gradient(1q,#23384B 32q,#D36354 0 53q,#D9D9D9 0 74q,#23384B);*{width:30;height:60;box-shadow:59vh 40vw#23384B
+</style>
+```

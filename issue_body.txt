@@ -1,0 +1,23 @@
+### Date
+
+Jun 2, 2025
+
+### CSS Solution(s)
+
+```css
+<style>&{background:radial-gradient(1q,#23384B 32q,#D36354 0 53q,#D9D9D9 0 74q,#23384B);*{width:30;height:60;box-shadow:59vh 40vw#23384B
+</style>
+```
+
+### Comparison Images
+
+<img width="870" alt="Image" src="https://github.com/user-attachments/assets/1a0e3344-4e31-4b7f-9761-1c547bc39ab9" />
+
+### Additional Notes (Optional)
+
+Aux Jack.
+
+### Confirmation
+
+- [x] I have tested my CSS solution
+- [x] The comparison images show the target vs my result
