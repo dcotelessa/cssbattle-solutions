@@ -1,0 +1,95 @@
+name: CSS Battle Solution
+description: Submit your CSS Battle solution with images
+title: "[CSSBattle] Daily Target - "
+labels: ["cssbattle", "solution"]
+assignees:
+  - dcotelessa
+body:
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: Enter the date in any format (e.g., "Jan 15, 2025", "January 15, 2025", or "1/15/2025")
+      placeholder: "Jan 15, 2025"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: css_content
+    attributes:
+      label: CSS Solution(s)
+      description: |
+        Paste your CSS code here. If you have multiple versions/attempts, separate them with a line containing only "---VERSION---"
+        
+        **Single Version Example:**
+        ```css
+        <style>
+        body { background: #6592CF; }
+        </style>
+        ```
+        
+        **Multiple Versions Example:**
+        ```css
+        <style>
+        body { background: #6592CF; }
+        /* Version 1 - Basic approach */
+        </style>
+        ```
+        ---VERSION---
+        ```css
+        <style>
+        body { background: #6592CF; }
+        /* Version 2 - Optimized approach */
+        </style>
+        ```
+      placeholder: |
+        ```css
+        <style>
+        body {
+          background: #6592CF;
+          margin: 0;
+        }
+        div {
+          width: 100px;
+          height: 100px;
+          background: #243D83;
+          margin: 50px auto;
+        }
+        </style>
+        ```
+      render: css
+    validations:
+      required: true
+      
+  - type: textarea
+    id: images
+    attributes:
+      label: Comparison Images
+      description: |
+        Drag and drop your comparison images here. 
+        They will be automatically saved as target-1-comparison.png, target-2-comparison.png, etc.
+        
+        **Supported formats:** PNG, JPG, JPEG, GIF
+      placeholder: "Drag your images here..."
+    validations:
+      required: false
+      
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes (Optional)
+      description: Any additional notes about your solution
+      placeholder: "This solution uses flexbox to center the element..."
+    validations:
+      required: false
+      
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      description: Please confirm the following
+      options:
+        - label: I have tested my CSS solution
+          required: true
+        - label: The comparison images show the target vs my result
+          required: false

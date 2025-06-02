@@ -1,22 +1,16 @@
-name: Create Solutions File for Daily CSSBattle
+name: Create or Update Solutions File for Daily CSSBattle
 on:
-  workflow_dispatch:
-    inputs:
-      content:
-        description: 'CSS content for CSS Battles'
-        required: true
-        type: string
-      date:
-        description: 'Date (m d,YYYY)'
-        required: true
-        type: string
-        
+  issues:
+    types: [opened]
+
 permissions:
   contents: write
+  issues: write
   
 jobs:
-  create-solutions-file:
+  process-solutions-file:
     runs-on: ubuntu-latest
+    if: contains(github.event.issue.title, '[CSSBattle]') || contains(github.event.issue.title, '[CSSBattle-UPDATE]')
     
     env:
       GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
@@ -25,31 +19,1168 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Create dated folder and solutions file
+      - name: Install dependencies
         run: |
-          # Convert date format once to store
-          FORMATTED_DATE=$(echo "${{ github.event.inputs.date }}" | awk '{
-              split("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec", months, " ")
-              for (i=1; i<=12; i++) mdigit[months[i]]=sprintf("%02d",i)
-              gsub(",", "")
-              printf "%s-%s-%02d\n", $3, mdigit[$1], $2
-          }')
-          mkdir -p "daily-targets/$FORMATTED_DATE"
+          sudo apt-get update && sudo apt-get install -y gh jq
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+      
+      - name: Determine operation type
+        run: |
+          if [[ "${{ github.event.issue.title }}" == *"[CSSBattle-UPDATE]"* ]]; then
+            echo "TYPE=update" >> $GITHUB_ENV
+            echo "Operation: UPDATE"
+          else
+            echo "TYPE=create" >> $GITHUB_ENV
+            echo "Operation: CREATE"
+          fi
+      
+      - name: Extract issue data
+        run: |
+          # Save issue body to file for easier processing
+          cat > issue_body.txt << 'EOF'
+          ${{ github.event.issue.body }}
+          EOF
           
-          # Create solutions.html with template (TODO)
-          {
-            echo "<!-- Version 1 -->"
-            echo "${{ github.event.inputs.content }}"
-            echo "</style>"
-          } > "daily-targets/$FORMATTED_DATE/solutions.html"
+          echo "DEBUG: Issue body saved. Full content:"
+          cat issue_body.txt
+          echo "DEBUG: ===== END OF ISSUE BODY ====="
           
-          # Export the variable for use in next step
-          echo "FORMATTED_DATE=$FORMATTED_DATE" >> $GITHUB_ENV
+          # Extract date based on operation type
+          if [ "$TYPE" = "create" ]; then
+            echo "DEBUG: Extracting date for CREATE operation"
+            echo "DEBUG: Looking for '### Date' section..."
+            
+            # Try multiple extraction methods
+            DATE=$(sed -n '/### Date/,/^### /p' issue_body.txt | grep -v "### Date" | grep -v "^### " | head -1 | xargs)
+            
+            if [ -z "$DATE" ]; then
+              echo "DEBUG: Method 1 failed, trying alternative..."
+              DATE=$(grep -A 3 "### Date" issue_body.txt | grep -v "### Date" | grep -v "^--" | head -1 | xargs)
+            fi
+            
+            if [ -z "$DATE" ]; then
+              echo "DEBUG: Method 2 failed, trying to find any date pattern..."
+              DATE=$(grep -E "(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)" issue_body.txt | head -1 | xargs)
+            fi
+            
+          else
+            echo "DEBUG: Extracting date for UPDATE operation"
+            DATE=$(sed -n '/### Target Date/,/^### /p' issue_body.txt | grep -v "### Target Date" | grep -v "^### " | head -1 | xargs)
+            UPDATE_TYPE=$(sed -n '/### Update Type/,/^### /p' issue_body.txt | grep -v "### Update Type" | grep -v "^### " | head -1 | xargs)
+            VERSION_NUMBER=$(sed -n '/### Version Number/,/^### /p' issue_body.txt | grep -v "### Version Number" | grep -v "^### " | head -1 | xargs)
+            echo "DEBUG: Update type: '$UPDATE_TYPE'"
+            echo "DEBUG: Version number: '$VERSION_NUMBER'"
+            echo "UPDATE_TYPE=$UPDATE_TYPE" >> $GITHUB_ENV
+            echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_ENV
+          fi
+          
+          echo "PARSED_DATE=$DATE" >> $GITHUB_ENV
+          echo "DEBUG: Raw extracted date: '$DATE'"
+          
+          if [ -z "$DATE" ]; then
+            echo "ERROR: No date extracted from issue!"
+            echo "DEBUG: Manual fallback - using today's date"
+            DATE=$(date +"%B %d, %Y")
+            echo "PARSED_DATE=$DATE" >> $GITHUB_ENV
+            echo "DEBUG: Fallback date set to: '$DATE'"
+          fi
+          
+      - name: Convert date format
+        run: |
+          DATE="$PARSED_DATE"
+          echo "DEBUG: Processing date: '$DATE'"
+          
+          # Create Go program for date parsing
+          cat > date_parser.go << 'EOF'
+          package main
+
+          import (
+              "fmt"
+              "os"
+              "strings"
+              "time"
+          )
+
+          func main() {
+              if len(os.Args) < 2 {
+                  fmt.Printf("ERROR: No date provided\n")
+                  fmt.Println("2025-01-15")
+                  return
+              }
+              
+              dateStr := os.Args[1]
+              fmt.Printf("DEBUG: Input date: '%s'\n", dateStr)
+              
+              // Clean up the date string
+              dateStr = strings.TrimSpace(dateStr)
+              originalDate := dateStr
+              dateStr = strings.ReplaceAll(dateStr, ",", "")
+              fmt.Printf("DEBUG: Cleaned date: '%s'\n", dateStr)
+              
+              // Try different date formats - FIXED: Added missing formats
+              formats := []string{
+                  "January 2 2006",     // January 15 2025
+                  "Jan 2 2006",         // Jan 15 2025  
+                  "January 02 2006",    // January 02 2025
+                  "Jan 02 2006",        // Jan 02 2025
+                  "1/2/2006",           // 1/15/2025
+                  "01/02/2006",         // 01/15/2025
+                  "1-2-2006",           // 1-15-2025
+                  "01-02-2006",         // 01-15-2025
+                  "2/1/2006",           // 15/1/2025 (day/month)
+                  "02/01/2006",         // 02/01/2025 (day/month)
+              }
+              
+              // Also try with the original string (with comma)
+              allFormats := []string{
+                  "January 2, 2006",    // January 15, 2025  
+                  "Jan 2, 2006",        // Jun 2, 2025 ← This should match!
+                  "January 02, 2006",   // January 02, 2025
+                  "Jan 02, 2006",       // Jan 02, 2025
+              }
+              
+              // First try with comma versions using original string
+              for _, format := range allFormats {
+                  fmt.Printf("DEBUG: Trying format '%s' with original string '%s'\n", format, originalDate)
+                  if t, err := time.Parse(format, originalDate); err == nil {
+                      result := t.Format("2006-01-02")
+                      fmt.Printf("SUCCESS: Parsed as %s\n", result)
+                      fmt.Println(result)
+                      return
+                  } else {
+                      fmt.Printf("DEBUG: Format failed: %v\n", err)
+                  }
+              }
+              
+              // Then try without comma versions using cleaned string
+              for _, format := range formats {
+                  fmt.Printf("DEBUG: Trying format '%s' with cleaned string '%s'\n", format, dateStr)
+                  if t, err := time.Parse(format, dateStr); err == nil {
+                      result := t.Format("2006-01-02")
+                      fmt.Printf("SUCCESS: Parsed as %s\n", result)
+                      fmt.Println(result)
+                      return
+                  } else {
+                      fmt.Printf("DEBUG: Format failed: %v\n", err)
+                  }
+              }
+              
+              // Fallback if all formats fail
+              fmt.Printf("WARNING: All formats failed for input '%s', using fallback\n", originalDate)
+              fmt.Println("2025-06-02")  // Updated fallback to June 2025
+          }
+          EOF
+          
+          # Run the Go program with debugging
+          echo "DEBUG: Running Go parser with date: '$DATE'"
+          go run date_parser.go "$DATE" 2>&1 | tee date_output.txt
+          
+          # Extract just the final date (last line that looks like YYYY-MM-DD)
+          FORMATTED_DATE=$(grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}
+          
+      - name: Extract CSS content
+        run: |
+          if [ "$TYPE" = "create" ]; then
+            sed -n '/### CSS Solution/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' > css_content.txt
+          else
+            sed -n '/### New CSS Solution/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' > css_content.txt
+          fi
+          
+          # Count versions by counting ---VERSION--- separators
+          VERSION_COUNT=$(grep -c "---VERSION---" css_content.txt || echo 0)
+          VERSION_COUNT=$((VERSION_COUNT + 1))
+          echo "VERSION_COUNT=$VERSION_COUNT" >> $GITHUB_ENV
+          echo "Found $VERSION_COUNT CSS versions"
+          
+      - name: Create or update solutions file
+        run: |
+          # Re-read the formatted date from environment
+          echo "DEBUG: Reading FORMATTED_DATE from environment"
+          echo "DEBUG: FORMATTED_DATE from env: '$FORMATTED_DATE'"
+          
+          # If empty, try to read from the previous step's output
+          if [ -z "$FORMATTED_DATE" ]; then
+            echo "DEBUG: FORMATTED_DATE is empty, trying to read from file"
+            if [ -f "date_output.txt" ]; then
+              FORMATTED_DATE=$(grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Creating new solutions file..."
+            > "$SOLUTIONS_FILE"
+            
+            # Split CSS content by ---VERSION---
+            version_num=1
+            while IFS= read -r line; do
+              if [[ "$line" == "---VERSION---" ]]; then
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                echo "" >> "$SOLUTIONS_FILE"
+                version_num=$((version_num + 1))
+                echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
+              elif [[ "$line" == "<!-- Version"* ]]; then
+                echo "$line" >> "$SOLUTIONS_FILE"
+              else
+                echo "$line" >> "$SOLUTIONS_FILE"
+              fi
+            done < css_content.txt
+            
+            # Ensure we have at least one version header
+            if ! grep -q "<!-- Version" "$SOLUTIONS_FILE"; then
+              echo "<!-- Version 1 -->" > temp_solutions.html
+              cat css_content.txt >> temp_solutions.html
+              mv temp_solutions.html "$SOLUTIONS_FILE"
+            fi
+            
+            # Ensure file ends with </style>
+            if ! tail -1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
+              echo "</style>" >> "$SOLUTIONS_FILE"
+            fi
+            
+          else
+            echo "Updating existing solutions file..."
+            
+            if [ ! -f "$SOLUTIONS_FILE" ]; then
+              echo "Error: Solutions file not found for $FORMATTED_DATE"
+              echo "Available dates:"
+              ls daily-targets/ 2>/dev/null || echo "No existing solutions found"
+              exit 1
+            fi
+            
+            case "$UPDATE_TYPE" in
+              "Add new CSS version(s)")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+                
+              "Replace existing CSS version(s)")
+                if [ -n "$VERSION_NUMBER" ]; then
+                  echo "Replacing Version $VERSION_NUMBER..."
+                  # This is complex - for now, just add as new version
+                  echo "Note: Replacement not yet implemented, adding as new version instead"
+                  LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                  NEXT_VERSION=$((LAST_VERSION + 1))
+                  
+                  echo "" >> "$SOLUTIONS_FILE"
+                  echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                  cat css_content.txt >> "$SOLUTIONS_FILE"
+                  echo "</style>" >> "$SOLUTIONS_FILE"
+                else
+                  echo "Error: Version number required for replacement"
+                  exit 1
+                fi
+                ;;
+                
+              "Add new comparison image(s)")
+                echo "Images will be processed in next step..."
+                ;;
+                
+              "Add both CSS and images")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+            esac
+          fi
+          
+          echo "Solutions file processing complete"
+          
+      - name: Download images
+        run: |
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          
+          # Find next available image number
+          if [ "$TYPE" = "create" ]; then
+            NEXT_NUM=1
+          else
+            EXISTING_IMAGES=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null || true)
+            if [ -n "$EXISTING_IMAGES" ]; then
+              LAST_NUM=$(echo "$EXISTING_IMAGES" | sed 's/.*target-\([0-9]*\)-comparison\..*/\1/' | sort -n | tail -1)
+              NEXT_NUM=$((LAST_NUM + 1))
+            else
+              NEXT_NUM=1
+            fi
+          fi
+          
+          echo "Starting image numbering from: $NEXT_NUM"
+          
+          # Get image URLs from issue
+          gh issue view $ISSUE_NUM --repo ${{ github.repository }} --json body | \
+          jq -r '.body' | \
+          grep -oP 'https://github\.com/[^/]+/[^/]+/assets/[^)]+\.(png|jpg|jpeg|gif)' > image_urls.txt || true
+          
+          # Download each image
+          if [ -s image_urls.txt ]; then
+            while read img_url; do
+              if [ -n "$img_url" ]; then
+                ext=$(echo "$img_url" | grep -oP '\.(png|jpg|jpeg|gif)$')
+                filename="target-${NEXT_NUM}-comparison${ext}"
+                
+                echo "Downloading: $img_url -> $filename"
+                curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                     "$img_url" -o "daily-targets/$FORMATTED_DATE/$filename"
+                
+                if [ -f "daily-targets/$FORMATTED_DATE/$filename" ]; then
+                  echo "Successfully saved: $filename"
+                else
+                  echo "Failed to save: $filename"
+                fi
+                
+                NEXT_NUM=$((NEXT_NUM + 1))
+              fi
+            done < image_urls.txt
+          else
+            echo "No images found in issue"
+          fi
+          
+      - name: Generate LinkedIn post
+        run: |
+          LINKEDIN_FILE="daily-targets/$FORMATTED_DATE/linkedin-post.md"
+          
+          # Extract additional notes
+          if [ "$TYPE" = "create" ]; then
+            ADDITIONAL_NOTES=$(sed -n '/### Additional Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          else
+            ADDITIONAL_NOTES=$(sed -n '/### Update Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          fi
+          
+          # Create LinkedIn post
+          echo "# LinkedIn Post for $FORMATTED_DATE" > "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "---" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Today's CSSBattle solution:" >> "$LINKEDIN_FILE"
+          else
+            echo "Updated my CSSBattle solution:" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ -n "$ADDITIONAL_NOTES" ]; then
+            echo "$ADDITIONAL_NOTES" >> "$LINKEDIN_FILE"
+            echo "" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "**https://lnkd.in/gKDG6PHf**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "(My journal notes.)" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "**#cssgang** **#CSS** **#CSSBattle** **#HTML**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "[Upload thumbnail image here]" >> "$LINKEDIN_FILE"
+          
+          echo "LinkedIn post generated successfully"
           
       - name: Commit changes
         run: |
-          git config --local user.email "${GIT_USER_EMAIL:-"dcotelessa@github.com"}"
-          git config --local user.name "${GIT_USER_NAME:-"dcotelessa"}"
+          git config --local user.email "${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
+          git config --local user.name "${GIT_USER_NAME:-${{ github.actor }}}"
           git add .
-          git commit -m "Version 1 $FORMATTED_DATE"
-          git push
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            if [ "$TYPE" = "create" ]; then
+              git commit -m "CSS Battle solution for $FORMATTED_DATE"
+            else
+              git commit -m "Update CSS Battle solution for $FORMATTED_DATE"
+            fi
+            git push
+            echo "Changes committed and pushed successfully"
+          fi
+          
+      - name: Create success comment
+        run: |
+          # Count final results
+          VERSION_COUNT_IN_FILE=$(grep -c "<!-- Version" "daily-targets/$FORMATTED_DATE/solutions.html" || echo 1)
+          IMAGE_COUNT=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null | wc -l || echo 0)
+          
+          # Build simple success message
+          echo "✅ **CSS Battle solution processed successfully!**" > comment.txt
+          echo "" >> comment.txt
+          echo "📁 **Location:** \`daily-targets/$FORMATTED_DATE/\`" >> comment.txt
+          echo "" >> comment.txt
+          echo "📄 **Files created:**" >> comment.txt
+          echo "- solutions.html ($VERSION_COUNT_IN_FILE versions)" >> comment.txt
+          echo "- linkedin-post.md (ready to copy)" >> comment.txt
+          
+          if [ $IMAGE_COUNT -gt 0 ]; then
+            echo "- $IMAGE_COUNT comparison images" >> comment.txt
+          fi
+          
+          echo "" >> comment.txt
+          echo "🎉 **Ready for battle and social sharing!**" >> comment.txt
+          
+          # Post comment and close issue
+          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body-file comment.txt
+          gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }} date_output.txt | tail -1)
+          
+          if [ -z "$FORMATTED_DATE" ]; then
+            echo "ERROR: Could not parse date, using fallback"
+            FORMATTED_DATE="2025-01-15"
+          fi
+          
+          echo "FORMATTED_DATE=$FORMATTED_DATE" >> $GITHUB_ENV
+          echo "DEBUG: Final formatted date: '$FORMATTED_DATE'"
+          
+      - name: Extract CSS content
+        run: |
+          if [ "$TYPE" = "create" ]; then
+            sed -n '/### CSS Solution/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' > css_content.txt
+          else
+            sed -n '/### New CSS Solution/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' > css_content.txt
+          fi
+          
+          # Count versions by counting ---VERSION--- separators
+          VERSION_COUNT=$(grep -c "---VERSION---" css_content.txt || echo 0)
+          VERSION_COUNT=$((VERSION_COUNT + 1))
+          echo "VERSION_COUNT=$VERSION_COUNT" >> $GITHUB_ENV
+          echo "Found $VERSION_COUNT CSS versions"
+          
+      - name: Create or update solutions file
+        run: |
+          mkdir -p "daily-targets/$FORMATTED_DATE"
+          SOLUTIONS_FILE="daily-targets/$FORMATTED_DATE/solutions.html"
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Creating new solutions file..."
+            > "$SOLUTIONS_FILE"
+            
+            # Split CSS content by ---VERSION---
+            version_num=1
+            while IFS= read -r line; do
+              if [[ "$line" == "---VERSION---" ]]; then
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                echo "" >> "$SOLUTIONS_FILE"
+                version_num=$((version_num + 1))
+                echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
+              elif [[ "$line" == "<!-- Version"* ]]; then
+                echo "$line" >> "$SOLUTIONS_FILE"
+              else
+                echo "$line" >> "$SOLUTIONS_FILE"
+              fi
+            done < css_content.txt
+            
+            # Ensure we have at least one version header
+            if ! grep -q "<!-- Version" "$SOLUTIONS_FILE"; then
+              echo "<!-- Version 1 -->" > temp_solutions.html
+              cat css_content.txt >> temp_solutions.html
+              mv temp_solutions.html "$SOLUTIONS_FILE"
+            fi
+            
+            # Ensure file ends with </style>
+            if ! tail -1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
+              echo "</style>" >> "$SOLUTIONS_FILE"
+            fi
+            
+          else
+            echo "Updating existing solutions file..."
+            
+            if [ ! -f "$SOLUTIONS_FILE" ]; then
+              echo "Error: Solutions file not found for $FORMATTED_DATE"
+              echo "Available dates:"
+              ls daily-targets/ 2>/dev/null || echo "No existing solutions found"
+              exit 1
+            fi
+            
+            case "$UPDATE_TYPE" in
+              "Add new CSS version(s)")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+                
+              "Replace existing CSS version(s)")
+                if [ -n "$VERSION_NUMBER" ]; then
+                  echo "Replacing Version $VERSION_NUMBER..."
+                  # This is complex - for now, just add as new version
+                  echo "Note: Replacement not yet implemented, adding as new version instead"
+                  LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                  NEXT_VERSION=$((LAST_VERSION + 1))
+                  
+                  echo "" >> "$SOLUTIONS_FILE"
+                  echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                  cat css_content.txt >> "$SOLUTIONS_FILE"
+                  echo "</style>" >> "$SOLUTIONS_FILE"
+                else
+                  echo "Error: Version number required for replacement"
+                  exit 1
+                fi
+                ;;
+                
+              "Add new comparison image(s)")
+                echo "Images will be processed in next step..."
+                ;;
+                
+              "Add both CSS and images")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+            esac
+          fi
+          
+          echo "Solutions file processing complete"
+          
+      - name: Download images
+        run: |
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          
+          # Find next available image number
+          if [ "$TYPE" = "create" ]; then
+            NEXT_NUM=1
+          else
+            EXISTING_IMAGES=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null || true)
+            if [ -n "$EXISTING_IMAGES" ]; then
+              LAST_NUM=$(echo "$EXISTING_IMAGES" | sed 's/.*target-\([0-9]*\)-comparison\..*/\1/' | sort -n | tail -1)
+              NEXT_NUM=$((LAST_NUM + 1))
+            else
+              NEXT_NUM=1
+            fi
+          fi
+          
+          echo "Starting image numbering from: $NEXT_NUM"
+          
+          # Get image URLs from issue
+          gh issue view $ISSUE_NUM --repo ${{ github.repository }} --json body | \
+          jq -r '.body' | \
+          grep -oP 'https://github\.com/[^/]+/[^/]+/assets/[^)]+\.(png|jpg|jpeg|gif)' > image_urls.txt || true
+          
+          # Download each image
+          if [ -s image_urls.txt ]; then
+            while read img_url; do
+              if [ -n "$img_url" ]; then
+                ext=$(echo "$img_url" | grep -oP '\.(png|jpg|jpeg|gif)$')
+                filename="target-${NEXT_NUM}-comparison${ext}"
+                
+                echo "Downloading: $img_url -> $filename"
+                curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                     "$img_url" -o "daily-targets/$FORMATTED_DATE/$filename"
+                
+                if [ -f "daily-targets/$FORMATTED_DATE/$filename" ]; then
+                  echo "Successfully saved: $filename"
+                else
+                  echo "Failed to save: $filename"
+                fi
+                
+                NEXT_NUM=$((NEXT_NUM + 1))
+              fi
+            done < image_urls.txt
+          else
+            echo "No images found in issue"
+          fi
+          
+      - name: Generate LinkedIn post
+        run: |
+          LINKEDIN_FILE="daily-targets/$FORMATTED_DATE/linkedin-post.md"
+          
+          # Extract additional notes
+          if [ "$TYPE" = "create" ]; then
+            ADDITIONAL_NOTES=$(sed -n '/### Additional Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          else
+            ADDITIONAL_NOTES=$(sed -n '/### Update Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          fi
+          
+          # Create LinkedIn post
+          echo "# LinkedIn Post for $FORMATTED_DATE" > "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "---" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Today's CSSBattle solution:" >> "$LINKEDIN_FILE"
+          else
+            echo "Updated my CSSBattle solution:" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ -n "$ADDITIONAL_NOTES" ]; then
+            echo "$ADDITIONAL_NOTES" >> "$LINKEDIN_FILE"
+            echo "" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "**https://lnkd.in/gKDG6PHf**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "(My journal notes.)" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "**#cssgang** **#CSS** **#CSSBattle** **#HTML**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "[Upload thumbnail image here]" >> "$LINKEDIN_FILE"
+          
+          echo "LinkedIn post generated successfully"
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
+          git config --local user.name "${GIT_USER_NAME:-${{ github.actor }}}"
+          git add .
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            if [ "$TYPE" = "create" ]; then
+              git commit -m "CSS Battle solution for $FORMATTED_DATE"
+            else
+              git commit -m "Update CSS Battle solution for $FORMATTED_DATE"
+            fi
+            git push
+            echo "Changes committed and pushed successfully"
+          fi
+          
+      - name: Create success comment
+        run: |
+          # Count final results
+          VERSION_COUNT_IN_FILE=$(grep -c "<!-- Version" "daily-targets/$FORMATTED_DATE/solutions.html" || echo 1)
+          IMAGE_COUNT=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null | wc -l || echo 0)
+          
+          # Build simple success message
+          echo "✅ **CSS Battle solution processed successfully!**" > comment.txt
+          echo "" >> comment.txt
+          echo "📁 **Location:** \`daily-targets/$FORMATTED_DATE/\`" >> comment.txt
+          echo "" >> comment.txt
+          echo "📄 **Files created:**" >> comment.txt
+          echo "- solutions.html ($VERSION_COUNT_IN_FILE versions)" >> comment.txt
+          echo "- linkedin-post.md (ready to copy)" >> comment.txt
+          
+          if [ $IMAGE_COUNT -gt 0 ]; then
+            echo "- $IMAGE_COUNT comparison images" >> comment.txt
+          fi
+          
+          echo "" >> comment.txt
+          echo "🎉 **Ready for battle and social sharing!**" >> comment.txt
+          
+          # Post comment and close issue
+          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body-file comment.txt
+          gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }} date_output.txt | tail -1)
+              echo "DEBUG: Read from file: '$FORMATTED_DATE'"
+            fi
+          fi
+          
+          # Final fallback
+          if [ -z "$FORMATTED_DATE" ]; then
+            echo "ERROR: Could not determine formatted date, using fallback"
+            FORMATTED_DATE="2025-01-15"
+          fi
+          
+          echo "DEBUG: Final FORMATTED_DATE: '$FORMATTED_DATE'"
+          echo "DEBUG: TYPE is: '$TYPE'"
+          echo "DEBUG: Current working directory: $(pwd)"
+          echo "DEBUG: Directory contents:"
+          ls -la
+          
+          TARGET_DIR="daily-targets/$FORMATTED_DATE"
+          echo "DEBUG: Target directory path: '$TARGET_DIR'"
+          
+          # Create the directory with verbose output
+          echo "DEBUG: Creating directory structure..."
+          mkdir -pv "$TARGET_DIR"
+          
+          # Verify directory was created
+          if [ ! -d "$TARGET_DIR" ]; then
+            echo "ERROR: Failed to create directory: $TARGET_DIR"
+            echo "DEBUG: Checking if daily-targets exists:"
+            ls -la daily-targets/ 2>/dev/null || echo "daily-targets directory does not exist"
+            exit 1
+          fi
+          
+          echo "DEBUG: Directory created successfully!"
+          echo "DEBUG: Contents of daily-targets:"
+          ls -la daily-targets/
+          echo "DEBUG: Contents of target directory:"
+          ls -la "$TARGET_DIR"
+          
+          SOLUTIONS_FILE="$TARGET_DIR/solutions.html"
+          echo "DEBUG: Solutions file will be: '$SOLUTIONS_FILE'"
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Creating new solutions file..."
+            > "$SOLUTIONS_FILE"
+            
+            # Split CSS content by ---VERSION---
+            version_num=1
+            while IFS= read -r line; do
+              if [[ "$line" == "---VERSION---" ]]; then
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                echo "" >> "$SOLUTIONS_FILE"
+                version_num=$((version_num + 1))
+                echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
+              elif [[ "$line" == "<!-- Version"* ]]; then
+                echo "$line" >> "$SOLUTIONS_FILE"
+              else
+                echo "$line" >> "$SOLUTIONS_FILE"
+              fi
+            done < css_content.txt
+            
+            # Ensure we have at least one version header
+            if ! grep -q "<!-- Version" "$SOLUTIONS_FILE"; then
+              echo "<!-- Version 1 -->" > temp_solutions.html
+              cat css_content.txt >> temp_solutions.html
+              mv temp_solutions.html "$SOLUTIONS_FILE"
+            fi
+            
+            # Ensure file ends with </style>
+            if ! tail -1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
+              echo "</style>" >> "$SOLUTIONS_FILE"
+            fi
+            
+          else
+            echo "Updating existing solutions file..."
+            
+            if [ ! -f "$SOLUTIONS_FILE" ]; then
+              echo "Error: Solutions file not found for $FORMATTED_DATE"
+              echo "Available dates:"
+              ls daily-targets/ 2>/dev/null || echo "No existing solutions found"
+              exit 1
+            fi
+            
+            case "$UPDATE_TYPE" in
+              "Add new CSS version(s)")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+                
+              "Replace existing CSS version(s)")
+                if [ -n "$VERSION_NUMBER" ]; then
+                  echo "Replacing Version $VERSION_NUMBER..."
+                  # This is complex - for now, just add as new version
+                  echo "Note: Replacement not yet implemented, adding as new version instead"
+                  LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                  NEXT_VERSION=$((LAST_VERSION + 1))
+                  
+                  echo "" >> "$SOLUTIONS_FILE"
+                  echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                  cat css_content.txt >> "$SOLUTIONS_FILE"
+                  echo "</style>" >> "$SOLUTIONS_FILE"
+                else
+                  echo "Error: Version number required for replacement"
+                  exit 1
+                fi
+                ;;
+                
+              "Add new comparison image(s)")
+                echo "Images will be processed in next step..."
+                ;;
+                
+              "Add both CSS and images")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+            esac
+          fi
+          
+          echo "Solutions file processing complete"
+          
+      - name: Download images
+        run: |
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          
+          # Find next available image number
+          if [ "$TYPE" = "create" ]; then
+            NEXT_NUM=1
+          else
+            EXISTING_IMAGES=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null || true)
+            if [ -n "$EXISTING_IMAGES" ]; then
+              LAST_NUM=$(echo "$EXISTING_IMAGES" | sed 's/.*target-\([0-9]*\)-comparison\..*/\1/' | sort -n | tail -1)
+              NEXT_NUM=$((LAST_NUM + 1))
+            else
+              NEXT_NUM=1
+            fi
+          fi
+          
+          echo "Starting image numbering from: $NEXT_NUM"
+          
+          # Get image URLs from issue
+          gh issue view $ISSUE_NUM --repo ${{ github.repository }} --json body | \
+          jq -r '.body' | \
+          grep -oP 'https://github\.com/[^/]+/[^/]+/assets/[^)]+\.(png|jpg|jpeg|gif)' > image_urls.txt || true
+          
+          # Download each image
+          if [ -s image_urls.txt ]; then
+            while read img_url; do
+              if [ -n "$img_url" ]; then
+                ext=$(echo "$img_url" | grep -oP '\.(png|jpg|jpeg|gif)$')
+                filename="target-${NEXT_NUM}-comparison${ext}"
+                
+                echo "Downloading: $img_url -> $filename"
+                curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                     "$img_url" -o "daily-targets/$FORMATTED_DATE/$filename"
+                
+                if [ -f "daily-targets/$FORMATTED_DATE/$filename" ]; then
+                  echo "Successfully saved: $filename"
+                else
+                  echo "Failed to save: $filename"
+                fi
+                
+                NEXT_NUM=$((NEXT_NUM + 1))
+              fi
+            done < image_urls.txt
+          else
+            echo "No images found in issue"
+          fi
+          
+      - name: Generate LinkedIn post
+        run: |
+          LINKEDIN_FILE="daily-targets/$FORMATTED_DATE/linkedin-post.md"
+          
+          # Extract additional notes
+          if [ "$TYPE" = "create" ]; then
+            ADDITIONAL_NOTES=$(sed -n '/### Additional Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          else
+            ADDITIONAL_NOTES=$(sed -n '/### Update Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          fi
+          
+          # Create LinkedIn post
+          echo "# LinkedIn Post for $FORMATTED_DATE" > "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "---" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Today's CSSBattle solution:" >> "$LINKEDIN_FILE"
+          else
+            echo "Updated my CSSBattle solution:" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ -n "$ADDITIONAL_NOTES" ]; then
+            echo "$ADDITIONAL_NOTES" >> "$LINKEDIN_FILE"
+            echo "" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "**https://lnkd.in/gKDG6PHf**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "(My journal notes.)" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "**#cssgang** **#CSS** **#CSSBattle** **#HTML**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "[Upload thumbnail image here]" >> "$LINKEDIN_FILE"
+          
+          echo "LinkedIn post generated successfully"
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
+          git config --local user.name "${GIT_USER_NAME:-${{ github.actor }}}"
+          git add .
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            if [ "$TYPE" = "create" ]; then
+              git commit -m "CSS Battle solution for $FORMATTED_DATE"
+            else
+              git commit -m "Update CSS Battle solution for $FORMATTED_DATE"
+            fi
+            git push
+            echo "Changes committed and pushed successfully"
+          fi
+          
+      - name: Create success comment
+        run: |
+          # Count final results
+          VERSION_COUNT_IN_FILE=$(grep -c "<!-- Version" "daily-targets/$FORMATTED_DATE/solutions.html" || echo 1)
+          IMAGE_COUNT=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null | wc -l || echo 0)
+          
+          # Build simple success message
+          echo "✅ **CSS Battle solution processed successfully!**" > comment.txt
+          echo "" >> comment.txt
+          echo "📁 **Location:** \`daily-targets/$FORMATTED_DATE/\`" >> comment.txt
+          echo "" >> comment.txt
+          echo "📄 **Files created:**" >> comment.txt
+          echo "- solutions.html ($VERSION_COUNT_IN_FILE versions)" >> comment.txt
+          echo "- linkedin-post.md (ready to copy)" >> comment.txt
+          
+          if [ $IMAGE_COUNT -gt 0 ]; then
+            echo "- $IMAGE_COUNT comparison images" >> comment.txt
+          fi
+          
+          echo "" >> comment.txt
+          echo "🎉 **Ready for battle and social sharing!**" >> comment.txt
+          
+          # Post comment and close issue
+          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body-file comment.txt
+          gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }} date_output.txt | tail -1)
+          
+          if [ -z "$FORMATTED_DATE" ]; then
+            echo "ERROR: Could not parse date, using fallback"
+            FORMATTED_DATE="2025-01-15"
+          fi
+          
+          echo "FORMATTED_DATE=$FORMATTED_DATE" >> $GITHUB_ENV
+          echo "DEBUG: Final formatted date: '$FORMATTED_DATE'"
+          
+      - name: Extract CSS content
+        run: |
+          if [ "$TYPE" = "create" ]; then
+            sed -n '/### CSS Solution/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' > css_content.txt
+          else
+            sed -n '/### New CSS Solution/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' > css_content.txt
+          fi
+          
+          # Count versions by counting ---VERSION--- separators
+          VERSION_COUNT=$(grep -c "---VERSION---" css_content.txt || echo 0)
+          VERSION_COUNT=$((VERSION_COUNT + 1))
+          echo "VERSION_COUNT=$VERSION_COUNT" >> $GITHUB_ENV
+          echo "Found $VERSION_COUNT CSS versions"
+          
+      - name: Create or update solutions file
+        run: |
+          mkdir -p "daily-targets/$FORMATTED_DATE"
+          SOLUTIONS_FILE="daily-targets/$FORMATTED_DATE/solutions.html"
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Creating new solutions file..."
+            > "$SOLUTIONS_FILE"
+            
+            # Split CSS content by ---VERSION---
+            version_num=1
+            while IFS= read -r line; do
+              if [[ "$line" == "---VERSION---" ]]; then
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                echo "" >> "$SOLUTIONS_FILE"
+                version_num=$((version_num + 1))
+                echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
+              elif [[ "$line" == "<!-- Version"* ]]; then
+                echo "$line" >> "$SOLUTIONS_FILE"
+              else
+                echo "$line" >> "$SOLUTIONS_FILE"
+              fi
+            done < css_content.txt
+            
+            # Ensure we have at least one version header
+            if ! grep -q "<!-- Version" "$SOLUTIONS_FILE"; then
+              echo "<!-- Version 1 -->" > temp_solutions.html
+              cat css_content.txt >> temp_solutions.html
+              mv temp_solutions.html "$SOLUTIONS_FILE"
+            fi
+            
+            # Ensure file ends with </style>
+            if ! tail -1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
+              echo "</style>" >> "$SOLUTIONS_FILE"
+            fi
+            
+          else
+            echo "Updating existing solutions file..."
+            
+            if [ ! -f "$SOLUTIONS_FILE" ]; then
+              echo "Error: Solutions file not found for $FORMATTED_DATE"
+              echo "Available dates:"
+              ls daily-targets/ 2>/dev/null || echo "No existing solutions found"
+              exit 1
+            fi
+            
+            case "$UPDATE_TYPE" in
+              "Add new CSS version(s)")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+                
+              "Replace existing CSS version(s)")
+                if [ -n "$VERSION_NUMBER" ]; then
+                  echo "Replacing Version $VERSION_NUMBER..."
+                  # This is complex - for now, just add as new version
+                  echo "Note: Replacement not yet implemented, adding as new version instead"
+                  LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                  NEXT_VERSION=$((LAST_VERSION + 1))
+                  
+                  echo "" >> "$SOLUTIONS_FILE"
+                  echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                  cat css_content.txt >> "$SOLUTIONS_FILE"
+                  echo "</style>" >> "$SOLUTIONS_FILE"
+                else
+                  echo "Error: Version number required for replacement"
+                  exit 1
+                fi
+                ;;
+                
+              "Add new comparison image(s)")
+                echo "Images will be processed in next step..."
+                ;;
+                
+              "Add both CSS and images")
+                echo "Adding new CSS versions..."
+                LAST_VERSION=$(grep "<!-- Version" "$SOLUTIONS_FILE" | sed 's/.*Version \([0-9]*\).*/\1/' | sort -n | tail -1)
+                NEXT_VERSION=$((LAST_VERSION + 1))
+                
+                echo "" >> "$SOLUTIONS_FILE"
+                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
+                cat css_content.txt >> "$SOLUTIONS_FILE"
+                echo "</style>" >> "$SOLUTIONS_FILE"
+                ;;
+            esac
+          fi
+          
+          echo "Solutions file processing complete"
+          
+      - name: Download images
+        run: |
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          
+          # Find next available image number
+          if [ "$TYPE" = "create" ]; then
+            NEXT_NUM=1
+          else
+            EXISTING_IMAGES=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null || true)
+            if [ -n "$EXISTING_IMAGES" ]; then
+              LAST_NUM=$(echo "$EXISTING_IMAGES" | sed 's/.*target-\([0-9]*\)-comparison\..*/\1/' | sort -n | tail -1)
+              NEXT_NUM=$((LAST_NUM + 1))
+            else
+              NEXT_NUM=1
+            fi
+          fi
+          
+          echo "Starting image numbering from: $NEXT_NUM"
+          
+          # Get image URLs from issue
+          gh issue view $ISSUE_NUM --repo ${{ github.repository }} --json body | \
+          jq -r '.body' | \
+          grep -oP 'https://github\.com/[^/]+/[^/]+/assets/[^)]+\.(png|jpg|jpeg|gif)' > image_urls.txt || true
+          
+          # Download each image
+          if [ -s image_urls.txt ]; then
+            while read img_url; do
+              if [ -n "$img_url" ]; then
+                ext=$(echo "$img_url" | grep -oP '\.(png|jpg|jpeg|gif)$')
+                filename="target-${NEXT_NUM}-comparison${ext}"
+                
+                echo "Downloading: $img_url -> $filename"
+                curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                     "$img_url" -o "daily-targets/$FORMATTED_DATE/$filename"
+                
+                if [ -f "daily-targets/$FORMATTED_DATE/$filename" ]; then
+                  echo "Successfully saved: $filename"
+                else
+                  echo "Failed to save: $filename"
+                fi
+                
+                NEXT_NUM=$((NEXT_NUM + 1))
+              fi
+            done < image_urls.txt
+          else
+            echo "No images found in issue"
+          fi
+          
+      - name: Generate LinkedIn post
+        run: |
+          LINKEDIN_FILE="daily-targets/$FORMATTED_DATE/linkedin-post.md"
+          
+          # Extract additional notes
+          if [ "$TYPE" = "create" ]; then
+            ADDITIONAL_NOTES=$(sed -n '/### Additional Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          else
+            ADDITIONAL_NOTES=$(sed -n '/### Update Notes/,/^### /p' issue_body.txt | sed '1d;$d' | sed '/^$/d' | head -5)
+          fi
+          
+          # Create LinkedIn post
+          echo "# LinkedIn Post for $FORMATTED_DATE" > "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "---" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ "$TYPE" = "create" ]; then
+            echo "Today's CSSBattle solution:" >> "$LINKEDIN_FILE"
+          else
+            echo "Updated my CSSBattle solution:" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "" >> "$LINKEDIN_FILE"
+          
+          if [ -n "$ADDITIONAL_NOTES" ]; then
+            echo "$ADDITIONAL_NOTES" >> "$LINKEDIN_FILE"
+            echo "" >> "$LINKEDIN_FILE"
+          fi
+          
+          echo "**https://lnkd.in/gKDG6PHf**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "(My journal notes.)" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "**#cssgang** **#CSS** **#CSSBattle** **#HTML**" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "[Upload thumbnail image here]" >> "$LINKEDIN_FILE"
+          
+          echo "LinkedIn post generated successfully"
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
+          git config --local user.name "${GIT_USER_NAME:-${{ github.actor }}}"
+          git add .
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            if [ "$TYPE" = "create" ]; then
+              git commit -m "CSS Battle solution for $FORMATTED_DATE"
+            else
+              git commit -m "Update CSS Battle solution for $FORMATTED_DATE"
+            fi
+            git push
+            echo "Changes committed and pushed successfully"
+          fi
+          
+      - name: Create success comment
+        run: |
+          # Count final results
+          VERSION_COUNT_IN_FILE=$(grep -c "<!-- Version" "daily-targets/$FORMATTED_DATE/solutions.html" || echo 1)
+          IMAGE_COUNT=$(ls daily-targets/$FORMATTED_DATE/target-*-comparison.* 2>/dev/null | wc -l || echo 0)
+          
+          # Build simple success message
+          echo "✅ **CSS Battle solution processed successfully!**" > comment.txt
+          echo "" >> comment.txt
+          echo "📁 **Location:** \`daily-targets/$FORMATTED_DATE/\`" >> comment.txt
+          echo "" >> comment.txt
+          echo "📄 **Files created:**" >> comment.txt
+          echo "- solutions.html ($VERSION_COUNT_IN_FILE versions)" >> comment.txt
+          echo "- linkedin-post.md (ready to copy)" >> comment.txt
+          
+          if [ $IMAGE_COUNT -gt 0 ]; then
+            echo "- $IMAGE_COUNT comparison images" >> comment.txt
+          fi
+          
+          echo "" >> comment.txt
+          echo "🎉 **Ready for battle and social sharing!**" >> comment.txt
+          
+          # Post comment and close issue
+          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body-file comment.txt
+          gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }}

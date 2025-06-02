@@ -1,0 +1,81 @@
+name: Update CSS Battle Solution
+description: Update an existing CSS Battle solution with new versions or images
+title: "[CSSBattle-UPDATE] "
+labels: ["cssbattle", "update"]
+assignees:
+  - dcotelessa
+body:
+  - type: input
+    id: date
+    attributes:
+      label: Target Date
+      description: Enter the date of the existing solution you want to update
+      placeholder: "Jan 15, 2025"
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: update_type
+    attributes:
+      label: Update Type
+      description: What do you want to update?
+      options:
+        - Add new CSS version(s)
+        - Add new comparison image(s)
+        - Replace existing CSS version(s)
+        - Add both CSS and images
+    validations:
+      required: true
+      
+  - type: input
+    id: version_number
+    attributes:
+      label: Version Number (for replacements)
+      description: If replacing, which version number? (e.g., "2" to replace Version 2)
+      placeholder: "Leave empty if adding new versions"
+    validations:
+      required: false
+      
+  - type: textarea
+    id: css_content
+    attributes:
+      label: New CSS Solution(s)
+      description: |
+        Add your new CSS code here. For multiple versions, separate with "---VERSION---"
+        
+        **Example:**
+        ```css
+        <style>
+        /* New optimized version */
+        body { background: #6592CF; }
+        </style>
+        ```
+      placeholder: |
+        ```css
+        <style>
+        /* Your new/updated CSS here */
+        </style>
+        ```
+      render: css
+    validations:
+      required: false
+      
+  - type: textarea
+    id: images
+    attributes:
+      label: New Comparison Images
+      description: |
+        Drag and drop your new comparison images here.
+        They will be saved as target-X-comparison.png where X is the next available number.
+      placeholder: "Drag your images here..."
+    validations:
+      required: false
+      
+  - type: textarea
+    id: notes
+    attributes:
+      label: Update Notes
+      description: Describe what you're updating and why
+      placeholder: "Added a more efficient version using CSS Grid..."
+    validations:
+      required: false
