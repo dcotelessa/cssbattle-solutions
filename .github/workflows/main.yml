@@ -388,6 +388,11 @@ jobs:
         run: |
           git config --local user.email "${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
           git config --local user.name "${GIT_USER_NAME:-${{ github.actor }}}"
+          
+          # Pull latest changes first to avoid conflicts
+          echo "Pulling latest changes..."
+          git pull origin main --rebase || git pull origin main
+          
           git add .
           
           if git diff --staged --quiet; then
@@ -398,7 +403,15 @@ jobs:
             else
               git commit -m "Update CSS Battle solution for $FORMATTED_DATE"
             fi
-            git push
+            
+            # Try to push, with retry if needed
+            echo "Pushing changes..."
+            if ! git push origin main; then
+              echo "Push failed, trying pull and push again..."
+              git pull origin main --rebase
+              git push origin main
+            fi
+            
             echo "Changes committed and pushed successfully"
           fi
           
