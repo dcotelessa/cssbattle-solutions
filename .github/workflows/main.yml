@@ -1,3 +1,4 @@
+
 name: Create or Update Solutions File for Daily CSSBattle
 on:
   issues:
