@@ -91,85 +91,81 @@ jobs:
           echo "DEBUG: Processing date: '$DATE'"
           
           # Create Go program for date parsing
-          cat > date_parser.go << 'EOF'
-          package main
+          cat > date_parser.go << 'GOEOF'
+package main
 
-          import (
-              "fmt"
-              "os"
-              "strings"
-              "time"
-          )
+import (
+    "fmt"
+    "os"
+    "strings"
+    "time"
+)
 
-          func main() {
-              if len(os.Args) < 2 {
-                  fmt.Printf("ERROR: No date provided\n")
-                  fmt.Println("2025-01-15")
-                  return
-              }
-              
-              dateStr := os.Args[1]
-              fmt.Printf("DEBUG: Input date: '%s'\n", dateStr)
-              
-              // Clean up the date string
-              dateStr = strings.TrimSpace(dateStr)
-              originalDate := dateStr
-              dateStr = strings.ReplaceAll(dateStr, ",", "")
-              fmt.Printf("DEBUG: Cleaned date: '%s'\n", dateStr)
-              
-              // Try different date formats - FIXED: Added missing formats
-              formats := []string{
-                  "January 2 2006",     // January 15 2025
-                  "Jan 2 2006",         // Jan 15 2025  
-                  "January 02 2006",    // January 02 2025
-                  "Jan 02 2006",        // Jan 02 2025
-                  "1/2/2006",           // 1/15/2025
-                  "01/02/2006",         // 01/15/2025
-                  "1-2-2006",           // 1-15-2025
-                  "01-02-2006",         // 01-15-2025
-                  "2/1/2006",           // 15/1/2025 (day/month)
-                  "02/01/2006",         // 02/01/2025 (day/month)
-              }
-              
-              // Also try with the original string (with comma)
-              allFormats := []string{
-                  "January 2, 2006",    // January 15, 2025  
-                  "Jan 2, 2006",        // Jun 2, 2025 ← This should match!
-                  "January 02, 2006",   // January 02, 2025
-                  "Jan 02, 2006",       // Jan 02, 2025
-              }
-              
-              // First try with comma versions using original string
-              for _, format := range allFormats {
-                  fmt.Printf("DEBUG: Trying format '%s' with original string '%s'\n", format, originalDate)
-                  if t, err := time.Parse(format, originalDate); err == nil {
-                      result := t.Format("2006-01-02")
-                      fmt.Printf("SUCCESS: Parsed as %s\n", result)
-                      fmt.Println(result)
-                      return
-                  } else {
-                      fmt.Printf("DEBUG: Format failed: %v\n", err)
-                  }
-              }
-              
-              // Then try without comma versions using cleaned string
-              for _, format := range formats {
-                  fmt.Printf("DEBUG: Trying format '%s' with cleaned string '%s'\n", format, dateStr)
-                  if t, err := time.Parse(format, dateStr); err == nil {
-                      result := t.Format("2006-01-02")
-                      fmt.Printf("SUCCESS: Parsed as %s\n", result)
-                      fmt.Println(result)
-                      return
-                  } else {
-                      fmt.Printf("DEBUG: Format failed: %v\n", err)
-                  }
-              }
-              
-              // Fallback if all formats fail
-              fmt.Printf("WARNING: All formats failed for input '%s', using fallback\n", originalDate)
-              fmt.Println("2025-06-02")  // Updated fallback to June 2025
-          }
-          EOF
+func main() {
+    if len(os.Args) < 2 {
+        fmt.Printf("ERROR: No date provided\n")
+        fmt.Println("2025-01-15")
+        return
+    }
+    
+    dateStr := os.Args[1]
+    fmt.Printf("DEBUG: Input date: %s\n", dateStr)
+    
+    // Clean up the date string
+    dateStr = strings.TrimSpace(dateStr)
+    originalDate := dateStr
+    dateStr = strings.ReplaceAll(dateStr, ",", "")
+    fmt.Printf("DEBUG: Cleaned date: %s\n", dateStr)
+    
+    // Try different date formats - FIXED: Added missing formats
+    formats := []string{
+        "January 2 2006",     // January 15 2025
+        "Jan 2 2006",         // Jan 15 2025  
+        "January 02 2006",    // January 02 2025
+        "Jan 02 2006",        // Jan 02 2025
+        "1/2/2006",           // 1/15/2025
+        "01/02/2006",         // 01/15/2025
+        "1-2-2006",           // 1-15-2025
+        "01-02-2006",         // 01-15-2025
+        "2/1/2006",           // 15/1/2025 (day/month)
+        "02/01/2006",         // 02/01/2025 (day/month)
+    }
+    
+    // Also try with the original string (with comma)
+    allFormats := []string{
+        "January 2, 2006",    // January 15, 2025  
+        "Jan 2, 2006",        // Jun 2, 2025
+        "January 02, 2006",   // January 02, 2025
+        "Jan 02, 2006",       // Jan 02, 2025
+    }
+    
+    // First try with comma versions using original string
+    for _, format := range allFormats {
+        fmt.Printf("DEBUG: Trying format with original string\n")
+        if t, err := time.Parse(format, originalDate); err == nil {
+            result := t.Format("2006-01-02")
+            fmt.Printf("SUCCESS: Parsed as %s\n", result)
+            fmt.Println(result)
+            return
+        }
+    }
+    
+    // Then try without comma versions using cleaned string
+    for _, format := range formats {
+        fmt.Printf("DEBUG: Trying format with cleaned string\n")
+        if t, err := time.Parse(format, dateStr); err == nil {
+            result := t.Format("2006-01-02")
+            fmt.Printf("SUCCESS: Parsed as %s\n", result)
+            fmt.Println(result)
+            return
+        }
+    }
+    
+    // Fallback if all formats fail
+    fmt.Printf("WARNING: All formats failed, using fallback\n")
+    fmt.Println("2025-06-02")
+}
+GOEOF
           
           # Run the Go program with debugging
           echo "DEBUG: Running Go parser with date: '$DATE'"
