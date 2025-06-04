@@ -1,21 +1,20 @@
 ### Date
 
-Jun 3, 2025
+Jun 4, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><style>&{background:#D95362;>*{border:70px solid#C0D6E7;border-bottom-color:#2D3464;margin:0 129.5 160;p{position:fixed;rotate:45deg;padding:50;background:#2D3464;margin:40-50;color:C0D6E7;box-shadow:25vw 0,0 25vw,25vw 25vw,-38vh -14px,-14px -38vh
-</style>
+<style>*{background:radial-gradient(1q at var(--p,50vw 0),#5A9F48 25vw,#282828 0 130px,#5A9F48 0);*{margin:50 150 0;--p:50px 5pc
 ```
 
 ### Comparison Images
 
-_No response_
+<img width="859" alt="Image" src="https://github.com/user-attachments/assets/6828a690-091d-4ae8-a1d1-feea5663c94a" />
 
 ### Additional Notes (Optional)
 
-<img width="860" alt="Image" src="https://github.com/user-attachments/assets/8ddfa4e8-904f-4ae1-acfc-0f8ddaad75ef" />
+Bit out of a floating circle. (Or is it an illusion?)
 
 ### Confirmation
 
