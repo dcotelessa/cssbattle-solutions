@@ -1,20 +1,20 @@
 ### Date
 
-Jun 4, 2025
+Jun 5, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>*{background:radial-gradient(1q at var(--p,50vw 0),#5A9F48 25vw,#282828 0 130px,#5A9F48 0);*{margin:50 150 0;--p:50px 5pc
+<p><p a><p b><style>[a],*{background:#394257}body{display:flex;margin:14 0}p{background:radial-gradient(1q at 50vw 50vw,#0000 130px,#EED9D9 0 170px,#0000 0);border:solid#EED9D9;width:110;border-width:0 40 40 0}[a]{width:100;border-width:40 0}[b]{scale:-1 1
 ```
 
 ### Comparison Images
 
-<img width="859" alt="Image" src="https://github.com/user-attachments/assets/6828a690-091d-4ae8-a1d1-feea5663c94a" />
+<img width="856" alt="Image" src="https://github.com/user-attachments/assets/6fbc0f10-68dd-4443-91c5-3bd11e1c635e" />
 
 ### Additional Notes (Optional)
 
-Bit out of a floating circle. (Or is it an illusion?)
+_No response_
 
 ### Confirmation
 
