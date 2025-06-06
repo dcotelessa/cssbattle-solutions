@@ -1,20 +1,20 @@
 ### Date
 
-Jun 5, 2025
+Jun 6, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p a><p b><style>[a],*{background:#394257}body{display:flex;margin:14 0}p{background:radial-gradient(1q at 50vw 50vw,#0000 130px,#EED9D9 0 170px,#0000 0);border:solid#EED9D9;width:110;border-width:0 40 40 0}[a]{width:100;border-width:40 0}[b]{scale:-1 1
+<p><p><style>*{background:var(--b,#2D3464)}body{margin:45 95;padding:100;--b:radial-gradient(#C0D6E7 25px,#0000 0);background-size:70px 70px}p{color:D95362;padding:25;margin:-20;box-shadow:0 70px,70px 0,30vw 0,40vw 0,45vw 0;+p{scale:-1;margin:-50-20
 ```
 
 ### Comparison Images
 
-<img width="856" alt="Image" src="https://github.com/user-attachments/assets/6fbc0f10-68dd-4443-91c5-3bd11e1c635e" />
+<img width="855" alt="Image" src="https://github.com/user-attachments/assets/a9e7788e-14d6-44e2-882c-7874d277abb0" />
 
 ### Additional Notes (Optional)
 
-_No response_
+Dots and Squares, and a line.
 
 ### Confirmation
 
