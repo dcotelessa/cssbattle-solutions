@@ -592,47 +592,104 @@ EOF
           VERSION_COUNT_IN_FILE=$(grep -c "<!-- Version" "$TARGET_DIR/solutions.html" 2>/dev/null || echo 1)
           IMAGE_COUNT=$(find "$TARGET_DIR" -name "target-*-comparison.*" 2>/dev/null | wc -l)
           
-          # Create comprehensive success comment
-          cat > comment.txt << EOL
+          # Get processing summary from the image download step
+          IMAGES_FOUND=$(cat image_urls.txt 2>/dev/null | wc -l || echo 0)
+          
+          # Calculate character counts for each CSS version (from original cleaned CSS)
+          echo "DEBUG: Calculating character counts..."
+          
+          # Split the cleaned CSS content by ---VERSION--- markers
+          cp css_cleaned.txt css_for_counting.txt
+          
+          # Create individual version files for counting
+          version_num=1
+          current_file="version_${version_num}.css"
+          > "$current_file"  # Create empty first version file
+          
+          while IFS= read -r line || [ -n "$line" ]; do
+            if [[ "$line" == "---VERSION---" ]]; then
+              # Start new version file
+              version_num=$((version_num + 1))
+              current_file="version_${version_num}.css"
+              > "$current_file"  # Create empty new version file
+            else
+              # Add line to current version file
+              echo "$line" >> "$current_file"
+            fi
+          done < css_for_counting.txt
+          
+          # Count characters for each version (excluding any </style> tags)
+          CHAR_COUNTS=""
+          for i in $(seq 1 $VERSION_COUNT_IN_FILE); do
+            version_file="version_${i}.css"
+            if [ -f "$version_file" ]; then
+              # Remove any </style> tags and count characters
+              char_count=$(sed 's|</style>||g' "$version_file" | tr -d '\n' | wc -c)
+              if [ $i -eq 1 ]; then
+                CHAR_COUNTS="Version $i: $char_count chars"
+              else
+                CHAR_COUNTS="$CHAR_COUNTS - Version $i: $char_count chars"
+              fi
+              echo "DEBUG: Version $i character count: $char_count"
+            fi
+          done
+          
+          # Create comprehensive success comment with detailed summary
+          # Using separate echo statements to avoid heredoc quoting issues
+          cat > comment.txt << 'COMMENT_EOF'
 # ✅ CSS Battle Solution Processed Successfully!
 
 ## 📁 Location
-\`$TARGET_DIR/\`
-
-## 📄 Files Created/Updated
-
-### Solutions
-- ✅ \`solutions.html\` - Your CSS solution${VERSION_COUNT_IN_FILE:+ ($VERSION_COUNT_IN_FILE version(s))}
-
-### Content
-- ✅ \`linkedin-post.md\` - Ready-to-post LinkedIn content
-
-### Images
-EOL
+COMMENT_EOF
+          
+          echo "\`$TARGET_DIR/\`" >> comment.txt
+          echo "" >> comment.txt
+          echo "## 📊 Processing Summary" >> comment.txt
+          echo "- 🎯 **CSS Versions Created:** $VERSION_COUNT_IN_FILE" >> comment.txt
+          echo "- 🖼️ **Images Found in Issue:** $IMAGES_FOUND" >> comment.txt
+          echo "- 📥 **Images Successfully Downloaded:** $IMAGE_COUNT" >> comment.txt
+          echo "- 📅 **Target Date:** ${{ steps.date.outputs.formatted_date }}" >> comment.txt
+          echo "- 🔄 **Operation Type:** ${{ steps.operation.outputs.type }}" >> comment.txt
+          echo "" >> comment.txt
+          echo "## ⚡ Char Count" >> comment.txt
+          echo "$CHAR_COUNTS" >> comment.txt
+          echo "" >> comment.txt
+          echo "## 📄 Files Created/Updated" >> comment.txt
+          echo "" >> comment.txt
+          echo "### Solutions" >> comment.txt
+          echo "- ✅ \`solutions.html\` - Your CSS solution ($VERSION_COUNT_IN_FILE version(s))" >> comment.txt
+          echo "" >> comment.txt
+          echo "### Content" >> comment.txt
+          echo "- ✅ \`linkedin-post.md\` - Ready-to-post LinkedIn content" >> comment.txt
+          echo "" >> comment.txt
+          echo "### Images" >> comment.txt
           
           if [ "$IMAGE_COUNT" -gt 0 ]; then
+            echo "📸 **Downloaded Images:**" >> comment.txt
             find "$TARGET_DIR" -name "target-*-comparison.*" | sort | while read -r img; do
-              echo "- ✅ \`$(basename "$img")\`" >> comment.txt
+              # Get file size for each image
+              size=$(du -h "$img" 2>/dev/null | cut -f1 || echo "?")
+              echo "- ✅ \`$(basename "$img")\` (${size})" >> comment.txt
             done
-            echo "" >> comment.txt
-            echo "🖼️ **Total images:** $IMAGE_COUNT" >> comment.txt
           else
-            echo "- ℹ️ No images uploaded" >> comment.txt
+            echo "- ℹ️ No images were uploaded or found" >> comment.txt
+            if [ "$IMAGES_FOUND" -gt 0 ]; then
+              echo "- ⚠️ Found $IMAGES_FOUND image URL(s) but download failed" >> comment.txt
+            fi
           fi
           
-          cat >> comment.txt << EOL
-
-## 📊 Summary
-- 🎯 **Total CSS versions:** $VERSION_COUNT_IN_FILE
-- 🖼️ **Total images:** $IMAGE_COUNT
-- 📱 **LinkedIn post:** Ready to copy from \`linkedin-post.md\`
-
-## 🎉 Ready for Battle!
-Your solution is now organized and ready for sharing. Check the LinkedIn post file for social media content!
-
----
-*Processed by GitHub Actions on $(date)*
-EOL
+          echo "" >> comment.txt
+          echo "## 🔗 Quick Links" >> comment.txt
+          echo "- 📱 **LinkedIn Post:** [\`linkedin-post.md\`](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/linkedin-post.md)" >> comment.txt
+          echo "- 💻 **CSS Solution:** [\`solutions.html\`](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/solutions.html)" >> comment.txt
+          echo "- 📁 **Full Directory:** [\`$TARGET_DIR/\`](${{ github.server_url }}/${{ github.repository }}/tree/main/$TARGET_DIR)" >> comment.txt
+          echo "" >> comment.txt
+          echo "## 🎉 Ready for Battle!" >> comment.txt
+          echo "Your solution is now organized and ready for sharing. Click the LinkedIn post link above to copy the content!" >> comment.txt
+          echo "" >> comment.txt
+          echo "---" >> comment.txt
+          echo "*✨ Processed by GitHub Actions on $(date)*" >> comment.txt
+          echo "*🔧 Workflow: [\`${{ github.workflow }}\`](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*" >> comment.txt
           
           # Post comment and close issue
           gh issue comment "${{ github.event.issue.number }}" \
@@ -654,6 +711,7 @@ EOL
             "css_content.txt"
             "css_content_raw.txt"
             "css_cleaned.txt"
+            "css_for_counting.txt"
             "image_urls.txt"
             "image_urls_clean.txt"
             "formatted_date_backup.txt"
@@ -671,6 +729,9 @@ EOL
               rm -f "$file"
             fi
           done
+          
+          # Remove version-specific character counting files
+          rm -f version_*.css 2>/dev/null || true
           
           # Double-check for any other temporary files with common patterns
           find . -maxdepth 1 -name "*.tmp" -type f -delete 2>/dev/null || true
