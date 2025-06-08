@@ -25,7 +25,6 @@ body:
         ```css
         <style>
         body { background: #6592CF; }
-        </style>
         ```
         
         **Multiple Versions Example:**
@@ -33,30 +32,20 @@ body:
         <style>
         body { background: #6592CF; }
         /* Version 1 - Basic approach */
-        </style>
         ```
         ---VERSION---
         ```css
         <style>
         body { background: #6592CF; }
         /* Version 2 - Optimized approach */
-        </style>
         ```
       placeholder: |
-        ```css
-        <style>
-        body {
-          background: #6592CF;
-          margin: 0;
-        }
-        div {
+        <style>body{background: #6592CF;margin:0}div{
           width: 100px;
           height: 100px;
           background: #243D83;
           margin: 50px auto;
         }
-        </style>
-        ```
       render: css
     validations:
       required: true
