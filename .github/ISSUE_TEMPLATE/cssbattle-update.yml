@@ -48,13 +48,11 @@ body:
         <style>
         /* New optimized version */
         body { background: #6592CF; }
-        </style>
         ```
       placeholder: |
         ```css
         <style>
         /* Your new/updated CSS here */
-        </style>
         ```
       render: css
     validations:
