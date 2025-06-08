@@ -227,48 +227,152 @@ jobs:
         id: css
         run: |
           echo "DEBUG: Extracting CSS content for ${{ steps.operation.outputs.type }} operation"
+          echo "DEBUG: Full issue body structure:"
+          echo "--- ISSUE BODY START ---"
+          cat issue_body.txt
+          echo "--- ISSUE BODY END ---"
+          echo ""
           
           # Method 1: Look for CSS content in code blocks (```css ... ```)
+          echo "DEBUG: Method 1 - Looking for CSS in code blocks..."
           if sed -n '/```css/,/```/p' issue_body.txt | sed '1d;$d' > css_content_raw.txt && [ -s css_content_raw.txt ]; then
             echo "DEBUG: Found CSS in code blocks"
-          # Method 2: Look for CSS content in HTML style blocks
-          elif grep -A 50 -B 5 "<style>" issue_body.txt | sed '/^--$/d' > css_content_raw.txt && [ -s css_content_raw.txt ]; then
+            
+            # Check if the content looks like valid CSS (not mixed with form elements)
+            if grep -q "Confirmation\|checkbox\|\[x\]\|\[ \]" css_content_raw.txt; then
+              echo "DEBUG: CSS block contains form elements, needs cleaning..."
+              # Extract only the actual CSS part, stop at form elements
+              sed '/### Comparison Images/,$d; /### Additional Notes/,$d; /### Confirmation/,$d; /- \[/,$d' css_content_raw.txt > css_content_cleaned.txt
+              if [ -s css_content_cleaned.txt ]; then
+                mv css_content_cleaned.txt css_content_raw.txt
+                echo "DEBUG: Cleaned CSS content of form elements"
+              fi
+            fi
+            
+          # Method 2: Look for CSS in GitHub issue form structure
+          elif echo "DEBUG: Method 2 - Looking for CSS in issue form structure..." && \
+               sed -n '/### CSS Solution/,/### Comparison Images/p; /### CSS Solution/,/### Additional Notes/p; /### CSS Solution/,/### Confirmation/p' issue_body.txt | \
+               sed '/### Comparison Images/,$d; /### Additional Notes/,$d; /### Confirmation/,$d; /^### /d' > css_content_raw.txt && [ -s css_content_raw.txt ]; then
+            echo "DEBUG: Found CSS in issue form structure"
+            
+            # Clean up any remaining form elements or markdown
+            sed -e '/^```css$/d' -e '/^```$/d' -e '/^- \[/d' -e '/^\[x\]/d' -e '/Confirmation/d' css_content_raw.txt > css_content_temp.txt
+            mv css_content_temp.txt css_content_raw.txt
+            
+          # Method 3: Look for CSS content in HTML style blocks
+          elif echo "DEBUG: Method 3 - Looking for CSS with <style> tags..." && \
+               grep -A 50 -B 5 "<style>" issue_body.txt | sed '/^--$/d' > css_content_raw.txt && [ -s css_content_raw.txt ]; then
             echo "DEBUG: Found CSS with <style> tags"
-          # Method 3: Look for any CSS-like content (fallback)
-          elif grep -A 20 -i "css\|style" issue_body.txt | grep -E "(background|width|height|margin|padding|color)" > css_content_raw.txt && [ -s css_content_raw.txt ]; then
+            
+          # Method 4: Look for any CSS-like content (fallback)
+          elif echo "DEBUG: Method 4 - Looking for CSS-like content..." && \
+               grep -A 20 -i "css\|style" issue_body.txt | grep -E "(background|width|height|margin|padding|color)" > css_content_raw.txt && [ -s css_content_raw.txt ]; then
             echo "DEBUG: Found CSS-like content"
+            
           else
             echo "ERROR: No CSS content found in issue"
-            echo "DEBUG: Issue body for troubleshooting:"
-            echo "--- ISSUE BODY START ---"
-            cat issue_body.txt
-            echo "--- ISSUE BODY END ---"
-            echo "Expected: CSS code in \`\`\`css blocks or <style> tags"
+            echo "DEBUG: Issue body structure for troubleshooting:"
+            echo "--- SECTIONS FOUND ---"
+            grep "^###" issue_body.txt || echo "No sections found"
+            echo "--- CSS SEARCH RESULTS ---"
+            echo "Looking for CSS blocks:"
+            grep -n "```css" issue_body.txt || echo "No CSS blocks found"
+            echo "Looking for CSS Solutions section:"
+            grep -n -A 5 -i "css.*solution" issue_body.txt || echo "No CSS Solutions section found"
+            echo "Expected: CSS code in \`\`\`css blocks or under ### CSS Solution(s) section"
             exit 1
           fi
           
-          # Clean up the CSS content
-          sed '/^[[:space:]]*$/d' css_content_raw.txt > css_content.txt
+          echo "DEBUG: Raw CSS content extracted:"
+          echo "--- RAW CSS CONTENT START ---"
+          cat css_content_raw.txt
+          echo "--- RAW CSS CONTENT END ---"
+          echo ""
           
-          # Validate CSS content exists after cleaning
+          # Clean up the CSS content more thoroughly
+          echo "DEBUG: Cleaning CSS content..."
+          
+          # Remove common issue form artifacts and clean up formatting
+          sed -e '/^[[:space:]]*$/d' \
+              -e '/^```css$/d' \
+              -e '/^```$/d' \
+              -e '/^### /d' \
+              -e '/^- \[/d' \
+              -e '/^\[x\]/d' \
+              -e '/^\[ \]/d' \
+              -e '/Confirmation/d' \
+              -e '/I have tested/d' \
+              -e '/comparison images/d' \
+              -e '/show the target/d' \
+              -e 's/^[[:space:]]*//' \
+              css_content_raw.txt > css_content.txt
+          
+          # Additional cleanup - remove any lines that don't look like CSS
+          echo "DEBUG: Performing additional CSS validation..."
+          
+          # Create a temporary file for validated CSS
+          > css_validated.txt
+          
+          while IFS= read -r line || [ -n "$line" ]; do
+            # Skip empty lines
+            [ -z "$line" ] && continue
+            
+            # Skip lines that are clearly not CSS
+            if echo "$line" | grep -qE "^(###|---|\[|\*\*|Image|width=|alt=|src=|https://|Confirmation|I have|comparison|target|vs|result)"; then
+              echo "DEBUG: Skipping non-CSS line: $line"
+              continue
+            fi
+            
+            # Skip lines that look like markdown or form elements
+            if echo "$line" | grep -qE "^(\*|\-|\+|[0-9]+\.|\[x\]|\[ \])"; then
+              echo "DEBUG: Skipping markdown/form line: $line"
+              continue
+            fi
+            
+            # Keep lines that look like CSS or contain CSS properties
+            if echo "$line" | grep -qE "(\{|\}|:|;|background|color|margin|padding|width|height|border|font|display|position|<style>|</style>)" || \
+               echo "$line" | grep -q "^[[:space:]]*[a-zA-Z#.*][^{]*{" || \
+               echo "$line" | grep -q "---VERSION---"; then
+              echo "$line" >> css_validated.txt
+            else
+              echo "DEBUG: Questionable line (keeping): $line"
+              echo "$line" >> css_validated.txt
+            fi
+          done < css_content.txt
+          
+          # Use the validated content
+          mv css_validated.txt css_content.txt
+          
+          # Final validation - CSS content exists after cleaning
           if [ ! -s css_content.txt ]; then
             echo "ERROR: CSS content is empty after processing"
+            echo "DEBUG: Raw CSS content was:"
+            cat css_content_raw.txt
+            echo "DEBUG: This might indicate the CSS is embedded in unexpected format"
             exit 1
           fi
           
-          echo "DEBUG: CSS content extracted successfully:"
-          echo "--- CSS CONTENT START ---"
-          head -10 css_content.txt
-          if [ $(wc -l < css_content.txt) -gt 10 ]; then
-            echo "... (truncated, total lines: $(wc -l < css_content.txt))"
-          fi
-          echo "--- CSS CONTENT END ---"
+          echo "DEBUG: Final cleaned CSS content:"
+          echo "--- FINAL CSS CONTENT START ---"
+          cat css_content.txt
+          echo "--- FINAL CSS CONTENT END ---"
+          echo ""
           
           # Count versions by counting ---VERSION--- separators
           VERSION_COUNT=$(grep -c "---VERSION---" css_content.txt 2>/dev/null || echo 0)
           VERSION_COUNT=$((VERSION_COUNT + 1))
           echo "version_count=$VERSION_COUNT" >> $GITHUB_OUTPUT
           echo "DEBUG: Found $VERSION_COUNT CSS versions"
+          
+          # Final sanity check - make sure we have some CSS-like content
+          if ! grep -qE "(\{|\}|background|color|margin|padding|width|height|<style>)" css_content.txt; then
+            echo "WARNING: Extracted content doesn't appear to contain valid CSS"
+            echo "DEBUG: Content analysis:"
+            echo "  Lines: $(wc -l < css_content.txt)"
+            echo "  Characters: $(wc -c < css_content.txt)"
+            echo "  First few lines:"
+            head -5 css_content.txt
+          fi
           
       - name: Create directory structure
         run: |
@@ -486,25 +590,62 @@ jobs:
           TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
           LINKEDIN_FILE="$TARGET_DIR/linkedin-post.md"
           
+          echo "DEBUG: Extracting additional notes for LinkedIn post..."
+          
           # Extract additional notes based on operation type
           if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
-            # For GitHub issue forms, look for the "Additional Notes" content
-            ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | grep -A 10 -i "additional.*notes\|notes\|description" | grep -v -i "additional.*notes\|notes\|description" | sed '/^[[:space:]]*$/d' | head -3 | tr '\n' ' ')
+            echo "DEBUG: Looking for additional notes in CREATE operation..."
+            
+            # Method 1: Look for "Additional Notes" section in GitHub issue form
+            ADDITIONAL_NOTES=$(sed -n '/### Additional Notes/,/### Confirmation/p; /### Additional Notes/,/### /p' issue_body.txt | \
+                             sed '/### Additional Notes/d; /### Confirmation/,$d; /### /,$d; /^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d' | \
+                             head -3 | tr '\n' ' ')
+            
+            # Method 2: If not found, look for notes after CSS section
+            if [ -z "$ADDITIONAL_NOTES" ]; then
+              echo "DEBUG: Method 1 failed, trying Method 2..."
+              ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | \
+                               grep -A 10 -i "additional.*notes\|notes\|description" | \
+                               grep -v -i "additional.*notes\|notes\|description\|confirmation\|tested\|comparison" | \
+                               sed '/^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d; /^###/d' | \
+                               head -3 | tr '\n' ' ')
+            fi
+            
+            # Method 3: Look for content between specific sections
+            if [ -z "$ADDITIONAL_NOTES" ]; then
+              echo "DEBUG: Method 2 failed, trying Method 3..."
+              ADDITIONAL_NOTES=$(awk '/### Additional Notes/{flag=1; next} /### Confirmation|### /{flag=0} flag && !/^[[:space:]]*$/ && !/^- \[/ && !/^\[x\]/' issue_body.txt | \
+                               head -3 | tr '\n' ' ')
+            fi
+            
           else
-            ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | grep -A 10 -i "update.*notes\|notes" | grep -v -i "update.*notes\|notes" | sed '/^[[:space:]]*$/d' | head -3 | tr '\n' ' ')
+            echo "DEBUG: Looking for update notes in UPDATE operation..."
+            ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | \
+                             grep -A 10 -i "update.*notes\|notes" | \
+                             grep -v -i "update.*notes\|notes\|confirmation\|tested\|comparison" | \
+                             sed '/^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d; /^###/d' | \
+                             head -3 | tr '\n' ' ')
           fi
           
-          # Clean up additional notes - remove empty content
-          ADDITIONAL_NOTES=$(echo "$ADDITIONAL_NOTES" | xargs)
+          # Clean up additional notes - remove empty content and unwanted elements
+          ADDITIONAL_NOTES=$(echo "$ADDITIONAL_NOTES" | \
+                           sed 's/\[x\]//g; s/\[ \]//g; s/- //g' | \
+                           sed 's/I have tested.*//g; s/comparison images.*//g; s/target vs.*//g' | \
+                           xargs)
+          
+          echo "DEBUG: Extracted additional notes: '$ADDITIONAL_NOTES'"
           
           # If no additional notes found, create a default description
           if [ -z "$ADDITIONAL_NOTES" ]; then
+            echo "DEBUG: No additional notes found, using default..."
             if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
               ADDITIONAL_NOTES="Another CSS challenge completed! 🎯"
             else
               ADDITIONAL_NOTES="Updated my CSS solution with improvements! 🚀"
             fi
           fi
+          
+          echo "DEBUG: Final additional notes: '$ADDITIONAL_NOTES'"
           
           # Generate the repository URL for the solutions.html file
           REPO_URL="https://github.com/${{ github.repository }}"
