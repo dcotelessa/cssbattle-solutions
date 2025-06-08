@@ -17,6 +17,29 @@ jobs:
       GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
     
     steps:
+      - name: Debug trigger conditions
+        run: |
+          echo "🔍 DEBUG: Trigger Analysis"
+          echo "Issue title: '${{ github.event.issue.title }}'"
+          echo "Issue number: ${{ github.event.issue.number }}"
+          echo "Issue author: ${{ github.event.issue.user.login }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Event action: ${{ github.event.action }}"
+          echo ""
+          echo "🔍 Checking trigger conditions:"
+          if [[ "${{ github.event.issue.title }}" == *"[CSSBattle]"* ]]; then
+            echo "✅ Title contains '[CSSBattle]'"
+          else
+            echo "❌ Title does NOT contain '[CSSBattle]'"
+          fi
+          
+          if [[ "${{ github.event.issue.title }}" == *"[CSSBattle-UPDATE]"* ]]; then
+            echo "✅ Title contains '[CSSBattle-UPDATE]'"
+          else
+            echo "❌ Title does NOT contain '[CSSBattle-UPDATE]'"
+          fi
+          echo ""
+          
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
