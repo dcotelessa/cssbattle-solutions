@@ -4,7 +4,7 @@
 
 Today's CSSBattle solution:
 
-Orange Coin. ### Confirmation - [x] I have tested my CSS solution
+Orange Coin.
 
 https://github.com/dcotelessa/cssbattle-solutions/blob/main/daily-targets/2025-06-08/solutions.html
 
