@@ -154,23 +154,60 @@ jobs:
         run: |
           echo "🖼️ Looking for images..."
           
-          # Simple image URL extraction
+          # Enhanced image URL extraction
           > image_urls.txt
           
-          # Look for GitHub image URLs (simple patterns)
-          grep -oE 'https://[^[:space:]"]+\.(png|jpg|jpeg|gif|webp)' issue_body.txt >> image_urls.txt 2>/dev/null || true
+          echo "🔍 Searching for various image URL patterns..."
           
-          # Remove duplicates
+          # Pattern 1: Markdown image syntax ![alt](url)
+          grep -oE '!\[[^\]]*\]\([^)]+\)' issue_body.txt | sed 's/!\[[^\]]*\](\([^)]*\))/\1/' >> image_urls.txt 2>/dev/null || true
+          
+          # Pattern 2: HTML img tags <img src="url">
+          grep -oE '<img[^>]+src="[^"]*"' issue_body.txt | sed 's/.*src="\([^"]*\)".*/\1/' >> image_urls.txt 2>/dev/null || true
+          
+          # Pattern 3: GitHub user-images (most common)
+          grep -oE 'https://user-images\.githubusercontent\.com/[^[:space:]")\]]+' issue_body.txt >> image_urls.txt 2>/dev/null || true
+          
+          # Pattern 4: GitHub assets URLs
+          grep -oE 'https://github\.com/[^/]+/[^/]+/assets/[^[:space:]")\]]+' issue_body.txt >> image_urls.txt 2>/dev/null || true
+          
+          # Pattern 5: Any GitHub content URLs
+          grep -oE 'https://[^[:space:]")\]]*\.githubusercontent\.com/[^[:space:]")\]]+' issue_body.txt >> image_urls.txt 2>/dev/null || true
+          
+          # Pattern 6: Direct image URLs with extensions
+          grep -oE 'https://[^[:space:]")\]]+\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP)' issue_body.txt >> image_urls.txt 2>/dev/null || true
+          
+          # Show what we found (before deduplication)
+          echo "🔍 Raw URLs found:"
+          cat image_urls.txt | head -10
+          
+          # Remove duplicates and filter valid URLs
           if [ -s image_urls.txt ]; then
-            sort image_urls.txt | uniq > image_urls_clean.txt
-            mv image_urls_clean.txt image_urls.txt
-            IMAGE_COUNT=$(wc -l < image_urls.txt)
-            echo "✅ Found $IMAGE_COUNT image URL(s)"
+            # Clean URLs and remove duplicates
+            sort image_urls.txt | uniq | grep -E '^https://' | head -20 > image_urls_clean.txt 2>/dev/null || true
+            mv image_urls_clean.txt image_urls.txt 2>/dev/null || true
+            
+            IMAGE_COUNT=$(wc -l < image_urls.txt 2>/dev/null || echo 0)
+            echo "✅ Found $IMAGE_COUNT unique image URL(s)"
             echo "IMAGE_COUNT=$IMAGE_COUNT" >> $GITHUB_ENV
+            
+            # Show final URLs
+            if [ "$IMAGE_COUNT" -gt 0 ]; then
+              echo "📋 Final image URLs:"
+              cat image_urls.txt
+            fi
           else
             echo "ℹ️ No images found in issue"
             echo "IMAGE_COUNT=0" >> $GITHUB_ENV
           fi
+          
+          # Debug: Show markdown image syntax found
+          echo "🔍 Markdown images found:"
+          grep -E '!\[[^\]]*\]\([^)]+\)' issue_body.txt || echo "No markdown images found"
+          
+          # Debug: Show HTML img tags found
+          echo "🔍 HTML img tags found:"
+          grep -E '<img[^>]+src=' issue_body.txt || echo "No HTML img tags found"
 
       - name: 📁 Create Directory Structure
         run: |
@@ -212,40 +249,47 @@ jobs:
           echo "✅ Solutions file created with $CSS_VERSION_COUNT version(s)"
 
       - name: 🖼️ Download Images
-        if: env.IMAGE_COUNT != '0'
         run: |
-          echo "🖼️ Downloading $IMAGE_COUNT image(s)..."
+          echo "🖼️ Processing images..."
           
-          counter=1
-          while IFS= read -r img_url; do
-            if [ -n "$img_url" ]; then
-              # Get file extension
-              ext=$(echo "$img_url" | grep -oE '\.(png|jpg|jpeg|gif|webp)' | head -1)
-              [ -z "$ext" ] && ext=".png"
-              
-              filename="target-${counter}-comparison${ext}"
-              filepath="$TARGET_DIR/$filename"
-              
-              echo "📥 Downloading: $filename"
-              
-              # Simple download with timeout
-              if curl -L -f -s --max-time 30 "$img_url" -o "$filepath" 2>/dev/null; then
-                if [ -s "$filepath" ]; then
-                  echo "✅ Downloaded: $filename ($(du -h "$filepath" | cut -f1))"
-                  counter=$((counter + 1))
+          if [ "$IMAGE_COUNT" = "0" ]; then
+            echo "ℹ️ No images found in issue body"
+            echo "DOWNLOADED_COUNT=0" >> $GITHUB_ENV
+          else
+            echo "🖼️ Downloading $IMAGE_COUNT image(s)..."
+            
+            counter=1
+            while IFS= read -r img_url; do
+              if [ -n "$img_url" ]; then
+                # Get file extension
+                ext=$(echo "$img_url" | grep -oE '\.(png|jpg|jpeg|gif|webp)' | head -1)
+                [ -z "$ext" ] && ext=".png"
+                
+                filename="target-${counter}-comparison${ext}"
+                filepath="$TARGET_DIR/$filename"
+                
+                echo "📥 Downloading: $filename"
+                echo "    URL: $img_url"
+                
+                # Simple download with timeout
+                if curl -L -f -s --max-time 30 "$img_url" -o "$filepath" 2>/dev/null; then
+                  if [ -s "$filepath" ]; then
+                    echo "✅ Downloaded: $filename ($(du -h "$filepath" | cut -f1))"
+                    counter=$((counter + 1))
+                  else
+                    echo "❌ Downloaded file is empty: $filename"
+                    rm -f "$filepath"
+                  fi
                 else
-                  echo "❌ Downloaded file is empty: $filename"
-                  rm -f "$filepath"
+                  echo "❌ Failed to download: $img_url"
                 fi
-              else
-                echo "❌ Failed to download: $img_url"
               fi
-            fi
-          done < image_urls.txt
-          
-          DOWNLOADED_COUNT=$((counter - 1))
-          echo "DOWNLOADED_COUNT=$DOWNLOADED_COUNT" >> $GITHUB_ENV
-          echo "✅ Downloaded $DOWNLOADED_COUNT of $IMAGE_COUNT images"
+            done < image_urls.txt
+            
+            DOWNLOADED_COUNT=$((counter - 1))
+            echo "DOWNLOADED_COUNT=$DOWNLOADED_COUNT" >> $GITHUB_ENV
+            echo "✅ Downloaded $DOWNLOADED_COUNT of $IMAGE_COUNT images"
+          fi
 
       - name: 📱 Generate LinkedIn Post
         run: |
