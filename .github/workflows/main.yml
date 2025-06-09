@@ -17,1303 +17,353 @@ jobs:
       GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
     
     steps:
-      - name: Debug trigger conditions
+      - name: 🔧 Setup Environment
         run: |
-          echo "🔍 DEBUG: Trigger Analysis"
+          echo "🔍 Workflow Trigger Analysis"
           echo "Issue title: '${{ github.event.issue.title }}'"
           echo "Issue number: ${{ github.event.issue.number }}"
-          echo "Issue author: ${{ github.event.issue.user.login }}"
           echo "Repository: ${{ github.repository }}"
-          echo "Event action: ${{ github.event.action }}"
           echo ""
-          echo "🔍 Checking trigger conditions:"
-          if [[ "${{ github.event.issue.title }}" == *"[CSSBattle]"* ]]; then
-            echo "✅ Title contains '[CSSBattle]'"
-          else
-            echo "❌ Title does NOT contain '[CSSBattle]'"
-          fi
           
+          # Determine operation type
           if [[ "${{ github.event.issue.title }}" == *"[CSSBattle-UPDATE]"* ]]; then
-            echo "✅ Title contains '[CSSBattle-UPDATE]'"
+            echo "OPERATION_TYPE=update" >> $GITHUB_ENV
+            echo "✅ Operation: UPDATE"
           else
-            echo "❌ Title does NOT contain '[CSSBattle-UPDATE]'"
+            echo "OPERATION_TYPE=create" >> $GITHUB_ENV
+            echo "✅ Operation: CREATE"
           fi
-          echo ""
-          
-      - uses: actions/checkout@v4
+
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
-      
-      - name: Install dependencies
+
+      - name: 🛠️ Install Dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y jq
+          sudo apt-get update -qq
+          sudo apt-get install -y jq file
           echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-      
-      - name: Determine operation type
-        id: operation
+          echo "✅ Dependencies installed"
+
+      - name: 📄 Extract Issue Content
         run: |
-          if [[ "${{ github.event.issue.title }}" == *"[CSSBattle-UPDATE]"* ]]; then
-            echo "type=update" >> $GITHUB_OUTPUT
-            echo "Operation: UPDATE"
-          else
-            echo "type=create" >> $GITHUB_OUTPUT
-            echo "Operation: CREATE"
-          fi
-      
-      - name: Extract and validate issue data
-        id: extract
-        run: |
-          # Save issue body to file for processing
-          cat > issue_body.txt << 'EOF'
+          echo "📄 Extracting issue body..."
+          
+          # Save issue body safely
+          cat > issue_body.txt << 'ISSUE_EOF'
           ${{ github.event.issue.body }}
-          EOF
+          ISSUE_EOF
           
-          echo "DEBUG: Issue body content:"
-          cat issue_body.txt
-          echo "DEBUG: ===== END OF ISSUE BODY ====="
-          
-          # Validate issue body is not empty
+          # Validate content
           if [ ! -s issue_body.txt ]; then
-            echo "ERROR: Issue body is empty"
+            echo "❌ ERROR: Issue body is empty"
             exit 1
           fi
           
-          # Extract date based on operation type
-          if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
-            echo "DEBUG: Extracting date for CREATE operation"
-            
-            # Method 1: Look for date pattern directly (for "Jun 8, 2025" format)
-            DATE=$(grep -oE "(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)[[:space:]]+[0-9]{1,2},[[:space:]]*[0-9]{4}" issue_body.txt | head -1)
-            
-            # Method 2: If not found, look for numeric date formats
-            if [ -z "$DATE" ]; then
-              DATE=$(grep -oE "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}" issue_body.txt | head -1)
-            fi
-            
-            # Method 3: Look for ISO format dates
-            if [ -z "$DATE" ]; then
-              DATE=$(grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" issue_body.txt | head -1)
-            fi
-            
-            # Method 4: Search around common labels (fallback)
-            if [ -z "$DATE" ]; then
-              DATE=$(grep -A 5 -i "date\|when\|day" issue_body.txt | grep -oE "(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[[:space:]]+[0-9]{1,2},[[:space:]]*[0-9]{4}" | head -1)
-            fi
-            
-          else
-            echo "DEBUG: Extracting date for UPDATE operation"
-            # For update operations, look for target date
-            DATE=$(grep -oE "(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)[[:space:]]+[0-9]{1,2},[[:space:]]*[0-9]{4}" issue_body.txt | head -1)
-            
-            # Extract update type and version number
-            UPDATE_TYPE=$(grep -A 3 -i "update.*type" issue_body.txt | grep -v -i "update.*type" | head -1 | xargs)
-            VERSION_NUMBER=$(grep -A 3 -i "version.*number" issue_body.txt | grep -v -i "version.*number" | head -1 | xargs)
-            
-            echo "update_type=$UPDATE_TYPE" >> $GITHUB_OUTPUT
-            echo "version_number=$VERSION_NUMBER" >> $GITHUB_OUTPUT
-          fi
+          echo "✅ Issue content extracted ($(wc -l < issue_body.txt) lines)"
           
-          echo "parsed_date=$DATE" >> $GITHUB_OUTPUT
-          echo "DEBUG: Extracted date: '$DATE'"
+          # Show structure for debugging
+          echo "📋 Issue sections found:"
+          grep "^###" issue_body.txt || echo "No sections found"
+
+      - name: 📅 Parse Date
+        run: |
+          echo "📅 Parsing date from issue..."
           
-          # Validate date was extracted
+          # Try multiple date formats
+          DATE=""
+          
+          # Method 1: Month Day, Year (e.g., "Jun 9, 2025")
+          DATE=$(grep -oE "(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)[[:space:]]+[0-9]{1,2},[[:space:]]*[0-9]{4}" issue_body.txt | head -1)
+          
+          # Method 2: Numeric format (e.g., "6/9/2025")
           if [ -z "$DATE" ]; then
-            echo "ERROR: Could not extract date from issue."
-            echo "DEBUG: Issue body for troubleshooting:"
-            echo "--- ISSUE BODY START ---"
-            cat issue_body.txt
-            echo "--- ISSUE BODY END ---"
-            echo ""
-            echo "Expected format examples:"
-            echo "  - Jun 8, 2025"
-            echo "  - January 15, 2025"
-            echo "  - 6/8/2025"
-            echo "  - 2025-06-08"
+            DATE=$(grep -oE "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}" issue_body.txt | head -1)
+          fi
+          
+          # Method 3: ISO format (e.g., "2025-06-09")
+          if [ -z "$DATE" ]; then
+            DATE=$(grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" issue_body.txt | head -1)
+          fi
+          
+          if [ -z "$DATE" ]; then
+            echo "❌ ERROR: No date found in issue"
             exit 1
           fi
           
-      - name: Convert and validate date format
-        id: date
-        run: |
-          DATE="${{ steps.extract.outputs.parsed_date }}"
-          echo "DEBUG: Converting date: '$DATE'"
+          echo "🔍 Raw date found: '$DATE'"
           
-          # Enhanced date parsing for various formats
-          if [ -n "$DATE" ]; then
-            # Try GNU date first (handles "Jun 8, 2025" format perfectly)
-            if FORMATTED_DATE=$(date -d "$DATE" +%Y-%m-%d 2>/dev/null); then
-              echo "DEBUG: Successfully parsed with GNU date: $FORMATTED_DATE"
-            else
-              echo "DEBUG: GNU date failed, attempting manual parsing"
-              
-              # Clean up the date string - remove extra spaces and commas
-              DATE_CLEAN=$(echo "$DATE" | sed 's/,/ /g' | tr -s ' ' | xargs)
-              echo "DEBUG: Cleaned date: '$DATE_CLEAN'"
-              
-              # Extract components for "Mon D, YYYY" or "Mon D YYYY" format
-              if echo "$DATE_CLEAN" | grep -qE "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)[[:space:]]+[0-9]{1,2}[[:space:]]+[0-9]{4}$"; then
-                
-                # Extract components
-                MONTH_NAME=$(echo "$DATE_CLEAN" | cut -d' ' -f1)
-                DAY_NUM=$(echo "$DATE_CLEAN" | cut -d' ' -f2)
-                YEAR_NUM=$(echo "$DATE_CLEAN" | cut -d' ' -f3)
-                
-                echo "DEBUG: Extracted - Month: '$MONTH_NAME', Day: '$DAY_NUM', Year: '$YEAR_NUM'"
-                
-                # Convert month name to number
-                case "$MONTH_NAME" in
-                  Jan|January) MONTH_NUM="01" ;;
-                  Feb|February) MONTH_NUM="02" ;;
-                  Mar|March) MONTH_NUM="03" ;;
-                  Apr|April) MONTH_NUM="04" ;;
-                  May) MONTH_NUM="05" ;;
-                  Jun|June) MONTH_NUM="06" ;;
-                  Jul|July) MONTH_NUM="07" ;;
-                  Aug|August) MONTH_NUM="08" ;;
-                  Sep|September) MONTH_NUM="09" ;;
-                  Oct|October) MONTH_NUM="10" ;;
-                  Nov|November) MONTH_NUM="11" ;;
-                  Dec|December) MONTH_NUM="12" ;;
-                  *) 
-                    echo "ERROR: Could not parse month: '$MONTH_NAME'"
-                    exit 1
-                    ;;
-                esac
-                
-                # Validate day (1-31)
-                if ! [[ "$DAY_NUM" =~ ^[0-9]+$ ]] || [ "$DAY_NUM" -lt 1 ] || [ "$DAY_NUM" -gt 31 ]; then
-                  echo "ERROR: Invalid day: '$DAY_NUM' (must be 1-31)"
-                  exit 1
-                fi
-                
-                # Validate year (reasonable range)
-                if ! [[ "$YEAR_NUM" =~ ^[0-9]{4}$ ]] || [ "$YEAR_NUM" -lt 2020 ] || [ "$YEAR_NUM" -gt 2030 ]; then
-                  echo "ERROR: Invalid year: '$YEAR_NUM' (must be 2020-2030)"
-                  exit 1
-                fi
-                
-                # Format as YYYY-MM-DD with zero padding
-                FORMATTED_DATE=$(printf "%04d-%02d-%02d" "$YEAR_NUM" "$MONTH_NUM" "$DAY_NUM")
-                echo "DEBUG: Manual parsing result: $FORMATTED_DATE"
-                
-              else
-                echo "ERROR: Date format not recognized: '$DATE_CLEAN'"
-                echo "Expected format: 'Jun 8, 2025' or 'June 8, 2025'"
-                exit 1
-              fi
-            fi
+          # Convert to YYYY-MM-DD format
+          if FORMATTED_DATE=$(date -d "$DATE" +%Y-%m-%d 2>/dev/null); then
+            echo "FORMATTED_DATE=$FORMATTED_DATE" >> $GITHUB_ENV
+            echo "✅ Date parsed: $FORMATTED_DATE"
           else
-            echo "ERROR: No date provided"
+            echo "❌ ERROR: Could not parse date: '$DATE'"
             exit 1
           fi
-          
-          # Final validation
-          if ! echo "$FORMATTED_DATE" | grep -qE "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; then
-            echo "ERROR: Invalid formatted date: '$FORMATTED_DATE'"
-            exit 1
-          fi
-          
-          # Verify it's a valid date
-          if ! date -d "$FORMATTED_DATE" >/dev/null 2>&1; then
-            echo "ERROR: '$FORMATTED_DATE' is not a valid date"
-            exit 1
-          fi
-          
-          echo "formatted_date=$FORMATTED_DATE" >> $GITHUB_OUTPUT
-          echo "DEBUG: Final formatted date: $FORMATTED_DATE"
-          
-      - name: Extract and validate CSS content
-        id: css
+
+      - name: 🎨 Extract CSS Content
         run: |
-          echo "DEBUG: Extracting CSS content for ${{ steps.operation.outputs.type }} operation"
-          echo "DEBUG: Full issue body structure:"
-          echo "--- ISSUE BODY START ---"
-          cat issue_body.txt
-          echo "--- ISSUE BODY END ---"
-          echo ""
+          echo "🎨 Extracting CSS content..."
           
-          # Simple and robust CSS extraction
-          echo "DEBUG: Starting CSS extraction..."
-          
-          # Initialize empty CSS file
-          > css_content_raw.txt
-          
-          # Method 1: Extract everything between ### CSS Solution(s) and next ### section
-          echo "DEBUG: Method 1 - Extract from CSS Solution section..."
-          
-          # Find start and end line numbers
+          # Find CSS section
           CSS_START=$(grep -n "### CSS Solution" issue_body.txt | head -1 | cut -d: -f1)
           
-          if [ -n "$CSS_START" ]; then
-            echo "DEBUG: Found CSS section starting at line: $CSS_START"
-            
-            # Find the next ### section after CSS Solution
-            CSS_END=$(tail -n +$((CSS_START + 1)) issue_body.txt | grep -n "^### " | head -1 | cut -d: -f1)
-            
-            if [ -n "$CSS_END" ]; then
-              # Calculate actual end line
-              ACTUAL_END=$((CSS_START + CSS_END - 1))
-              echo "DEBUG: CSS section ends at line: $ACTUAL_END"
-              
-              # Extract the CSS section content
-              sed -n "$((CSS_START + 1)),$((ACTUAL_END - 1))p" issue_body.txt > css_section_content.txt
-            else
-              echo "DEBUG: No section found after CSS, extracting to end of file"
-              tail -n +$((CSS_START + 1)) issue_body.txt > css_section_content.txt
-            fi
-            
-            # Now extract actual CSS content from the section
-            echo "DEBUG: Processing CSS section content..."
-            
-            # Remove empty lines and section headers
-            sed '/^[[:space:]]*$/d; /^### /d' css_section_content.txt > css_filtered.txt
-            
-            # Extract CSS code - look for lines that contain CSS-like content
-            while IFS= read -r line || [ -n "$line" ]; do
-              # Skip lines that are clearly not CSS
-              if echo "$line" | grep -qE "^(```css|```|description|placeholder|render:|Paste your|Single Version|Multiple Version|\*\*|Drag and drop)"; then
-                continue
-              fi
-              
-              # Skip checkbox lines
-              if echo "$line" | grep -qE "^- \["; then
-                continue
-              fi
-              
-              # Keep CSS content and VERSION separators
-              if echo "$line" | grep -qE "(---VERSION---|<style>|</style>|background|width|height|margin|padding|color|border|font|display|position|{|}|;)" || \
-                 echo "$line" | grep -qE "^[[:space:]]*[a-zA-Z#.*]"; then
-                echo "$line" >> css_content_raw.txt
-              fi
-              
-            done < css_filtered.txt
-            
-            # Clean up temporary files
-            rm -f css_section_content.txt css_filtered.txt
-            
-          else
-            echo "DEBUG: No CSS Solution section found"
-          fi
-          
-          # Method 2: Fallback - look for any <style> tags in the entire issue
-          if [ ! -s css_content_raw.txt ]; then
-            echo "DEBUG: Method 2 - Looking for <style> tags anywhere in issue..."
-            
-            # Extract lines containing <style> or CSS properties
-            grep -E "(<style>|</style>|background|width.*:|height.*:|margin.*:|padding.*:|color.*:|border.*:)" issue_body.txt > css_content_raw.txt || true
-            
-            if [ -s css_content_raw.txt ]; then
-              echo "DEBUG: Found CSS content using <style> tag search"
-            fi
-          fi
-          
-          # Method 3: Last resort - extract anything that looks like CSS
-          if [ ! -s css_content_raw.txt ]; then
-            echo "DEBUG: Method 3 - Last resort CSS extraction..."
-            
-            # Look for common CSS patterns
-            grep -E "(background:#|width:[0-9]|height:[0-9]|margin:[0-9]|{|};)" issue_body.txt > css_content_raw.txt || true
-            
-            if [ -s css_content_raw.txt ]; then
-              echo "DEBUG: Found CSS content using pattern matching"
-            fi
-          fi
-          
-          # Final validation
-          if [ ! -s css_content_raw.txt ]; then
-            echo "ERROR: No CSS content found in issue"
-            echo "DEBUG: Issue sections found:"
-            grep "^###" issue_body.txt || echo "No sections found"
-            echo ""
-            echo "Please ensure your issue contains:"
-            echo "1. A '### CSS Solution(s)' section"
-            echo "2. CSS code with <style> tags or CSS properties"
+          if [ -z "$CSS_START" ]; then
+            echo "❌ ERROR: No CSS Solution section found"
             exit 1
           fi
           
-          echo "DEBUG: Raw CSS content extracted:"
-          echo "--- RAW CSS CONTENT START ---"
-          cat css_content_raw.txt
-          echo "--- RAW CSS CONTENT END ---"
-          echo ""
+          echo "🔍 CSS section starts at line: $CSS_START"
           
-          # Clean up the CSS content more thoroughly
-          echo "DEBUG: Cleaning CSS content..."
+          # Find next section
+          CSS_END=$(tail -n +$((CSS_START + 1)) issue_body.txt | grep -n "^### " | head -1 | cut -d: -f1)
           
-          # Remove common issue form artifacts and clean up formatting
+          if [ -n "$CSS_END" ]; then
+            ACTUAL_END=$((CSS_START + CSS_END - 1))
+            sed -n "$((CSS_START + 1)),$((ACTUAL_END - 1))p" issue_body.txt > css_raw.txt
+          else
+            tail -n +$((CSS_START + 1)) issue_body.txt > css_raw.txt
+          fi
+          
+          # Clean CSS content
           sed -e '/^[[:space:]]*$/d' \
               -e '/^```css$/d' \
               -e '/^```$/d' \
               -e '/^### /d' \
               -e '/^- \[/d' \
               -e '/^\[x\]/d' \
-              -e '/^\[ \]/d' \
               -e '/Confirmation/d' \
-              -e '/I have tested/d' \
-              -e '/comparison images/d' \
-              -e '/show the target/d' \
-              -e 's/^[[:space:]]*//' \
-              css_content_raw.txt > css_content.txt
+              css_raw.txt > css_content.txt
           
-          # Additional cleanup - remove any lines that don't look like CSS
-          echo "DEBUG: Performing additional CSS validation..."
+          if [ ! -s css_content.txt ]; then
+            echo "❌ ERROR: No CSS content found after cleaning"
+            exit 1
+          fi
           
-          # Create a temporary file for validated CSS
-          > css_validated.txt
+          # Count versions
+          VERSION_COUNT=$(grep -c "---VERSION---" css_content.txt || echo 0)
+          VERSION_COUNT=$((VERSION_COUNT + 1))
+          echo "CSS_VERSION_COUNT=$VERSION_COUNT" >> $GITHUB_ENV
           
+          echo "✅ CSS extracted: $VERSION_COUNT version(s), $(wc -l < css_content.txt) lines"
+
+      - name: 🖼️ Find Images
+        run: |
+          echo "🖼️ Looking for images..."
+          
+          # Simple image URL extraction
+          > image_urls.txt
+          
+          # Look for GitHub image URLs (simple patterns)
+          grep -oE 'https://[^[:space:]"]+\.(png|jpg|jpeg|gif|webp)' issue_body.txt >> image_urls.txt 2>/dev/null || true
+          
+          # Remove duplicates
+          if [ -s image_urls.txt ]; then
+            sort image_urls.txt | uniq > image_urls_clean.txt
+            mv image_urls_clean.txt image_urls.txt
+            IMAGE_COUNT=$(wc -l < image_urls.txt)
+            echo "✅ Found $IMAGE_COUNT image URL(s)"
+            echo "IMAGE_COUNT=$IMAGE_COUNT" >> $GITHUB_ENV
+          else
+            echo "ℹ️ No images found in issue"
+            echo "IMAGE_COUNT=0" >> $GITHUB_ENV
+          fi
+
+      - name: 📁 Create Directory Structure
+        run: |
+          echo "📁 Creating directory structure..."
+          
+          TARGET_DIR="daily-targets/$FORMATTED_DATE"
+          mkdir -p "$TARGET_DIR"
+          
+          echo "TARGET_DIR=$TARGET_DIR" >> $GITHUB_ENV
+          echo "✅ Created directory: $TARGET_DIR"
+
+      - name: 📝 Generate Solutions File
+        run: |
+          echo "📝 Generating solutions.html..."
+          
+          SOLUTIONS_FILE="$TARGET_DIR/solutions.html"
+          
+          # Start with Version 1
+          echo "<!-- Version 1 -->" > "$SOLUTIONS_FILE"
+          
+          # Process CSS content
+          version_num=1
           while IFS= read -r line || [ -n "$line" ]; do
-            # Skip empty lines
-            [ -z "$line" ] && continue
-            
-            # Skip lines that are clearly not CSS
-            if echo "$line" | grep -qE "^(###|---|\[|\*\*|Image|width=|alt=|src=|https://|Confirmation|I have|comparison|target|vs|result)"; then
-              echo "DEBUG: Skipping non-CSS line: $line"
-              continue
-            fi
-            
-            # Skip lines that look like markdown or form elements
-            if echo "$line" | grep -qE "^(\*|\-|\+|[0-9]+\.|\[x\]|\[ \])"; then
-              echo "DEBUG: Skipping markdown/form line: $line"
-              continue
-            fi
-            
-            # Keep lines that look like CSS or contain CSS properties
-            if echo "$line" | grep -qE "(\{|\}|:|;|background|color|margin|padding|width|height|border|font|display|position|<style>|</style>)" || \
-               echo "$line" | grep -q "^[[:space:]]*[a-zA-Z#.*][^{]*{" || \
-               echo "$line" | grep -q "---VERSION---"; then
-              echo "$line" >> css_validated.txt
+            if [[ "$line" == "---VERSION---" ]]; then
+              echo "</style>" >> "$SOLUTIONS_FILE"
+              echo "" >> "$SOLUTIONS_FILE"
+              version_num=$((version_num + 1))
+              echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
             else
-              echo "DEBUG: Questionable line (keeping): $line"
-              echo "$line" >> css_validated.txt
+              echo "$line" >> "$SOLUTIONS_FILE"
             fi
           done < css_content.txt
           
-          # Use the validated content
-          mv css_validated.txt css_content.txt
-          
-          # Final validation - CSS content exists after cleaning
-          if [ ! -s css_content.txt ]; then
-            echo "ERROR: CSS content is empty after processing"
-            echo "DEBUG: Raw CSS content was:"
-            cat css_content_raw.txt
-            echo "DEBUG: This might indicate the CSS is embedded in unexpected format"
-            exit 1
+          # Ensure proper closing
+          if ! tail -n1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
+            echo "</style>" >> "$SOLUTIONS_FILE"
           fi
           
-          echo "DEBUG: Final cleaned CSS content:"
-          echo "--- FINAL CSS CONTENT START ---"
-          cat css_content.txt
-          echo "--- FINAL CSS CONTENT END ---"
-          echo ""
-          
-          # Count versions by counting ---VERSION--- separators
-          VERSION_COUNT=$(grep -c "---VERSION---" css_content.txt 2>/dev/null || echo 0)
-          VERSION_COUNT=$((VERSION_COUNT + 1))
-          echo "version_count=$VERSION_COUNT" >> $GITHUB_OUTPUT
-          echo "DEBUG: Found $VERSION_COUNT CSS versions"
-          
-          # Final sanity check - make sure we have some CSS-like content
-          if ! grep -qE "(\{|\}|background|color|margin|padding|width|height|<style>)" css_content.txt; then
-            echo "WARNING: Extracted content doesn't appear to contain valid CSS"
-            echo "DEBUG: Content analysis:"
-            echo "  Lines: $(wc -l < css_content.txt)"
-            echo "  Characters: $(wc -c < css_content.txt)"
-            echo "  First few lines:"
-            head -5 css_content.txt
-          fi
-          
-      - name: Create directory structure
+          echo "✅ Solutions file created with $CSS_VERSION_COUNT version(s)"
+
+      - name: 🖼️ Download Images
+        if: env.IMAGE_COUNT != '0'
         run: |
-          TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
-          echo "DEBUG: Creating directory: $TARGET_DIR"
+          echo "🖼️ Downloading $IMAGE_COUNT image(s)..."
           
-          mkdir -p "$TARGET_DIR"
-          
-          if [ ! -d "$TARGET_DIR" ]; then
-            echo "ERROR: Failed to create directory: $TARGET_DIR"
-            exit 1
-          fi
-          
-          echo "DEBUG: Directory created successfully"
-          ls -la daily-targets/
-          
-      - name: Create or update solutions file
-        run: |
-          TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
-          SOLUTIONS_FILE="$TARGET_DIR/solutions.html"
-          
-          echo "DEBUG: Processing solutions file: $SOLUTIONS_FILE"
-          
-          # Clean CSS content - remove ```css and ``` markers, keep only the actual CSS
-          sed -e '/^```css$/d' -e '/^```$/d' css_content.txt > css_cleaned.txt
-          
-          if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
-            echo "Creating new solutions file..."
-            
-            # Start with Version 1 comment
-            echo "<!-- Version 1 -->" > "$SOLUTIONS_FILE"
-            
-            # Process CSS content with version separation
-            version_num=1
-            while IFS= read -r line || [ -n "$line" ]; do
-              if [[ "$line" == "---VERSION---" ]]; then
-                # Close current version and start new one
-                echo "</style>" >> "$SOLUTIONS_FILE"
-                echo "" >> "$SOLUTIONS_FILE"
-                version_num=$((version_num + 1))
-                echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
+          counter=1
+          while IFS= read -r img_url; do
+            if [ -n "$img_url" ]; then
+              # Get file extension
+              ext=$(echo "$img_url" | grep -oE '\.(png|jpg|jpeg|gif|webp)' | head -1)
+              [ -z "$ext" ] && ext=".png"
+              
+              filename="target-${counter}-comparison${ext}"
+              filepath="$TARGET_DIR/$filename"
+              
+              echo "📥 Downloading: $filename"
+              
+              # Simple download with timeout
+              if curl -L -f -s --max-time 30 "$img_url" -o "$filepath" 2>/dev/null; then
+                if [ -s "$filepath" ]; then
+                  echo "✅ Downloaded: $filename ($(du -h "$filepath" | cut -f1))"
+                  counter=$((counter + 1))
+                else
+                  echo "❌ Downloaded file is empty: $filename"
+                  rm -f "$filepath"
+                fi
               else
-                echo "$line" >> "$SOLUTIONS_FILE"
+                echo "❌ Failed to download: $img_url"
               fi
-            done < css_cleaned.txt
-            
-            # Ensure file ends with </style>
-            if ! tail -n1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
-              echo "</style>" >> "$SOLUTIONS_FILE"
             fi
-            
-          else
-            echo "Updating existing solutions file..."
-            
-            if [ ! -f "$SOLUTIONS_FILE" ]; then
-              echo "ERROR: Solutions file not found: $SOLUTIONS_FILE"
-              echo "Available dates:"
-              ls daily-targets/ 2>/dev/null || echo "No existing solutions found"
-              exit 1
-            fi
-            
-            case "${{ steps.extract.outputs.update_type }}" in
-              "Add new CSS version(s)")
-                echo "Adding new CSS versions..."
-                # Find last version number
-                LAST_VERSION=$(grep -o "<!-- Version [0-9]\+ -->" "$SOLUTIONS_FILE" | grep -o "[0-9]\+" | sort -n | tail -1)
-                NEXT_VERSION=$((${LAST_VERSION:-0} + 1))
-                
-                echo "" >> "$SOLUTIONS_FILE"
-                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
-                
-                # Process CSS content with version separation
-                version_num=$NEXT_VERSION
-                while IFS= read -r line || [ -n "$line" ]; do
-                  if [[ "$line" == "---VERSION---" ]]; then
-                    # Close current version and start new one
-                    echo "</style>" >> "$SOLUTIONS_FILE"
-                    echo "" >> "$SOLUTIONS_FILE"
-                    version_num=$((version_num + 1))
-                    echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
-                  else
-                    echo "$line" >> "$SOLUTIONS_FILE"
-                  fi
-                done < css_cleaned.txt
-                
-                # Ensure file ends with </style>
-                if ! tail -n1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
-                  echo "</style>" >> "$SOLUTIONS_FILE"
-                fi
-                ;;
-                
-              "Replace existing CSS version(s)")
-                if [ -n "${{ steps.extract.outputs.version_number }}" ]; then
-                  echo "Note: Version replacement is complex - adding as new version instead..."
-                  LAST_VERSION=$(grep -o "<!-- Version [0-9]\+ -->" "$SOLUTIONS_FILE" | grep -o "[0-9]\+" | sort -n | tail -1)
-                  NEXT_VERSION=$((${LAST_VERSION:-0} + 1))
-                  
-                  echo "" >> "$SOLUTIONS_FILE"
-                  echo "<!-- Version $NEXT_VERSION (replacement for Version ${{ steps.extract.outputs.version_number }}) -->" >> "$SOLUTIONS_FILE"
-                  
-                  # Add cleaned CSS content
-                  cat css_cleaned.txt >> "$SOLUTIONS_FILE"
-                  
-                  if ! tail -n1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
-                    echo "</style>" >> "$SOLUTIONS_FILE"
-                  fi
-                else
-                  echo "ERROR: Version number required for replacement"
-                  exit 1
-                fi
-                ;;
-                
-              "Add new comparison image(s)")
-                echo "Images will be processed in next step..."
-                ;;
-                
-              "Add both CSS and images")
-                echo "Adding new CSS versions and images..."
-                LAST_VERSION=$(grep -o "<!-- Version [0-9]\+ -->" "$SOLUTIONS_FILE" | grep -o "[0-9]\+" | sort -n | tail -1)
-                NEXT_VERSION=$((${LAST_VERSION:-0} + 1))
-                
-                echo "" >> "$SOLUTIONS_FILE"
-                echo "<!-- Version $NEXT_VERSION -->" >> "$SOLUTIONS_FILE"
-                
-                # Process CSS content with version separation
-                version_num=$NEXT_VERSION
-                while IFS= read -r line || [ -n "$line" ]; do
-                  if [[ "$line" == "---VERSION---" ]]; then
-                    # Close current version and start new one
-                    echo "</style>" >> "$SOLUTIONS_FILE"
-                    echo "" >> "$SOLUTIONS_FILE"
-                    version_num=$((version_num + 1))
-                    echo "<!-- Version $version_num -->" >> "$SOLUTIONS_FILE"
-                  else
-                    echo "$line" >> "$SOLUTIONS_FILE"
-                  fi
-                done < css_cleaned.txt
-                
-                if ! tail -n1 "$SOLUTIONS_FILE" | grep -q "</style>"; then
-                  echo "</style>" >> "$SOLUTIONS_FILE"
-                fi
-                ;;
-                
-              *)
-                echo "ERROR: Unknown update type: ${{ steps.extract.outputs.update_type }}"
-                exit 1
-                ;;
-            esac
-          fi
+          done < image_urls.txt
           
-          echo "Solutions file processing complete"
-          echo "DEBUG: Final solutions file content:"
-          cat "$SOLUTIONS_FILE"
-          
-      - name: Download and process images
+          DOWNLOADED_COUNT=$((counter - 1))
+          echo "DOWNLOADED_COUNT=$DOWNLOADED_COUNT" >> $GITHUB_ENV
+          echo "✅ Downloaded $DOWNLOADED_COUNT of $IMAGE_COUNT images"
+
+      - name: 📱 Generate LinkedIn Post
         run: |
-          TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
-          ISSUE_NUM="${{ github.event.issue.number }}"
+          echo "📱 Generating LinkedIn post..."
           
-          echo "DEBUG: Processing images for issue #$ISSUE_NUM"
-          echo "DEBUG: Target directory: $TARGET_DIR"
+          # Extract additional notes
+          NOTES=$(sed -n '/### Additional Notes/,/### Confirmation/p' issue_body.txt | \
+                  sed '/### Additional Notes/d; /### Confirmation/,$d; /^[[:space:]]*$/d; /^- \[/d' | \
+                  head -3 | tr '\n' ' ' | xargs)
           
-          # Determine next available image number
-          if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
-            NEXT_NUM=1
-          else
-            # Find existing images and get next number
-            EXISTING_IMAGES=$(find "$TARGET_DIR" -name "target-*-comparison.*" 2>/dev/null | sort)
-            if [ -n "$EXISTING_IMAGES" ]; then
-              LAST_NUM=$(echo "$EXISTING_IMAGES" | sed 's/.*target-\([0-9]\+\)-comparison\..*/\1/' | sort -n | tail -1)
-              NEXT_NUM=$((LAST_NUM + 1))
-              echo "DEBUG: Found existing images, starting from number: $NEXT_NUM"
-            else
-              NEXT_NUM=1
-              echo "DEBUG: No existing images found, starting from: $NEXT_NUM"
-            fi
-          fi
+          # Use default if no notes found
+          [ -z "$NOTES" ] && NOTES="Another CSS challenge completed! 🎯"
           
-          # Get the full issue data including uploaded assets
-          echo "DEBUG: Fetching issue data..."
-          gh issue view "$ISSUE_NUM" --repo "${{ github.repository }}" --json body,url > issue_data.json
-          
-          # Extract the issue body
-          ISSUE_BODY=$(jq -r '.body' issue_data.json)
-          echo "DEBUG: Issue body extracted, length: ${#ISSUE_BODY}"
-          
-          # Save issue body for debugging
-          echo "$ISSUE_BODY" > issue_body_full.txt
-          echo "DEBUG: Full issue body saved to file"
-          
-          # Look for image URL patterns in issue body
-          echo "DEBUG: Searching for image URLs in issue body..."
-          
-          # Ensure we can create files in current directory
-          echo "DEBUG: Current directory: $(pwd)"
-          echo "DEBUG: Directory permissions: $(ls -la . | head -1)"
-          
-          # Clear any existing image URLs file and ensure it exists
-          echo "DEBUG: Creating image_urls.txt file..."
-          if ! touch image_urls.txt; then
-            echo "ERROR: Cannot create image_urls.txt file"
-            echo "DEBUG: Current working directory contents:"
-            ls -la
-            exit 1
-          fi
-          
-          # Truncate the file to ensure it's empty
-          > image_urls.txt
-          
-          # Use the already saved issue_body_full.txt instead of $ISSUE_BODY variable
-          # to avoid issues with special characters in bash echo
-          echo "DEBUG: Using saved issue body file for image extraction..."
-          
-          if [ -f issue_body_full.txt ]; then
-            echo "DEBUG: Found issue_body_full.txt, extracting image URLs..."
-            
-            # Pattern 1: GitHub user content URLs
-            echo "DEBUG: Looking for user-images URLs..."
-            grep -oE 'https://user-images\.githubusercontent\.com/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || echo "DEBUG: No user-images URLs found"
-            
-            # Pattern 2: GitHub assets URLs  
-            echo "DEBUG: Looking for GitHub assets URLs..."
-            grep -oE 'https://github\.com/[^/]+/[^/]+/assets/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || echo "DEBUG: No GitHub assets URLs found"
-            
-            # Pattern 3: Generic GitHub content URLs
-            echo "DEBUG: Looking for GitHub content URLs..."
-            grep -oE 'https://[^.]*\.githubusercontent\.com/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || echo "DEBUG: No GitHub content URLs found"
-            
-            # Pattern 4: Any https image URLs (broader catch)
-            echo "DEBUG: Looking for any HTTPS image URLs..."
-            grep -oE 'https://[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || echo "DEBUG: No HTTPS image URLs found"
-            
-            echo "DEBUG: Image URL extraction completed"
-          else
-            echo "DEBUG: No issue_body_full.txt found, trying issue_body.txt..."
-            # Fallback: try to extract from the original issue_body.txt
-            if [ -f issue_body.txt ]; then
-              echo "DEBUG: Using issue_body.txt for image extraction..."
-              grep -oE 'https://[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body.txt >> image_urls.txt 2>/dev/null || echo "DEBUG: No image URLs found in issue_body.txt"
-            else
-              echo "DEBUG: No issue body files found for image extraction"
-            fi
-          fi
-          
-          # Check what we found
-          echo "DEBUG: Raw image_urls.txt content:"
-          if [ -f image_urls.txt ]; then
-            cat image_urls.txt || echo "DEBUG: File exists but cannot read content"
-          else
-            echo "DEBUG: image_urls.txt file does not exist"
-          fi
-          
-          # Remove duplicates and empty lines
-          if [ -f image_urls.txt ] && [ -s image_urls.txt ]; then
-            echo "DEBUG: Processing found URLs..."
-            if sort image_urls.txt 2>/dev/null | uniq | grep -v '^ > image_urls_clean.txt 2>/dev/null; then
-              mv image_urls_clean.txt image_urls.txt
-              echo "DEBUG: Successfully cleaned URL list"
-            else
-              echo "DEBUG: Failed to clean URL list, keeping original"
-            fi
-          else
-            # Ensure the file exists even if empty
-            echo "DEBUG: No URLs found, ensuring empty file exists"
-            touch image_urls.txt
-          fi
-          
-          echo "DEBUG: Found image URLs from issue body:"
-          cat image_urls.txt
-          
-          # Count images found in issue body
-          ISSUE_IMAGE_COUNT=$(wc -l < image_urls.txt)
-          echo "DEBUG: Total unique image URLs found in issue: $ISSUE_IMAGE_COUNT"
-          
-          # Also check for any screenshot images that might be in the repository root
-          echo "DEBUG: Checking for screenshot images in repository root..."
-          
-          # Look for common screenshot file patterns in root directory
-          SCREENSHOT_PATTERNS=(
-            "screenshot*.png"
-            "screenshot*.jpg"
-            "screenshot*.jpeg"
-            "comparison*.png"
-            "comparison*.jpg"
-            "comparison*.jpeg"
-            "target*.png"
-            "target*.jpg"
-            "target*.jpeg"
-            "cssbattle*.png"
-            "cssbattle*.jpg"
-            "cssbattle*.jpeg"
-          )
-          
-          LOCAL_SCREENSHOTS=()
-          for pattern in "${SCREENSHOT_PATTERNS[@]}"; do
-            if ls $pattern 1> /dev/null 2>&1; then
-              for file in $pattern; do
-                if [ -f "$file" ]; then
-                  LOCAL_SCREENSHOTS+=("$file")
-                  echo "DEBUG: Found local screenshot: $file"
-                fi
-              done
-            fi
-          done
-          
-          echo "DEBUG: Found ${#LOCAL_SCREENSHOTS[@]} local screenshot files"
-          
-          # Process images from issue URLs
-          if [ -s image_urls.txt ] && [ "$ISSUE_IMAGE_COUNT" -gt 0 ]; then
-            echo "Found $ISSUE_IMAGE_COUNT image(s) to download from issue"
-            
-            while IFS= read -r img_url; do
-              if [ -n "$img_url" ]; then
-                echo "DEBUG: Processing URL: $img_url"
-                
-                # Extract file extension
-                ext=$(echo "$img_url" | grep -oE '\.(png|jpg|jpeg|gif|webp)' | head -1)
-                if [ -z "$ext" ]; then
-                  ext=".png"  # Default extension
-                  echo "DEBUG: No extension found, defaulting to .png"
-                fi
-                
-                filename="target-${NEXT_NUM}-comparison${ext}"
-                filepath="$TARGET_DIR/$filename"
-                
-                echo "Downloading: $img_url"
-                echo "         to: $filename"
-                
-                # Try multiple download methods
-                DOWNLOAD_SUCCESS=false
-                
-                # Method 1: With GitHub token (for private repos)
-                if curl -L -f -s \
-                        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                        -H "User-Agent: GitHub-Actions" \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        "$img_url" -o "$filepath" 2>/dev/null; then
-                  DOWNLOAD_SUCCESS=true
-                  echo "✅ Downloaded with GitHub token"
-                fi
-                
-                # Method 2: Without token (for public URLs)
-                if [ "$DOWNLOAD_SUCCESS" = false ]; then
-                  if curl -L -f -s \
-                          -H "User-Agent: Mozilla/5.0 (GitHub Actions)" \
-                          "$img_url" -o "$filepath" 2>/dev/null; then
-                    DOWNLOAD_SUCCESS=true
-                    echo "✅ Downloaded without token"
-                  fi
-                fi
-                
-                # Method 3: Using wget as fallback
-                if [ "$DOWNLOAD_SUCCESS" = false ]; then
-                  if wget -q --timeout=30 --tries=2 \
-                          --header="User-Agent: GitHub-Actions" \
-                          "$img_url" -O "$filepath" 2>/dev/null; then
-                    DOWNLOAD_SUCCESS=true
-                    echo "✅ Downloaded with wget"
-                  fi
-                fi
-                
-                # Verify download
-                if [ "$DOWNLOAD_SUCCESS" = true ] && [ -f "$filepath" ] && [ -s "$filepath" ]; then
-                  # Check if it's actually an image file
-                  file_type=$(file "$filepath" 2>/dev/null || echo "unknown")
-                  if echo "$file_type" | grep -qi "image\|png\|jpeg\|gif\|webp"; then
-                    echo "✅ Successfully downloaded and verified: $filename"
-                    echo "   File type: $file_type"
-                    echo "   File size: $(du -h "$filepath" | cut -f1)"
-                    NEXT_NUM=$((NEXT_NUM + 1))
-                  else
-                    echo "❌ Downloaded file is not an image: $filename"
-                    echo "   File type detected: $file_type"
-                    rm -f "$filepath"
-                  fi
-                else
-                  echo "❌ Failed to download: $img_url"
-                  [ -f "$filepath" ] && rm -f "$filepath"
-                fi
-                
-                echo "---"
-              fi
-            done < image_urls.txt
-          else
-            echo "No images found in issue body"
-          fi
-          
-          # Process local screenshot files
-          if [ ${#LOCAL_SCREENSHOTS[@]} -gt 0 ]; then
-            echo ""
-            echo "Processing ${#LOCAL_SCREENSHOTS[@]} local screenshot file(s)..."
-            
-            for screenshot in "${LOCAL_SCREENSHOTS[@]}"; do
-              if [ -f "$screenshot" ]; then
-                echo "DEBUG: Processing local screenshot: $screenshot"
-                
-                # Get file extension
-                ext=$(echo "$screenshot" | grep -oE '\.[^.]* | head -1)
-                if [ -z "$ext" ]; then
-                  ext=".png"
-                fi
-                
-                # Create target filename
-                target_filename="target-${NEXT_NUM}-comparison${ext}"
-                target_filepath="$TARGET_DIR/$target_filename"
-                
-                echo "Moving: $screenshot"
-                echo "     to: $target_filename"
-                
-                # Copy the file to target directory
-                if cp "$screenshot" "$target_filepath"; then
-                  # Verify it's actually an image
-                  file_type=$(file "$target_filepath" 2>/dev/null || echo "unknown")
-                  if echo "$file_type" | grep -qi "image\|png\|jpeg\|gif\|webp"; then
-                    echo "✅ Successfully moved and verified: $target_filename"
-                    echo "   File type: $file_type"
-                    echo "   File size: $(du -h "$target_filepath" | cut -f1)"
-                    
-                    # Remove the original file from root directory
-                    rm -f "$screenshot"
-                    echo "   ✅ Removed original file: $screenshot"
-                    
-                    NEXT_NUM=$((NEXT_NUM + 1))
-                  else
-                    echo "❌ File is not an image: $target_filename"
-                    echo "   File type detected: $file_type"
-                    rm -f "$target_filepath"
-                  fi
-                else
-                  echo "❌ Failed to move: $screenshot"
-                fi
-                
-                echo "---"
-              fi
-            done
-          else
-            echo "No local screenshot files found in repository root"
-          fi
-          
-          # Summary
-          FINAL_IMAGE_COUNT=$(find "$TARGET_DIR" -name "target-*-comparison.*" 2>/dev/null | wc -l)
-          echo ""
-          echo "📸 IMAGE PROCESSING SUMMARY:"
-          echo "  Images found in issue: $ISSUE_IMAGE_COUNT"
-          echo "  Local screenshots found: ${#LOCAL_SCREENSHOTS[@]}"
-          echo "  Images successfully processed: $FINAL_IMAGE_COUNT"
-          echo "  Images saved in: $TARGET_DIR"
-          
-          if [ "$FINAL_IMAGE_COUNT" -gt 0 ]; then
-            echo ""
-            echo "📋 Final image list:"
-            find "$TARGET_DIR" -name "target-*-comparison.*" | sort | while read -r img; do
-              size=$(du -h "$img" | cut -f1)
-              echo "    $(basename "$img") ($size)"
-            done
-          fi
-          
-          echo ""
-          echo "DEBUG: Checking repository root for remaining image files..."
-          REMAINING_IMAGES=$(find . -maxdepth 1 -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" 2>/dev/null | wc -l)
-          if [ "$REMAINING_IMAGES" -gt 0 ]; then
-            echo "⚠️  WARNING: $REMAINING_IMAGES image files still remain in root directory"
-            find . -maxdepth 1 -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" 2>/dev/null
-          else
-            echo "✅ No image files remaining in root directory"
-          fi
-          
-      - name: Generate LinkedIn post
-        run: |
-          TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
+          # Generate post
           LINKEDIN_FILE="$TARGET_DIR/linkedin-post.md"
+          SOLUTIONS_URL="https://github.com/${{ github.repository }}/blob/main/$TARGET_DIR/solutions.html"
           
-          echo "DEBUG: Extracting additional notes for LinkedIn post..."
-          
-          # Extract additional notes based on operation type
-          if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
-            echo "DEBUG: Looking for additional notes in CREATE operation..."
-            
-            # Method 1: Look for "Additional Notes" section in GitHub issue form
-            ADDITIONAL_NOTES=$(sed -n '/### Additional Notes/,/### Confirmation/p; /### Additional Notes/,/### /p' issue_body.txt | \
-                             sed '/### Additional Notes/d; /### Confirmation/,$d; /### /,$d; /^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d' | \
-                             head -3 | tr '\n' ' ')
-            
-            # Method 2: If not found, look for notes after CSS section
-            if [ -z "$ADDITIONAL_NOTES" ]; then
-              echo "DEBUG: Method 1 failed, trying Method 2..."
-              ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | \
-                               grep -A 10 -i "additional.*notes\|notes\|description" | \
-                               grep -v -i "additional.*notes\|notes\|description\|confirmation\|tested\|comparison" | \
-                               sed '/^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d; /^###/d' | \
-                               head -3 | tr '\n' ' ')
-            fi
-            
-            # Method 3: Look for content between specific sections
-            if [ -z "$ADDITIONAL_NOTES" ]; then
-              echo "DEBUG: Method 2 failed, trying Method 3..."
-              ADDITIONAL_NOTES=$(awk '/### Additional Notes/{flag=1; next} /### Confirmation|### /{flag=0} flag && !/^[[:space:]]*$/ && !/^- \[/ && !/^\[x\]/' issue_body.txt | \
-                               head -3 | tr '\n' ' ')
-            fi
-            
-          else
-            echo "DEBUG: Looking for update notes in UPDATE operation..."
-            ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | \
-                             grep -A 10 -i "update.*notes\|notes" | \
-                             grep -v -i "update.*notes\|notes\|confirmation\|tested\|comparison" | \
-                             sed '/^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d; /^###/d' | \
-                             head -3 | tr '\n' ' ')
-          fi
-          
-          # Clean up additional notes - remove empty content and unwanted elements
-          ADDITIONAL_NOTES=$(echo "$ADDITIONAL_NOTES" | \
-                           sed 's/\[x\]//g; s/\[ \]//g; s/- //g' | \
-                           sed 's/I have tested.*//g; s/comparison images.*//g; s/target vs.*//g' | \
-                           xargs)
-          
-          echo "DEBUG: Extracted additional notes: '$ADDITIONAL_NOTES'"
-          
-          # If no additional notes found, create a default description
-          if [ -z "$ADDITIONAL_NOTES" ]; then
-            echo "DEBUG: No additional notes found, using default..."
-            if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
-              ADDITIONAL_NOTES="Another CSS challenge completed! 🎯"
-            else
-              ADDITIONAL_NOTES="Updated my CSS solution with improvements! 🚀"
-            fi
-          fi
-          
-          echo "DEBUG: Final additional notes: '$ADDITIONAL_NOTES'"
-          
-          # Generate the repository URL for the solutions.html file
-          REPO_URL="https://github.com/${{ github.repository }}"
-          SOLUTIONS_URL="$REPO_URL/blob/main/daily-targets/${{ steps.date.outputs.formatted_date }}/solutions.html"
-          
-          # Create LinkedIn post with the exact format requested
-          cat > "$LINKEDIN_FILE" << 'LINKEDIN_EOF'
-          # LinkedIn Post for ${{ steps.date.outputs.formatted_date }}
+          cat > "$LINKEDIN_FILE" << LINKEDIN_EOF
+# LinkedIn Post for $FORMATTED_DATE
 
-          ---
+---
 
-          Today's CSSBattle solution:
+Today's CSSBattle solution:
 
-          $ADDITIONAL_NOTES
+$NOTES
 
-          $SOLUTIONS_URL
+$SOLUTIONS_URL
 
-          (My journal notes.)
+(My journal notes.)
 
-          #cssgang #CSS #CSSBattle #HTML
-          LINKEDIN_EOF
+#cssgang #CSS #CSSBattle #HTML
+LINKEDIN_EOF
           
-          echo "LinkedIn post generated successfully"
-          echo "DEBUG: LinkedIn post content:"
-          cat "$LINKEDIN_FILE"
-          
-      - name: Commit and push changes
+          echo "✅ LinkedIn post generated"
+
+      - name: 🔄 Commit and Push Changes
         run: |
-          # Debug Git configuration
-          echo "🔍 DEBUG: Git Configuration"
-          echo "Current directory: $(pwd)"
-          echo "Git status:"
-          git status || echo "Git status failed"
-          echo "Git remote:"
-          git remote -v || echo "Git remote failed"
-          echo "Current branch:"
-          git branch || echo "Git branch failed"
-          echo ""
+          echo "🔄 Committing changes..."
           
-          # Configure git with enhanced error handling
-          echo "Configuring Git user..."
-          GIT_EMAIL="${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
-          GIT_NAME="${GIT_USER_NAME:-${{ github.actor }}}"
+          # Configure Git
+          git config --local user.email "${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
+          git config --local user.name "${GIT_USER_NAME:-${{ github.actor }}}"
           
-          echo "Using Git email: $GIT_EMAIL"
-          echo "Using Git name: $GIT_NAME"
+          # Add files
+          git add .
           
-          git config --local user.email "$GIT_EMAIL" || {
-            echo "ERROR: Failed to set git user.email"
-            exit 1
-          }
-          
-          git config --local user.name "$GIT_NAME" || {
-            echo "ERROR: Failed to set git user.name"
-            exit 1
-          }
-          
-          # Verify git config
-          echo "Verifying git configuration:"
-          echo "user.email: $(git config user.email)"
-          echo "user.name: $(git config user.name)"
-          echo ""
-          
-          # Check if there are changes to commit
-          echo "Adding files to git..."
-          git add . || {
-            echo "ERROR: Failed to add files to git"
-            exit 1
-          }
-          
-          echo "Checking for staged changes..."
+          # Check for changes
           if git diff --staged --quiet; then
-            echo "No changes to commit"
-            echo "has_changes=false" >> $GITHUB_ENV
+            echo "ℹ️ No changes to commit"
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
           else
-            echo "Changes detected, proceeding with commit..."
+            # Commit
+            COMMIT_MSG="feat: CSS Battle solution for $FORMATTED_DATE"
+            git commit -m "$COMMIT_MSG"
             
-            # Show what will be committed
-            echo "Files to be committed:"
-            git diff --staged --name-only || echo "Could not list staged files"
-            echo ""
-            
-            # Pull latest changes to avoid conflicts
-            echo "Fetching latest changes..."
-            git fetch origin || {
-              echo "WARNING: Failed to fetch from origin, continuing..."
-            }
-            
-            # Check if we need to handle conflicts
-            echo "Checking for conflicts..."
-            if ! git rebase origin/main; then
-              echo "Rebase failed, trying merge strategy..."
-              git rebase --abort || echo "No rebase to abort"
-              
-              if ! git merge origin/main; then
-                echo "ERROR: Merge failed. Manual intervention may be required."
-                echo "Merge status:"
-                git status
-                exit 1
-              fi
-            fi
-            
-            # Commit changes
-            if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
-              COMMIT_MSG="feat: CSS Battle solution for ${{ steps.date.outputs.formatted_date }}"
-            else
-              COMMIT_MSG="update: CSS Battle solution for ${{ steps.date.outputs.formatted_date }}"
-            fi
-            
-            echo "Committing with message: $COMMIT_MSG"
-            git commit -m "$COMMIT_MSG" || {
-              echo "ERROR: Failed to commit changes"
-              echo "Git status after failed commit:"
-              git status
-              exit 1
-            }
-            
-            # Push with enhanced retry logic
-            echo "Pushing changes to origin/main..."
-            PUSH_SUCCESS=false
-            
+            # Push with retry
             for i in {1..3}; do
-              echo "Push attempt $i of 3..."
-              
               if git push origin main; then
-                echo "✅ Changes pushed successfully on attempt $i"
-                PUSH_SUCCESS=true
+                echo "✅ Changes pushed successfully"
+                echo "HAS_CHANGES=true" >> $GITHUB_ENV
                 break
               else
-                PUSH_EXIT_CODE=$?
-                echo "❌ Push attempt $i failed with exit code: $PUSH_EXIT_CODE"
-                
-                if [ $i -lt 3 ]; then
-                  echo "Pulling latest changes before retry..."
-                  git fetch origin || echo "Fetch failed"
-                  
-                  if ! git rebase origin/main; then
-                    echo "Rebase failed, trying merge..."
-                    git rebase --abort || echo "No rebase to abort"
-                    git merge origin/main || {
-                      echo "ERROR: Unable to resolve conflicts automatically"
-                      git status
-                      exit 1
-                    }
-                  fi
-                else
-                  echo "All push attempts failed"
-                fi
+                echo "❌ Push attempt $i failed"
+                [ $i -lt 3 ] && sleep 2
               fi
             done
-            
-            if [ "$PUSH_SUCCESS" = true ]; then
-              echo "has_changes=true" >> $GITHUB_ENV
-            else
-              echo "ERROR: Failed to push after 3 attempts"
-              echo "Final git status:"
-              git status
-              echo "Git log (last 3 commits):"
-              git log --oneline -3 || echo "Could not show git log"
-              exit 1
-            fi
           fi
-          
-      - name: Create success comment and close issue
-        if: env.has_changes != 'false'
-        run: |
-          TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
-          
-          # Count final results
-          VERSION_COUNT_IN_FILE=$(grep -c "<!-- Version" "$TARGET_DIR/solutions.html" 2>/dev/null || echo 1)
-          IMAGE_COUNT=$(find "$TARGET_DIR" -name "target-*-comparison.*" 2>/dev/null | wc -l)
-          
-          # Get processing summary from the image download step
-          IMAGES_FOUND=$(cat image_urls.txt 2>/dev/null | wc -l || echo 0)
-          
-          # Calculate character counts for each CSS version
-          echo "DEBUG: Calculating character counts..."
-          
-          # Split the cleaned CSS content by ---VERSION--- markers
-          cp css_cleaned.txt css_for_counting.txt
-          
-          # Create individual version files for counting
-          version_num=1
-          current_file="version_${version_num}.css"
-          > "$current_file"  # Create empty first version file
-          
-          while IFS= read -r line || [ -n "$line" ]; do
-            if [[ "$line" == "---VERSION---" ]]; then
-              # Start new version file
-              version_num=$((version_num + 1))
-              current_file="version_${version_num}.css"
-              > "$current_file"  # Create empty new version file
-            else
-              # Add line to current version file
-              echo "$line" >> "$current_file"
-            fi
-          done < css_for_counting.txt
-          
-          # Count characters for each version (excluding any </style> tags)
-          CHAR_COUNTS=""
-          for i in $(seq 1 $VERSION_COUNT_IN_FILE); do
-            version_file="version_${i}.css"
-            if [ -f "$version_file" ]; then
-              # Remove any </style> tags and count characters
-              char_count=$(sed 's|</style>||g' "$version_file" | tr -d '\n' | wc -c)
-              if [ $i -eq 1 ]; then
-                CHAR_COUNTS="Version $i: $char_count chars"
-              else
-                CHAR_COUNTS="$CHAR_COUNTS - Version $i: $char_count chars"
-              fi
-              echo "DEBUG: Version $i character count: $char_count"
-            fi
-          done
-          
-          # Create comprehensive success comment
-          cat > comment.txt << 'COMMENT_EOF'
-          # ✅ CSS Battle Solution Processed Successfully!
 
-          ## 📁 Location
-          COMMENT_EOF
+      - name: ✅ Create Success Comment
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          echo "✅ Creating success comment..."
           
-          echo "\`$TARGET_DIR/\`" >> comment.txt
-          echo "" >> comment.txt
-          echo "## 📊 Processing Summary" >> comment.txt
-          echo "- 🎯 **CSS Versions Created:** $VERSION_COUNT_IN_FILE" >> comment.txt
-          echo "- 🖼️ **Images Found in Issue:** $IMAGES_FOUND" >> comment.txt
-          echo "- 📥 **Images Successfully Downloaded:** $IMAGE_COUNT" >> comment.txt
-          echo "- 📅 **Target Date:** ${{ steps.date.outputs.formatted_date }}" >> comment.txt
-          echo "- 🔄 **Operation Type:** ${{ steps.operation.outputs.type }}" >> comment.txt
-          echo "" >> comment.txt
-          echo "## ⚡ Character Count" >> comment.txt
-          echo "$CHAR_COUNTS" >> comment.txt
-          echo "" >> comment.txt
-          echo "## 📄 Files Created/Updated" >> comment.txt
-          echo "" >> comment.txt
-          echo "### Solutions" >> comment.txt
-          echo "- ✅ \`solutions.html\` - Your CSS solution ($VERSION_COUNT_IN_FILE version(s))" >> comment.txt
-          echo "" >> comment.txt
-          echo "### Content" >> comment.txt
-          echo "- ✅ \`linkedin-post.md\` - Ready-to-post LinkedIn content" >> comment.txt
-          echo "" >> comment.txt
-          echo "### Images" >> comment.txt
+          # Calculate character count
+          CHAR_COUNT=$(sed 's|</style>||g' css_content.txt | tr -d '\n' | wc -c)
           
-          if [ "$IMAGE_COUNT" -gt 0 ]; then
-            echo "📸 **Downloaded Images:**" >> comment.txt
-            find "$TARGET_DIR" -name "target-*-comparison.*" | sort | while read -r img; do
-              # Get file size for each image
-              size=$(du -h "$img" 2>/dev/null | cut -f1 || echo "?")
-              echo "- ✅ \`$(basename "$img")\` (${size})" >> comment.txt
-            done
-          else
-            echo "- ℹ️ No images were uploaded or found" >> comment.txt
-            if [ "$IMAGES_FOUND" -gt 0 ]; then
-              echo "- ⚠️ Found $IMAGES_FOUND image URL(s) but download failed" >> comment.txt
-            fi
-          fi
-          
-          echo "" >> comment.txt
-          echo "## 🔗 Quick Links" >> comment.txt
-          echo "- 📱 **LinkedIn Post:** [\`linkedin-post.md\`](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/linkedin-post.md)" >> comment.txt
-          echo "- 💻 **CSS Solution:** [\`solutions.html\`](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/solutions.html)" >> comment.txt
-          echo "- 📁 **Full Directory:** [\`$TARGET_DIR/\`](${{ github.server_url }}/${{ github.repository }}/tree/main/$TARGET_DIR)" >> comment.txt
-          echo "" >> comment.txt
-          echo "## 🎉 Ready for Battle!" >> comment.txt
-          echo "Your solution is now organized and ready for sharing. Click the LinkedIn post link above to copy the content!" >> comment.txt
-          echo "" >> comment.txt
-          echo "---" >> comment.txt
-          echo "*✨ Processed by GitHub Actions on $(date)*" >> comment.txt
-          echo "*🔧 Workflow: [\`${{ github.workflow }}\`](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*" >> comment.txt
+          # Create comment
+          cat > comment.txt << COMMENT_EOF
+# ✅ CSS Battle Solution Processed Successfully!
+
+## 📁 Location
+\`$TARGET_DIR/\`
+
+## 📊 Summary
+- 🎯 **CSS Versions:** $CSS_VERSION_COUNT
+- 🖼️ **Images Found:** ${IMAGE_COUNT:-0}
+- 📥 **Images Downloaded:** ${DOWNLOADED_COUNT:-0}
+- ⚡ **Character Count:** $CHAR_COUNT chars
+- 📅 **Date:** $FORMATTED_DATE
+
+## 📄 Files Created
+- ✅ \`solutions.html\` - Your CSS solution
+- ✅ \`linkedin-post.md\` - Ready-to-post content
+
+## 🔗 Quick Links
+- 💻 **[View Solution](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/solutions.html)**
+- 📱 **[LinkedIn Post](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/linkedin-post.md)**
+- 📁 **[Full Directory](${{ github.server_url }}/${{ github.repository }}/tree/main/$TARGET_DIR)**
+
+## 🎉 Ready for Battle!
+Your solution is organized and ready for sharing!
+
+---
+*✨ Processed by GitHub Actions*
+COMMENT_EOF
           
           # Post comment and close issue
-          gh issue comment "${{ github.event.issue.number }}" \
-            --repo "${{ github.repository }}" \
-            --body-file comment.txt
+          gh issue comment "${{ github.event.issue.number }}" --body-file comment.txt
+          gh issue close "${{ github.event.issue.number }}" --reason completed
           
-          gh issue close "${{ github.event.issue.number }}" \
-            --repo "${{ github.repository }}" \
-            --reason completed
+          echo "✅ Issue processed and closed"
 
-      - name: Cleanup temporary files
+      - name: 🧹 Cleanup
         if: always()
         run: |
           echo "🧹 Cleaning up temporary files..."
           
-          # List all temporary files that may be created during the workflow
-          TEMP_FILES=(
-            "issue_body.txt"
-            "css_content.txt"
-            "css_content_raw.txt"
-            "css_cleaned.txt"
-            "css_for_counting.txt"
-            "image_urls.txt"
-            "image_urls_clean.txt"
-            "formatted_date_backup.txt"
-            "issue_data.json"
-            "issue_body_full.txt"
-            "comment.txt"
-            "date_output.txt"
-            "temp_solutions.html"
-          )
+          # Remove temporary files
+          rm -f issue_body.txt css_raw.txt css_content.txt image_urls.txt comment.txt
           
-          echo "Files in root directory before cleanup:"
-          ls -la
-          echo ""
-          
-          # Remove each temporary file if it exists
-          echo "Removing temporary files..."
-          for file in "${TEMP_FILES[@]}"; do
-            if [ -f "$file" ]; then
-              echo "  ✅ Removing: $file"
-              rm -f "$file"
-            else
-              echo "  ➖ Not found: $file"
-            fi
-          done
-          
-          # Remove version-specific character counting files
-          echo "Removing version counting files..."
-          if ls version_*.css 1> /dev/null 2>&1; then
-            for file in version_*.css; do
-              echo "  ✅ Removing: $file"
-              rm -f "$file"
-            done
-          else
-            echo "  ➖ No version_*.css files found"
-          fi
-          
-          # Double-check for any other temporary files with common patterns
-          echo "Removing other temporary files..."
-          TEMP_PATTERNS_FOUND=false
-          
-          if ls *.tmp 1> /dev/null 2>&1; then
-            echo "  ✅ Removing *.tmp files:"
-            ls *.tmp
-            rm -f *.tmp
-            TEMP_PATTERNS_FOUND=true
-          fi
-          
-          if ls temp_* 1> /dev/null 2>&1; then
-            echo "  ✅ Removing temp_* files:"
-            ls temp_*
-            rm -f temp_*
-            TEMP_PATTERNS_FOUND=true
-          fi
-          
-          if [ "$TEMP_PATTERNS_FOUND" = false ]; then
-            echo "  ➖ No additional temporary files found"
-          fi
-          
-          echo ""
-          echo "✅ Cleanup completed - repository is clean"
-          
-          # Verify cleanup
-          echo "Files in root directory after cleanup:"
-          ls -la
-          echo ""
-          
-          # Final verification - check for any remaining temporary files
-          echo "🔍 Final verification - checking for missed temporary files:"
-          MISSED_FILES=$(find . -maxdepth 1 -name "*.txt" -o -name "*.json" -o -name "*.css" | grep -E "(issue_|css_|image_|temp_|version_)" || true)
-          
-          if [ -n "$MISSED_FILES" ]; then
-            echo "⚠️  WARNING: Some temporary files may have been missed:"
-            echo "$MISSED_FILES"
-          else
-            echo "✅ No missed temporary files detected"
-          fi
+          echo "✅ Cleanup completed"
