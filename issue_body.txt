@@ -1,0 +1,23 @@
+### Date
+
+Jun 9, 2025
+
+### CSS Solution(s)
+
+```css
+<p><a><style>*{background:#4F55A2;*{border-radius:33q;background:#DCC6A8;margin:150 105 55}p,a{a{margin:-50 165}position:fixed;padding:40 15;margin:-75-25;border:11q solid#4F55A2
+```
+
+### Comparison Images
+
+<img width="860" alt="Image" src="https://github.com/user-attachments/assets/c28fde16-fef0-49ff-a9a4-01eb24a65344" />
+
+### Additional Notes (Optional)
+
+Top down view of over-the-rails balcony table. (Best I can do at the moment.)
+
+### Confirmation
+
+- [x] I have tested my CSS solution and it renders correctly
+- [x] My CSS code blocks are properly formatted with opening and closing backticks
+- [x] The comparison images (if any) clearly show the target vs my result
