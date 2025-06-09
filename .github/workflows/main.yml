@@ -65,7 +65,7 @@ jobs:
         id: extract
         run: |
           # Save issue body to file for processing
-          cat > issue_body.txt << 'EOF'
+          cat > issue_body.txt << EOF
           ${{ github.event.issue.body }}
           EOF
           
