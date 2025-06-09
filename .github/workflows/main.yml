@@ -1012,10 +1012,6 @@ jobs:
             echo "$MISSED_FILES"
           else
             echo "✅ No missed temporary files detected"
-          fi > image_urls_clean.txt || touch image_urls_clean.txt
-            mv image_urls_clean.txt image_urls.txt
-          else
-            touch image_urls.txt
           fi
           
           echo "DEBUG: Found image URLs from issue body:"
