@@ -217,7 +217,10 @@ jobs:
           mkdir -p "$TARGET_DIR"
           
           echo "TARGET_DIR=$TARGET_DIR" >> $GITHUB_ENV
-          echo "✅ Created directory: $TARGET_DIR"
+          echo "✅ Create# Verify directory exists
+
+          ls -la "daily-targets/" || echo "daily-targets directory not found"
+          ls -la "$TARGET_DIR" || echo "Target directory empty"d directory: $TARGET_DIR"
 
       - name: 📝 Generate Solutions File
         run: |
