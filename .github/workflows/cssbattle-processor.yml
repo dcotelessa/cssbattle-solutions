@@ -213,14 +213,27 @@ jobs:
         run: |
           echo "📁 Creating directory structure..."
           
+          if [ -z "$FORMATTED_DATE" ]; then
+            echo "❌ ERROR: FORMATTED_DATE not set!"
+            echo "Available environment variables:"
+            env | grep -E "(FORMATTED_DATE|CSS_VERSION_COUNT|IMAGE_COUNT)" || echo "None found"
+            exit 1
+          fi
+          
           TARGET_DIR="daily-targets/$FORMATTED_DATE"
           mkdir -p "$TARGET_DIR"
           
+          if [ ! -d "$TARGET_DIR" ]; then
+            echo "❌ ERROR: Failed to create directory: $TARGET_DIR"
+            exit 1
+          fi
+          
           echo "TARGET_DIR=$TARGET_DIR" >> $GITHUB_ENV
-          echo "✅ Create# Verify directory exists
-
+          echo "✅ Created directory: $TARGET_DIR"
+          
+          # Verify directory exists
           ls -la "daily-targets/" || echo "daily-targets directory not found"
-          ls -la "$TARGET_DIR" || echo "Target directory empty"d directory: $TARGET_DIR"
+          ls -la "$TARGET_DIR" || echo "Target directory empty"
 
       - name: 📝 Generate Solutions File
         run: |
@@ -336,14 +349,27 @@ LINKEDIN_EOF
           git config --local user.email "${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
           git config --local user.name "${GIT_USER_NAME:-${{ github.actor }}}"
           
+          # Show what files exist
+          echo "📋 Files in repository:"
+          find . -name "*.html" -o -name "*.md" | grep daily-targets || echo "No daily-targets files found"
+          
           # Add files
           git add .
+          
+          # Show what's staged
+          echo "📋 Files staged for commit:"
+          git diff --staged --name-only || echo "No files staged"
           
           # Check for changes
           if git diff --staged --quiet; then
             echo "ℹ️ No changes to commit"
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           else
+            echo "📝 Changes detected, proceeding with commit..."
+            
+            # Show what will be committed
+            git diff --staged --stat
+            
             # Commit
             COMMIT_MSG="feat: CSS Battle solution for $FORMATTED_DATE"
             git commit -m "$COMMIT_MSG"
@@ -359,6 +385,11 @@ LINKEDIN_EOF
                 [ $i -lt 3 ] && sleep 2
               fi
             done
+            
+            if [ "$i" = "3" ] && ! git push origin main; then
+              echo "❌ All push attempts failed"
+              echo "HAS_CHANGES=false" >> $GITHUB_ENV
+            fi
           fi
 
       - name: ✅ Create Success Comment
@@ -414,3 +445,4 @@ COMMENT_EOF
           rm -f issue_body.txt css_raw.txt css_content.txt image_urls.txt comment.txt
           
           echo "✅ Cleanup completed"
+
