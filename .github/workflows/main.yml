@@ -233,104 +233,102 @@ jobs:
           echo "--- ISSUE BODY END ---"
           echo ""
           
-          # Method 1: Look for CSS content in code blocks (```css ... ```)
-          echo "DEBUG: Method 1 - Looking for CSS in code blocks..."
+          # Simple and robust CSS extraction
+          echo "DEBUG: Starting CSS extraction..."
           
-          # Handle potentially malformed CSS blocks more robustly
-          if grep -n "```css" issue_body.txt > /dev/null; then
-            echo "DEBUG: Found CSS block start marker"
+          # Initialize empty CSS file
+          > css_content_raw.txt
+          
+          # Method 1: Extract everything between ### CSS Solution(s) and next ### section
+          echo "DEBUG: Method 1 - Extract from CSS Solution section..."
+          
+          # Find start and end line numbers
+          CSS_START=$(grep -n "### CSS Solution" issue_body.txt | head -1 | cut -d: -f1)
+          
+          if [ -n "$CSS_START" ]; then
+            echo "DEBUG: Found CSS section starting at line: $CSS_START"
             
-            # Extract from ```css to either ``` or next ### section
-            START_LINE=$(grep -n "```css" issue_body.txt | head -1 | cut -d: -f1)
-            echo "DEBUG: CSS block starts at line: $START_LINE"
+            # Find the next ### section after CSS Solution
+            CSS_END=$(tail -n +$((CSS_START + 1)) issue_body.txt | grep -n "^### " | head -1 | cut -d: -f1)
             
-            # Look for closing ``` after the CSS start
-            CLOSE_LINE=$(tail -n +$((START_LINE + 1)) issue_body.txt | grep -n "```" | head -1 | cut -d: -f1)
-            
-            if [ -n "$CLOSE_LINE" ]; then
-              # Found proper closing ```
-              ACTUAL_CLOSE=$((START_LINE + CLOSE_LINE))
-              echo "DEBUG: Found closing ``` at line: $ACTUAL_CLOSE"
-              sed -n "${START_LINE},${ACTUAL_CLOSE}p" issue_body.txt | sed '1d;$d' > css_content_raw.txt
-            else
-              # No closing ```, extract until next ### section or end of CSS-like content
-              echo "DEBUG: No closing ``` found, extracting until next section"
-              NEXT_SECTION=$(tail -n +$((START_LINE + 1)) issue_body.txt | grep -n "^###" | head -1 | cut -d: -f1)
+            if [ -n "$CSS_END" ]; then
+              # Calculate actual end line
+              ACTUAL_END=$((CSS_START + CSS_END - 1))
+              echo "DEBUG: CSS section ends at line: $ACTUAL_END"
               
-              if [ -n "$NEXT_SECTION" ]; then
-                ACTUAL_END=$((START_LINE + NEXT_SECTION - 1))
-                echo "DEBUG: Extracting until next section at line: $ACTUAL_END"
-                sed -n "$((START_LINE + 1)),${ACTUAL_END}p" issue_body.txt > css_content_raw.txt
-              else
-                # Extract from CSS start to end of file
-                echo "DEBUG: Extracting from CSS start to end of file"
-                tail -n +$((START_LINE + 1)) issue_body.txt > css_content_raw.txt
-              fi
+              # Extract the CSS section content
+              sed -n "$((CSS_START + 1)),$((ACTUAL_END - 1))p" issue_body.txt > css_section_content.txt
+            else
+              echo "DEBUG: No section found after CSS, extracting to end of file"
+              tail -n +$((CSS_START + 1)) issue_body.txt > css_section_content.txt
             fi
             
-            # Clean up any trailing sections that got included
-            if [ -s css_content_raw.txt ]; then
-              # Remove any lines that start with ### (section headers)
-              sed -i '/^###/,$d' css_content_raw.txt
-              
-              # Check if we have content after cleaning
-              if [ -s css_content_raw.txt ]; then
-                echo "DEBUG: Found CSS in code blocks"
-                
-                # Check if the content looks like valid CSS (not mixed with form elements)
-                if grep -q "Confirmation\|checkbox\|\[x\]\|\[ \]" css_content_raw.txt; then
-                  echo "DEBUG: CSS block contains form elements, needs cleaning..."
-                  # Extract only the actual CSS part, stop at form elements
-                  sed '/### Comparison Images/,$d; /### Additional Notes/,$d; /### Confirmation/,$d; /- \[/,$d' css_content_raw.txt > css_content_cleaned.txt
-                  if [ -s css_content_cleaned.txt ]; then
-                    mv css_content_cleaned.txt css_content_raw.txt
-                    echo "DEBUG: Cleaned CSS content of form elements"
-                  fi
-                fi
-              else
-                echo "DEBUG: CSS block empty after cleaning"
-                rm -f css_content_raw.txt
+            # Now extract actual CSS content from the section
+            echo "DEBUG: Processing CSS section content..."
+            
+            # Remove empty lines and section headers
+            sed '/^[[:space:]]*$/d; /^### /d' css_section_content.txt > css_filtered.txt
+            
+            # Extract CSS code - look for lines that contain CSS-like content
+            while IFS= read -r line || [ -n "$line" ]; do
+              # Skip lines that are clearly not CSS
+              if echo "$line" | grep -qE "^(```css|```|description|placeholder|render:|Paste your|Single Version|Multiple Version|\*\*|Drag and drop)"; then
+                continue
               fi
+              
+              # Skip checkbox lines
+              if echo "$line" | grep -qE "^- \["; then
+                continue
+              fi
+              
+              # Keep CSS content and VERSION separators
+              if echo "$line" | grep -qE "(---VERSION---|<style>|</style>|background|width|height|margin|padding|color|border|font|display|position|{|}|;)" || \
+                 echo "$line" | grep -qE "^[[:space:]]*[a-zA-Z#.*]"; then
+                echo "$line" >> css_content_raw.txt
+              fi
+              
+            done < css_filtered.txt
+            
+            # Clean up temporary files
+            rm -f css_section_content.txt css_filtered.txt
+            
+          else
+            echo "DEBUG: No CSS Solution section found"
+          fi
+          
+          # Method 2: Fallback - look for any <style> tags in the entire issue
+          if [ ! -s css_content_raw.txt ]; then
+            echo "DEBUG: Method 2 - Looking for <style> tags anywhere in issue..."
+            
+            # Extract lines containing <style> or CSS properties
+            grep -E "(<style>|</style>|background|width.*:|height.*:|margin.*:|padding.*:|color.*:|border.*:)" issue_body.txt > css_content_raw.txt || true
+            
+            if [ -s css_content_raw.txt ]; then
+              echo "DEBUG: Found CSS content using <style> tag search"
             fi
           fi
           
-          # Check if Method 1 succeeded
-          if [ -s css_content_raw.txt ]; then
-            echo "DEBUG: Method 1 successful"
-          # Check if Method 1 succeeded
-          if [ -s css_content_raw.txt ]; then
-            echo "DEBUG: Method 1 successful"
-          # Method 2: Look for CSS in GitHub issue form structure
-          elif echo "DEBUG: Method 2 - Looking for CSS in issue form structure..." && \
-               sed -n '/### CSS Solution/,/### Comparison Images/p; /### CSS Solution/,/### Additional Notes/p; /### CSS Solution/,/### Confirmation/p' issue_body.txt | \
-               sed '/### Comparison Images/,$d; /### Additional Notes/,$d; /### Confirmation/,$d; /^### /d' > css_content_raw.txt && [ -s css_content_raw.txt ]; then
-            echo "DEBUG: Found CSS in issue form structure"
+          # Method 3: Last resort - extract anything that looks like CSS
+          if [ ! -s css_content_raw.txt ]; then
+            echo "DEBUG: Method 3 - Last resort CSS extraction..."
             
-            # Clean up any remaining form elements or markdown
-            sed -e '/^```css$/d' -e '/^```$/d' -e '/^- \[/d' -e '/^\[x\]/d' -e '/Confirmation/d' css_content_raw.txt > css_content_temp.txt
-            mv css_content_temp.txt css_content_raw.txt
+            # Look for common CSS patterns
+            grep -E "(background:#|width:[0-9]|height:[0-9]|margin:[0-9]|{|};)" issue_body.txt > css_content_raw.txt || true
             
-          # Method 3: Look for CSS content in HTML style blocks
-          elif echo "DEBUG: Method 3 - Looking for CSS with <style> tags..." && \
-               grep -A 50 -B 5 "<style>" issue_body.txt | sed '/^--$/d' > css_content_raw.txt && [ -s css_content_raw.txt ]; then
-            echo "DEBUG: Found CSS with <style> tags"
-            
-          # Method 4: Look for any CSS-like content (fallback)
-          elif echo "DEBUG: Method 4 - Looking for CSS-like content..." && \
-               grep -A 20 -i "css\|style" issue_body.txt | grep -E "(background|width|height|margin|padding|color)" > css_content_raw.txt && [ -s css_content_raw.txt ]; then
-            echo "DEBUG: Found CSS-like content"
-            
-          else
+            if [ -s css_content_raw.txt ]; then
+              echo "DEBUG: Found CSS content using pattern matching"
+            fi
+          fi
+          
+          # Final validation
+          if [ ! -s css_content_raw.txt ]; then
             echo "ERROR: No CSS content found in issue"
-            echo "DEBUG: Issue body structure for troubleshooting:"
-            echo "--- SECTIONS FOUND ---"
+            echo "DEBUG: Issue sections found:"
             grep "^###" issue_body.txt || echo "No sections found"
-            echo "--- CSS SEARCH RESULTS ---"
-            echo "Looking for CSS blocks:"
-            grep -n "```css" issue_body.txt || echo "No CSS blocks found"
-            echo "Looking for CSS Solutions section:"
-            grep -n -A 5 -i "css.*solution" issue_body.txt || echo "No CSS Solutions section found"
-            echo "Expected: CSS code in \`\`\`css blocks or under ### CSS Solution(s) section"
+            echo ""
+            echo "Please ensure your issue contains:"
+            echo "1. A '### CSS Solution(s)' section"
+            echo "2. CSS code with <style> tags or CSS properties"
             exit 1
           fi
           
