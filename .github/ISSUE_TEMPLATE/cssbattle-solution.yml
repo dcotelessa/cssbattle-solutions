@@ -9,8 +9,8 @@ body:
     id: date
     attributes:
       label: Date
-      description: Enter the date in any format (e.g., "Jan 15, 2025", "January 15, 2025", or "1/15/2025")
-      placeholder: "Jan 15, 2025"
+      description: Enter the date in any format (e.g., "Jun 9, 2025", "January 15, 2025", or "1/15/2025")
+      placeholder: "Jun 9, 2025"
     validations:
       required: true
       
@@ -19,33 +19,44 @@ body:
     attributes:
       label: CSS Solution(s)
       description: |
-        Paste your CSS code here. If you have multiple versions/attempts, separate them with a line containing only "---VERSION---"
+        Paste your CSS code here. **Important:** Make sure your code block is properly closed with three backticks.
+        
+        If you have multiple versions/attempts, separate them with a line containing only "---VERSION---"
         
         **Single Version Example:**
         ```css
         <style>
-        body { background: #6592CF; }
+        body { background: #6592CF; margin: 0; }
+        div { width: 100px; height: 100px; background: #243D83; margin: 50px auto; }
+        </style>
         ```
         
         **Multiple Versions Example:**
         ```css
         <style>
-        body { background: #6592CF; }
+        body { background: #6592CF; margin: 0; }
         /* Version 1 - Basic approach */
+        </style>
         ```
         ---VERSION---
         ```css
         <style>
-        body { background: #6592CF; }
+        body { background: #6592CF; margin: 0; }
         /* Version 2 - Optimized approach */
+        </style>
         ```
       placeholder: |
-        <style>body{background: #6592CF;margin:0}div{
+        ```css
+        <style>
+        body { background: #6592CF; margin: 0; }
+        div {
           width: 100px;
           height: 100px;
           background: #243D83;
           margin: 50px auto;
         }
+        </style>
+        ```
       render: css
     validations:
       required: true
@@ -58,8 +69,9 @@ body:
         Drag and drop your comparison images here. 
         They will be automatically saved as target-1-comparison.png, target-2-comparison.png, etc.
         
-        **Supported formats:** PNG, JPG, JPEG, GIF
-      placeholder: "Drag your images here..."
+        **Supported formats:** PNG, JPG, JPEG, GIF, WebP
+        **Tip:** Upload images showing both the target and your result side by side for easy comparison
+      placeholder: "Drag your images here or paste image URLs..."
     validations:
       required: false
       
@@ -67,8 +79,10 @@ body:
     id: notes
     attributes:
       label: Additional Notes (Optional)
-      description: Any additional notes about your solution
-      placeholder: "This solution uses flexbox to center the element..."
+      description: |
+        Any additional notes about your solution, approach, or challenges faced.
+        This will be included in your LinkedIn post if provided.
+      placeholder: "This solution uses flexbox to center the element. Had to use some creative positioning tricks..."
     validations:
       required: false
       
@@ -76,9 +90,11 @@ body:
     id: confirmation
     attributes:
       label: Confirmation
-      description: Please confirm the following
+      description: Please confirm the following before submitting
       options:
-        - label: I have tested my CSS solution
+        - label: I have tested my CSS solution and it renders correctly
           required: true
-        - label: The comparison images show the target vs my result
+        - label: My CSS code blocks are properly formatted with opening and closing backticks
+          required: true
+        - label: The comparison images (if any) clearly show the target vs my result
           required: false

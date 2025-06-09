@@ -235,20 +235,71 @@ jobs:
           
           # Method 1: Look for CSS content in code blocks (```css ... ```)
           echo "DEBUG: Method 1 - Looking for CSS in code blocks..."
-          if sed -n '/```css/,/```/p' issue_body.txt | sed '1d;$d' > css_content_raw.txt && [ -s css_content_raw.txt ]; then
-            echo "DEBUG: Found CSS in code blocks"
+          
+          # Handle potentially malformed CSS blocks more robustly
+          if grep -n "```css" issue_body.txt > /dev/null; then
+            echo "DEBUG: Found CSS block start marker"
             
-            # Check if the content looks like valid CSS (not mixed with form elements)
-            if grep -q "Confirmation\|checkbox\|\[x\]\|\[ \]" css_content_raw.txt; then
-              echo "DEBUG: CSS block contains form elements, needs cleaning..."
-              # Extract only the actual CSS part, stop at form elements
-              sed '/### Comparison Images/,$d; /### Additional Notes/,$d; /### Confirmation/,$d; /- \[/,$d' css_content_raw.txt > css_content_cleaned.txt
-              if [ -s css_content_cleaned.txt ]; then
-                mv css_content_cleaned.txt css_content_raw.txt
-                echo "DEBUG: Cleaned CSS content of form elements"
+            # Extract from ```css to either ``` or next ### section
+            START_LINE=$(grep -n "```css" issue_body.txt | head -1 | cut -d: -f1)
+            echo "DEBUG: CSS block starts at line: $START_LINE"
+            
+            # Look for closing ``` after the CSS start
+            CLOSE_LINE=$(tail -n +$((START_LINE + 1)) issue_body.txt | grep -n "```" | head -1 | cut -d: -f1)
+            
+            if [ -n "$CLOSE_LINE" ]; then
+              # Found proper closing ```
+              ACTUAL_CLOSE=$((START_LINE + CLOSE_LINE))
+              echo "DEBUG: Found closing ``` at line: $ACTUAL_CLOSE"
+              sed -n "${START_LINE},${ACTUAL_CLOSE}p" issue_body.txt | sed '1d;$d' > css_content_raw.txt
+            else
+              # No closing ```, extract until next ### section or end of CSS-like content
+              echo "DEBUG: No closing ``` found, extracting until next section"
+              NEXT_SECTION=$(tail -n +$((START_LINE + 1)) issue_body.txt | grep -n "^###" | head -1 | cut -d: -f1)
+              
+              if [ -n "$NEXT_SECTION" ]; then
+                ACTUAL_END=$((START_LINE + NEXT_SECTION - 1))
+                echo "DEBUG: Extracting until next section at line: $ACTUAL_END"
+                sed -n "$((START_LINE + 1)),${ACTUAL_END}p" issue_body.txt > css_content_raw.txt
+              else
+                # Extract from CSS start to end of file
+                echo "DEBUG: Extracting from CSS start to end of file"
+                tail -n +$((START_LINE + 1)) issue_body.txt > css_content_raw.txt
               fi
             fi
             
+            # Clean up any trailing sections that got included
+            if [ -s css_content_raw.txt ]; then
+              # Remove any lines that start with ### (section headers)
+              sed -i '/^###/,$d' css_content_raw.txt
+              
+              # Check if we have content after cleaning
+              if [ -s css_content_raw.txt ]; then
+                echo "DEBUG: Found CSS in code blocks"
+                
+                # Check if the content looks like valid CSS (not mixed with form elements)
+                if grep -q "Confirmation\|checkbox\|\[x\]\|\[ \]" css_content_raw.txt; then
+                  echo "DEBUG: CSS block contains form elements, needs cleaning..."
+                  # Extract only the actual CSS part, stop at form elements
+                  sed '/### Comparison Images/,$d; /### Additional Notes/,$d; /### Confirmation/,$d; /- \[/,$d' css_content_raw.txt > css_content_cleaned.txt
+                  if [ -s css_content_cleaned.txt ]; then
+                    mv css_content_cleaned.txt css_content_raw.txt
+                    echo "DEBUG: Cleaned CSS content of form elements"
+                  fi
+                fi
+              else
+                echo "DEBUG: CSS block empty after cleaning"
+                rm -f css_content_raw.txt
+              fi
+            fi
+          fi
+          
+          # Check if Method 1 succeeded
+          if [ -s css_content_raw.txt ]; then
+            echo "DEBUG: Method 1 successful"
+          # Check if Method 1 succeeded
+          if [ -s css_content_raw.txt ]; then
+            echo "DEBUG: Method 1 successful"
           # Method 2: Look for CSS in GitHub issue form structure
           elif echo "DEBUG: Method 2 - Looking for CSS in issue form structure..." && \
                sed -n '/### CSS Solution/,/### Comparison Images/p; /### CSS Solution/,/### Additional Notes/p; /### CSS Solution/,/### Confirmation/p' issue_body.txt | \
