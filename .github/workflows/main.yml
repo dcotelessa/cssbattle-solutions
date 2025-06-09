@@ -618,22 +618,670 @@ jobs:
           # Clear any existing image URLs file
           > image_urls.txt
           
-          # Pattern 1: GitHub user content URLs
-          echo "$ISSUE_BODY" | grep -oE 'https://user-images\.githubusercontent\.com/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' >> image_urls.txt || true
+          # Use the already saved issue_body_full.txt instead of $ISSUE_BODY variable
+          # to avoid issues with special characters in bash echo
+          echo "DEBUG: Using saved issue body file for image extraction..."
           
-          # Pattern 2: GitHub assets URLs  
-          echo "$ISSUE_BODY" | grep -oE 'https://github\.com/[^/]+/[^/]+/assets/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' >> image_urls.txt || true
-          
-          # Pattern 3: Generic GitHub content URLs
-          echo "$ISSUE_BODY" | grep -oE 'https://[^.]*\.githubusercontent\.com/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' >> image_urls.txt || true
-          
-          # Pattern 4: Any https image URLs (broader catch)
-          echo "$ISSUE_BODY" | grep -oE 'https://[^)"\s]+\.(png|jpg|jpeg|gif|webp)' >> image_urls.txt || true
+          if [ -f issue_body_full.txt ]; then
+            # Pattern 1: GitHub user content URLs
+            grep -oE 'https://user-images\.githubusercontent\.com/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || true
+            
+            # Pattern 2: GitHub assets URLs  
+            grep -oE 'https://github\.com/[^/]+/[^/]+/assets/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || true
+            
+            # Pattern 3: Generic GitHub content URLs
+            grep -oE 'https://[^.]*\.githubusercontent\.com/[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || true
+            
+            # Pattern 4: Any https image URLs (broader catch)
+            grep -oE 'https://[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body_full.txt >> image_urls.txt 2>/dev/null || true
+            
+            echo "DEBUG: Image URL extraction completed"
+          else
+            echo "DEBUG: No issue body file found, trying direct extraction..."
+            # Fallback: try to extract from the original issue_body.txt
+            if [ -f issue_body.txt ]; then
+              grep -oE 'https://[^)"\s]+\.(png|jpg|jpeg|gif|webp)' issue_body.txt >> image_urls.txt 2>/dev/null || true
+            fi
+          fi
           
           # Remove duplicates and empty lines
-          if [ -f image_urls.txt ]; then
-            sort image_urls.txt | uniq | grep -v '^$' > image_urls_clean.txt
-            mv image_urls_clean.txt image_urls.txt
+          if [ -f image_urls.txt ] && [ -s image_urls.txt ]; then
+            sort image_urls.txt | uniq | grep -v '^
+          
+          echo "DEBUG: Found image URLs from issue body:"
+          cat image_urls.txt
+          
+          # Count images found in issue body
+          ISSUE_IMAGE_COUNT=$(wc -l < image_urls.txt)
+          echo "DEBUG: Total unique image URLs found in issue: $ISSUE_IMAGE_COUNT"
+          
+          # Also check for any screenshot images that might be in the repository root
+          echo "DEBUG: Checking for screenshot images in repository root..."
+          
+          # Look for common screenshot file patterns in root directory
+          SCREENSHOT_PATTERNS=(
+            "screenshot*.png"
+            "screenshot*.jpg"
+            "screenshot*.jpeg"
+            "comparison*.png"
+            "comparison*.jpg"
+            "comparison*.jpeg"
+            "target*.png"
+            "target*.jpg"
+            "target*.jpeg"
+            "cssbattle*.png"
+            "cssbattle*.jpg"
+            "cssbattle*.jpeg"
+          )
+          
+          LOCAL_SCREENSHOTS=()
+          for pattern in "${SCREENSHOT_PATTERNS[@]}"; do
+            if ls $pattern 1> /dev/null 2>&1; then
+              for file in $pattern; do
+                if [ -f "$file" ]; then
+                  LOCAL_SCREENSHOTS+=("$file")
+                  echo "DEBUG: Found local screenshot: $file"
+                fi
+              done
+            fi
+          done
+          
+          echo "DEBUG: Found ${#LOCAL_SCREENSHOTS[@]} local screenshot files"
+          
+          # Process images from issue URLs
+          if [ -s image_urls.txt ] && [ "$ISSUE_IMAGE_COUNT" -gt 0 ]; then
+            echo "Found $ISSUE_IMAGE_COUNT image(s) to download from issue"
+            
+            while IFS= read -r img_url; do
+              if [ -n "$img_url" ]; then
+                echo "DEBUG: Processing URL: $img_url"
+                
+                # Extract file extension
+                ext=$(echo "$img_url" | grep -oE '\.(png|jpg|jpeg|gif|webp)' | head -1)
+                if [ -z "$ext" ]; then
+                  ext=".png"  # Default extension
+                  echo "DEBUG: No extension found, defaulting to .png"
+                fi
+                
+                filename="target-${NEXT_NUM}-comparison${ext}"
+                filepath="$TARGET_DIR/$filename"
+                
+                echo "Downloading: $img_url"
+                echo "         to: $filename"
+                
+                # Try multiple download methods
+                DOWNLOAD_SUCCESS=false
+                
+                # Method 1: With GitHub token (for private repos)
+                if curl -L -f -s \
+                        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                        -H "User-Agent: GitHub-Actions" \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        "$img_url" -o "$filepath" 2>/dev/null; then
+                  DOWNLOAD_SUCCESS=true
+                  echo "✅ Downloaded with GitHub token"
+                fi
+                
+                # Method 2: Without token (for public URLs)
+                if [ "$DOWNLOAD_SUCCESS" = false ]; then
+                  if curl -L -f -s \
+                          -H "User-Agent: Mozilla/5.0 (GitHub Actions)" \
+                          "$img_url" -o "$filepath" 2>/dev/null; then
+                    DOWNLOAD_SUCCESS=true
+                    echo "✅ Downloaded without token"
+                  fi
+                fi
+                
+                # Method 3: Using wget as fallback
+                if [ "$DOWNLOAD_SUCCESS" = false ]; then
+                  if wget -q --timeout=30 --tries=2 \
+                          --header="User-Agent: GitHub-Actions" \
+                          "$img_url" -O "$filepath" 2>/dev/null; then
+                    DOWNLOAD_SUCCESS=true
+                    echo "✅ Downloaded with wget"
+                  fi
+                fi
+                
+                # Verify download
+                if [ "$DOWNLOAD_SUCCESS" = true ] && [ -f "$filepath" ] && [ -s "$filepath" ]; then
+                  # Check if it's actually an image file
+                  file_type=$(file "$filepath" 2>/dev/null || echo "unknown")
+                  if echo "$file_type" | grep -qi "image\|png\|jpeg\|gif\|webp"; then
+                    echo "✅ Successfully downloaded and verified: $filename"
+                    echo "   File type: $file_type"
+                    echo "   File size: $(du -h "$filepath" | cut -f1)"
+                    NEXT_NUM=$((NEXT_NUM + 1))
+                  else
+                    echo "❌ Downloaded file is not an image: $filename"
+                    echo "   File type detected: $file_type"
+                    rm -f "$filepath"
+                  fi
+                else
+                  echo "❌ Failed to download: $img_url"
+                  [ -f "$filepath" ] && rm -f "$filepath"
+                fi
+                
+                echo "---"
+              fi
+            done < image_urls.txt
+          else
+            echo "No images found in issue body"
+          fi
+          
+          # Process local screenshot files
+          if [ ${#LOCAL_SCREENSHOTS[@]} -gt 0 ]; then
+            echo ""
+            echo "Processing ${#LOCAL_SCREENSHOTS[@]} local screenshot file(s)..."
+            
+            for screenshot in "${LOCAL_SCREENSHOTS[@]}"; do
+              if [ -f "$screenshot" ]; then
+                echo "DEBUG: Processing local screenshot: $screenshot"
+                
+                # Get file extension
+                ext=$(echo "$screenshot" | grep -oE '\.[^.]* | head -1)
+                if [ -z "$ext" ]; then
+                  ext=".png"
+                fi
+                
+                # Create target filename
+                target_filename="target-${NEXT_NUM}-comparison${ext}"
+                target_filepath="$TARGET_DIR/$target_filename"
+                
+                echo "Moving: $screenshot"
+                echo "     to: $target_filename"
+                
+                # Copy the file to target directory
+                if cp "$screenshot" "$target_filepath"; then
+                  # Verify it's actually an image
+                  file_type=$(file "$target_filepath" 2>/dev/null || echo "unknown")
+                  if echo "$file_type" | grep -qi "image\|png\|jpeg\|gif\|webp"; then
+                    echo "✅ Successfully moved and verified: $target_filename"
+                    echo "   File type: $file_type"
+                    echo "   File size: $(du -h "$target_filepath" | cut -f1)"
+                    
+                    # Remove the original file from root directory
+                    rm -f "$screenshot"
+                    echo "   ✅ Removed original file: $screenshot"
+                    
+                    NEXT_NUM=$((NEXT_NUM + 1))
+                  else
+                    echo "❌ File is not an image: $target_filename"
+                    echo "   File type detected: $file_type"
+                    rm -f "$target_filepath"
+                  fi
+                else
+                  echo "❌ Failed to move: $screenshot"
+                fi
+                
+                echo "---"
+              fi
+            done
+          else
+            echo "No local screenshot files found in repository root"
+          fi
+          
+          # Summary
+          FINAL_IMAGE_COUNT=$(find "$TARGET_DIR" -name "target-*-comparison.*" 2>/dev/null | wc -l)
+          echo ""
+          echo "📸 IMAGE PROCESSING SUMMARY:"
+          echo "  Images found in issue: $ISSUE_IMAGE_COUNT"
+          echo "  Local screenshots found: ${#LOCAL_SCREENSHOTS[@]}"
+          echo "  Images successfully processed: $FINAL_IMAGE_COUNT"
+          echo "  Images saved in: $TARGET_DIR"
+          
+          if [ "$FINAL_IMAGE_COUNT" -gt 0 ]; then
+            echo ""
+            echo "📋 Final image list:"
+            find "$TARGET_DIR" -name "target-*-comparison.*" | sort | while read -r img; do
+              size=$(du -h "$img" | cut -f1)
+              echo "    $(basename "$img") ($size)"
+            done
+          fi
+          
+          echo ""
+          echo "DEBUG: Checking repository root for remaining image files..."
+          REMAINING_IMAGES=$(find . -maxdepth 1 -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" 2>/dev/null | wc -l)
+          if [ "$REMAINING_IMAGES" -gt 0 ]; then
+            echo "⚠️  WARNING: $REMAINING_IMAGES image files still remain in root directory"
+            find . -maxdepth 1 -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" 2>/dev/null
+          else
+            echo "✅ No image files remaining in root directory"
+          fi
+          
+      - name: Generate LinkedIn post
+        run: |
+          TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
+          LINKEDIN_FILE="$TARGET_DIR/linkedin-post.md"
+          
+          echo "DEBUG: Extracting additional notes for LinkedIn post..."
+          
+          # Extract additional notes based on operation type
+          if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
+            echo "DEBUG: Looking for additional notes in CREATE operation..."
+            
+            # Method 1: Look for "Additional Notes" section in GitHub issue form
+            ADDITIONAL_NOTES=$(sed -n '/### Additional Notes/,/### Confirmation/p; /### Additional Notes/,/### /p' issue_body.txt | \
+                             sed '/### Additional Notes/d; /### Confirmation/,$d; /### /,$d; /^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d' | \
+                             head -3 | tr '\n' ' ')
+            
+            # Method 2: If not found, look for notes after CSS section
+            if [ -z "$ADDITIONAL_NOTES" ]; then
+              echo "DEBUG: Method 1 failed, trying Method 2..."
+              ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | \
+                               grep -A 10 -i "additional.*notes\|notes\|description" | \
+                               grep -v -i "additional.*notes\|notes\|description\|confirmation\|tested\|comparison" | \
+                               sed '/^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d; /^###/d' | \
+                               head -3 | tr '\n' ' ')
+            fi
+            
+            # Method 3: Look for content between specific sections
+            if [ -z "$ADDITIONAL_NOTES" ]; then
+              echo "DEBUG: Method 2 failed, trying Method 3..."
+              ADDITIONAL_NOTES=$(awk '/### Additional Notes/{flag=1; next} /### Confirmation|### /{flag=0} flag && !/^[[:space:]]*$/ && !/^- \[/ && !/^\[x\]/' issue_body.txt | \
+                               head -3 | tr '\n' ' ')
+            fi
+            
+          else
+            echo "DEBUG: Looking for update notes in UPDATE operation..."
+            ADDITIONAL_NOTES=$(sed -n '/```css/,/```/!p' issue_body.txt | \
+                             grep -A 10 -i "update.*notes\|notes" | \
+                             grep -v -i "update.*notes\|notes\|confirmation\|tested\|comparison" | \
+                             sed '/^[[:space:]]*$/d; /^- \[/d; /^\[x\]/d; /^###/d' | \
+                             head -3 | tr '\n' ' ')
+          fi
+          
+          # Clean up additional notes - remove empty content and unwanted elements
+          ADDITIONAL_NOTES=$(echo "$ADDITIONAL_NOTES" | \
+                           sed 's/\[x\]//g; s/\[ \]//g; s/- //g' | \
+                           sed 's/I have tested.*//g; s/comparison images.*//g; s/target vs.*//g' | \
+                           xargs)
+          
+          echo "DEBUG: Extracted additional notes: '$ADDITIONAL_NOTES'"
+          
+          # If no additional notes found, create a default description
+          if [ -z "$ADDITIONAL_NOTES" ]; then
+            echo "DEBUG: No additional notes found, using default..."
+            if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
+              ADDITIONAL_NOTES="Another CSS challenge completed! 🎯"
+            else
+              ADDITIONAL_NOTES="Updated my CSS solution with improvements! 🚀"
+            fi
+          fi
+          
+          echo "DEBUG: Final additional notes: '$ADDITIONAL_NOTES'"
+          
+          # Generate the repository URL for the solutions.html file
+          REPO_URL="https://github.com/${{ github.repository }}"
+          SOLUTIONS_URL="$REPO_URL/blob/main/daily-targets/${{ steps.date.outputs.formatted_date }}/solutions.html"
+          
+          # Create LinkedIn post with the exact format requested
+          cat > "$LINKEDIN_FILE" << 'LINKEDIN_EOF'
+          # LinkedIn Post for ${{ steps.date.outputs.formatted_date }}
+
+          ---
+
+          Today's CSSBattle solution:
+
+          $ADDITIONAL_NOTES
+
+          $SOLUTIONS_URL
+
+          (My journal notes.)
+
+          #cssgang #CSS #CSSBattle #HTML
+          LINKEDIN_EOF
+          
+          echo "LinkedIn post generated successfully"
+          echo "DEBUG: LinkedIn post content:"
+          cat "$LINKEDIN_FILE"
+          
+      - name: Commit and push changes
+        run: |
+          # Debug Git configuration
+          echo "🔍 DEBUG: Git Configuration"
+          echo "Current directory: $(pwd)"
+          echo "Git status:"
+          git status || echo "Git status failed"
+          echo "Git remote:"
+          git remote -v || echo "Git remote failed"
+          echo "Current branch:"
+          git branch || echo "Git branch failed"
+          echo ""
+          
+          # Configure git with enhanced error handling
+          echo "Configuring Git user..."
+          GIT_EMAIL="${GIT_USER_EMAIL:-${{ github.actor }}@users.noreply.github.com}"
+          GIT_NAME="${GIT_USER_NAME:-${{ github.actor }}}"
+          
+          echo "Using Git email: $GIT_EMAIL"
+          echo "Using Git name: $GIT_NAME"
+          
+          git config --local user.email "$GIT_EMAIL" || {
+            echo "ERROR: Failed to set git user.email"
+            exit 1
+          }
+          
+          git config --local user.name "$GIT_NAME" || {
+            echo "ERROR: Failed to set git user.name"
+            exit 1
+          }
+          
+          # Verify git config
+          echo "Verifying git configuration:"
+          echo "user.email: $(git config user.email)"
+          echo "user.name: $(git config user.name)"
+          echo ""
+          
+          # Check if there are changes to commit
+          echo "Adding files to git..."
+          git add . || {
+            echo "ERROR: Failed to add files to git"
+            exit 1
+          }
+          
+          echo "Checking for staged changes..."
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            echo "has_changes=false" >> $GITHUB_ENV
+          else
+            echo "Changes detected, proceeding with commit..."
+            
+            # Show what will be committed
+            echo "Files to be committed:"
+            git diff --staged --name-only || echo "Could not list staged files"
+            echo ""
+            
+            # Pull latest changes to avoid conflicts
+            echo "Fetching latest changes..."
+            git fetch origin || {
+              echo "WARNING: Failed to fetch from origin, continuing..."
+            }
+            
+            # Check if we need to handle conflicts
+            echo "Checking for conflicts..."
+            if ! git rebase origin/main; then
+              echo "Rebase failed, trying merge strategy..."
+              git rebase --abort || echo "No rebase to abort"
+              
+              if ! git merge origin/main; then
+                echo "ERROR: Merge failed. Manual intervention may be required."
+                echo "Merge status:"
+                git status
+                exit 1
+              fi
+            fi
+            
+            # Commit changes
+            if [ "${{ steps.operation.outputs.type }}" = "create" ]; then
+              COMMIT_MSG="feat: CSS Battle solution for ${{ steps.date.outputs.formatted_date }}"
+            else
+              COMMIT_MSG="update: CSS Battle solution for ${{ steps.date.outputs.formatted_date }}"
+            fi
+            
+            echo "Committing with message: $COMMIT_MSG"
+            git commit -m "$COMMIT_MSG" || {
+              echo "ERROR: Failed to commit changes"
+              echo "Git status after failed commit:"
+              git status
+              exit 1
+            }
+            
+            # Push with enhanced retry logic
+            echo "Pushing changes to origin/main..."
+            PUSH_SUCCESS=false
+            
+            for i in {1..3}; do
+              echo "Push attempt $i of 3..."
+              
+              if git push origin main; then
+                echo "✅ Changes pushed successfully on attempt $i"
+                PUSH_SUCCESS=true
+                break
+              else
+                PUSH_EXIT_CODE=$?
+                echo "❌ Push attempt $i failed with exit code: $PUSH_EXIT_CODE"
+                
+                if [ $i -lt 3 ]; then
+                  echo "Pulling latest changes before retry..."
+                  git fetch origin || echo "Fetch failed"
+                  
+                  if ! git rebase origin/main; then
+                    echo "Rebase failed, trying merge..."
+                    git rebase --abort || echo "No rebase to abort"
+                    git merge origin/main || {
+                      echo "ERROR: Unable to resolve conflicts automatically"
+                      git status
+                      exit 1
+                    }
+                  fi
+                else
+                  echo "All push attempts failed"
+                fi
+              fi
+            done
+            
+            if [ "$PUSH_SUCCESS" = true ]; then
+              echo "has_changes=true" >> $GITHUB_ENV
+            else
+              echo "ERROR: Failed to push after 3 attempts"
+              echo "Final git status:"
+              git status
+              echo "Git log (last 3 commits):"
+              git log --oneline -3 || echo "Could not show git log"
+              exit 1
+            fi
+          fi
+          
+      - name: Create success comment and close issue
+        if: env.has_changes != 'false'
+        run: |
+          TARGET_DIR="daily-targets/${{ steps.date.outputs.formatted_date }}"
+          
+          # Count final results
+          VERSION_COUNT_IN_FILE=$(grep -c "<!-- Version" "$TARGET_DIR/solutions.html" 2>/dev/null || echo 1)
+          IMAGE_COUNT=$(find "$TARGET_DIR" -name "target-*-comparison.*" 2>/dev/null | wc -l)
+          
+          # Get processing summary from the image download step
+          IMAGES_FOUND=$(cat image_urls.txt 2>/dev/null | wc -l || echo 0)
+          
+          # Calculate character counts for each CSS version
+          echo "DEBUG: Calculating character counts..."
+          
+          # Split the cleaned CSS content by ---VERSION--- markers
+          cp css_cleaned.txt css_for_counting.txt
+          
+          # Create individual version files for counting
+          version_num=1
+          current_file="version_${version_num}.css"
+          > "$current_file"  # Create empty first version file
+          
+          while IFS= read -r line || [ -n "$line" ]; do
+            if [[ "$line" == "---VERSION---" ]]; then
+              # Start new version file
+              version_num=$((version_num + 1))
+              current_file="version_${version_num}.css"
+              > "$current_file"  # Create empty new version file
+            else
+              # Add line to current version file
+              echo "$line" >> "$current_file"
+            fi
+          done < css_for_counting.txt
+          
+          # Count characters for each version (excluding any </style> tags)
+          CHAR_COUNTS=""
+          for i in $(seq 1 $VERSION_COUNT_IN_FILE); do
+            version_file="version_${i}.css"
+            if [ -f "$version_file" ]; then
+              # Remove any </style> tags and count characters
+              char_count=$(sed 's|</style>||g' "$version_file" | tr -d '\n' | wc -c)
+              if [ $i -eq 1 ]; then
+                CHAR_COUNTS="Version $i: $char_count chars"
+              else
+                CHAR_COUNTS="$CHAR_COUNTS - Version $i: $char_count chars"
+              fi
+              echo "DEBUG: Version $i character count: $char_count"
+            fi
+          done
+          
+          # Create comprehensive success comment
+          cat > comment.txt << 'COMMENT_EOF'
+          # ✅ CSS Battle Solution Processed Successfully!
+
+          ## 📁 Location
+          COMMENT_EOF
+          
+          echo "\`$TARGET_DIR/\`" >> comment.txt
+          echo "" >> comment.txt
+          echo "## 📊 Processing Summary" >> comment.txt
+          echo "- 🎯 **CSS Versions Created:** $VERSION_COUNT_IN_FILE" >> comment.txt
+          echo "- 🖼️ **Images Found in Issue:** $IMAGES_FOUND" >> comment.txt
+          echo "- 📥 **Images Successfully Downloaded:** $IMAGE_COUNT" >> comment.txt
+          echo "- 📅 **Target Date:** ${{ steps.date.outputs.formatted_date }}" >> comment.txt
+          echo "- 🔄 **Operation Type:** ${{ steps.operation.outputs.type }}" >> comment.txt
+          echo "" >> comment.txt
+          echo "## ⚡ Character Count" >> comment.txt
+          echo "$CHAR_COUNTS" >> comment.txt
+          echo "" >> comment.txt
+          echo "## 📄 Files Created/Updated" >> comment.txt
+          echo "" >> comment.txt
+          echo "### Solutions" >> comment.txt
+          echo "- ✅ \`solutions.html\` - Your CSS solution ($VERSION_COUNT_IN_FILE version(s))" >> comment.txt
+          echo "" >> comment.txt
+          echo "### Content" >> comment.txt
+          echo "- ✅ \`linkedin-post.md\` - Ready-to-post LinkedIn content" >> comment.txt
+          echo "" >> comment.txt
+          echo "### Images" >> comment.txt
+          
+          if [ "$IMAGE_COUNT" -gt 0 ]; then
+            echo "📸 **Downloaded Images:**" >> comment.txt
+            find "$TARGET_DIR" -name "target-*-comparison.*" | sort | while read -r img; do
+              # Get file size for each image
+              size=$(du -h "$img" 2>/dev/null | cut -f1 || echo "?")
+              echo "- ✅ \`$(basename "$img")\` (${size})" >> comment.txt
+            done
+          else
+            echo "- ℹ️ No images were uploaded or found" >> comment.txt
+            if [ "$IMAGES_FOUND" -gt 0 ]; then
+              echo "- ⚠️ Found $IMAGES_FOUND image URL(s) but download failed" >> comment.txt
+            fi
+          fi
+          
+          echo "" >> comment.txt
+          echo "## 🔗 Quick Links" >> comment.txt
+          echo "- 📱 **LinkedIn Post:** [\`linkedin-post.md\`](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/linkedin-post.md)" >> comment.txt
+          echo "- 💻 **CSS Solution:** [\`solutions.html\`](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/solutions.html)" >> comment.txt
+          echo "- 📁 **Full Directory:** [\`$TARGET_DIR/\`](${{ github.server_url }}/${{ github.repository }}/tree/main/$TARGET_DIR)" >> comment.txt
+          echo "" >> comment.txt
+          echo "## 🎉 Ready for Battle!" >> comment.txt
+          echo "Your solution is now organized and ready for sharing. Click the LinkedIn post link above to copy the content!" >> comment.txt
+          echo "" >> comment.txt
+          echo "---" >> comment.txt
+          echo "*✨ Processed by GitHub Actions on $(date)*" >> comment.txt
+          echo "*🔧 Workflow: [\`${{ github.workflow }}\`](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*" >> comment.txt
+          
+          # Post comment and close issue
+          gh issue comment "${{ github.event.issue.number }}" \
+            --repo "${{ github.repository }}" \
+            --body-file comment.txt
+          
+          gh issue close "${{ github.event.issue.number }}" \
+            --repo "${{ github.repository }}" \
+            --reason completed
+
+      - name: Cleanup temporary files
+        if: always()
+        run: |
+          echo "🧹 Cleaning up temporary files..."
+          
+          # List all temporary files that may be created during the workflow
+          TEMP_FILES=(
+            "issue_body.txt"
+            "css_content.txt"
+            "css_content_raw.txt"
+            "css_cleaned.txt"
+            "css_for_counting.txt"
+            "image_urls.txt"
+            "image_urls_clean.txt"
+            "formatted_date_backup.txt"
+            "issue_data.json"
+            "issue_body_full.txt"
+            "comment.txt"
+            "date_output.txt"
+            "temp_solutions.html"
+          )
+          
+          echo "Files in root directory before cleanup:"
+          ls -la
+          echo ""
+          
+          # Remove each temporary file if it exists
+          echo "Removing temporary files..."
+          for file in "${TEMP_FILES[@]}"; do
+            if [ -f "$file" ]; then
+              echo "  ✅ Removing: $file"
+              rm -f "$file"
+            else
+              echo "  ➖ Not found: $file"
+            fi
+          done
+          
+          # Remove version-specific character counting files
+          echo "Removing version counting files..."
+          if ls version_*.css 1> /dev/null 2>&1; then
+            for file in version_*.css; do
+              echo "  ✅ Removing: $file"
+              rm -f "$file"
+            done
+          else
+            echo "  ➖ No version_*.css files found"
+          fi
+          
+          # Double-check for any other temporary files with common patterns
+          echo "Removing other temporary files..."
+          TEMP_PATTERNS_FOUND=false
+          
+          if ls *.tmp 1> /dev/null 2>&1; then
+            echo "  ✅ Removing *.tmp files:"
+            ls *.tmp
+            rm -f *.tmp
+            TEMP_PATTERNS_FOUND=true
+          fi
+          
+          if ls temp_* 1> /dev/null 2>&1; then
+            echo "  ✅ Removing temp_* files:"
+            ls temp_*
+            rm -f temp_*
+            TEMP_PATTERNS_FOUND=true
+          fi
+          
+          if [ "$TEMP_PATTERNS_FOUND" = false ]; then
+            echo "  ➖ No additional temporary files found"
+          fi
+          
+          echo ""
+          echo "✅ Cleanup completed - repository is clean"
+          
+          # Verify cleanup
+          echo "Files in root directory after cleanup:"
+          ls -la
+          echo ""
+          
+          # Final verification - check for any remaining temporary files
+          echo "🔍 Final verification - checking for missed temporary files:"
+          MISSED_FILES=$(find . -maxdepth 1 -name "*.txt" -o -name "*.json" -o -name "*.css" | grep -E "(issue_|css_|image_|temp_|version_)" || true)
+          
+          if [ -n "$MISSED_FILES" ]; then
+            echo "⚠️  WARNING: Some temporary files may have been missed:"
+            echo "$MISSED_FILES"
+          else
+            echo "✅ No missed temporary files detected"
+          fi > image_urls_clean.txt 2>/dev/null || true
+            if [ -f image_urls_clean.txt ]; then
+              mv image_urls_clean.txt image_urls.txt
+            fi
+          else
+            # Ensure the file exists even if empty
+            touch image_urls.txt
           fi
           
           echo "DEBUG: Found image URLs from issue body:"
