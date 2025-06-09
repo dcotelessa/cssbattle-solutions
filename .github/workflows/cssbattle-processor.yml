@@ -407,12 +407,12 @@ jobs:
           # Calculate character count
           CHAR_COUNT=$(sed 's|</style>||g' css_content.txt | tr -d '\n' | wc -c)
           
-          # Create comment
-          cat > comment.txt << COMMENT_EOF
+          # Create comment using echo (safer than heredoc)
+          cat > comment.txt << 'COMMENT_EOF'
 # ✅ CSS Battle Solution Processed Successfully!
 
 ## 📁 Location
-\`$TARGET_DIR/\`
+`$TARGET_DIR/`
 
 ## 📊 Summary
 - 🎯 **CSS Versions:** $CSS_VERSION_COUNT
@@ -422,8 +422,8 @@ jobs:
 - 📅 **Date:** $FORMATTED_DATE
 
 ## 📄 Files Created
-- ✅ \`solutions.html\` - Your CSS solution
-- ✅ \`linkedin-post.md\` - Ready-to-post content
+- ✅ `solutions.html` - Your CSS solution
+- ✅ `linkedin-post.md` - Ready-to-post content
 
 ## 🔗 Quick Links
 - 💻 **[View Solution](${{ github.server_url }}/${{ github.repository }}/blob/main/$TARGET_DIR/solutions.html)**
