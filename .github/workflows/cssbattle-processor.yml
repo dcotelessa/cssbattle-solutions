@@ -323,23 +323,30 @@ jobs:
           LINKEDIN_FILE="$TARGET_DIR/linkedin-post.md"
           SOLUTIONS_URL="https://github.com/${{ github.repository }}/blob/main/$TARGET_DIR/solutions.html"
           
-          cat > "$LINKEDIN_FILE" << LINKEDIN_EOF
-# LinkedIn Post for $FORMATTED_DATE
-
----
-
-Today's CSSBattle solution:
-
-$NOTES
-
-$SOLUTIONS_URL
-
-(My journal notes.)
-
-#cssgang #CSS #CSSBattle #HTML
-LINKEDIN_EOF
+          # Create LinkedIn post using echo (safer than heredoc)
+          echo "# LinkedIn Post for $FORMATTED_DATE" > "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "---" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "Today's CSSBattle solution:" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "$NOTES" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "$SOLUTIONS_URL" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "(My journal notes.)" >> "$LINKEDIN_FILE"
+          echo "" >> "$LINKEDIN_FILE"
+          echo "#cssgang #CSS #CSSBattle #HTML" >> "$LINKEDIN_FILE"
           
-          echo "✅ LinkedIn post generated"
+          # Verify file was created
+          if [ -f "$LINKEDIN_FILE" ]; then
+            echo "✅ LinkedIn post generated"
+            echo "📄 Content preview:"
+            head -5 "$LINKEDIN_FILE"
+          else
+            echo "❌ Failed to create LinkedIn post"
+            exit 1
+          fi
 
       - name: 🔄 Commit and Push Changes
         run: |
@@ -445,4 +452,3 @@ COMMENT_EOF
           rm -f issue_body.txt css_raw.txt css_content.txt image_urls.txt comment.txt
           
           echo "✅ Cleanup completed"
-
