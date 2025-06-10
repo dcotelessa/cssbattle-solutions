@@ -1,20 +1,20 @@
 ### Date
 
-Jun 9, 2025
+Jun 10, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><a><style>*{background:#4F55A2;*{border-radius:33q;background:#DCC6A8;margin:150 105 55}p,a{a{margin:-50 165}position:fixed;padding:40 15;margin:-75-25;border:11q solid#4F55A2
+<p><style>*{p{margin:-140 0}background:#EEB850;border:solid#243D83;border-width:20 20 0;margin:110 50;*{margin:40 20 0;height:60
 ```
 
 ### Comparison Images
 
-<img width="860" alt="Image" src="https://github.com/user-attachments/assets/c28fde16-fef0-49ff-a9a4-01eb24a65344" />
+<img width="858" alt="Image" src="https://github.com/user-attachments/assets/e1dd61bc-af53-48f4-a521-e99ae5a87e93" />
 
 ### Additional Notes (Optional)
 
-Top down view of over-the-rails balcony table. (Best I can do at the moment.)
+Building...
 
 ### Confirmation
 
