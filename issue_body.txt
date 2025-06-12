@@ -1,20 +1,20 @@
 ### Date
 
-Jun 11, 2025
+Jun 12, 2025
 
 ### CSS Solution(s)
 
 ```css
-<dl><img><p><dl><img><p><dl><img><p><style>*{background:#EED9D9;+*{margin:80 50;+*{margin:-140 110}dl,p{background:#66284A}dl{width:80;height:140;border-radius:10px}img{border-radius:50%;padding:25;margin:15}p{width:60;height:10;margin:15 10;border-block:10px solid#EED9D9
+<p><p><style>*{background:radial-gradient(1q at 50%0,#5AA4B7 84.5q,var(--b,#2D3464)5em);p{--b:#0000;height:80;margin:80;+p{margin:-80;scale:-1
 ```
 
 ### Comparison Images
 
-<img width="858" alt="Image" src="https://github.com/user-attachments/assets/cf529525-15ca-4bf0-bfa4-37afafc1a202" />
+<img width="849" alt="Image" src="https://github.com/user-attachments/assets/ec3ea9e2-9398-4877-8f03-9a588f69bd12" />
 
 ### Additional Notes (Optional)
 
-Three tags.
+Stacked...
 
 ### Confirmation
 
