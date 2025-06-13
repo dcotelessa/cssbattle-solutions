@@ -1,1 +1,1 @@
-<p><p><style>*{background:radial-gradient(1q at 50%0,#5AA4B7 84.5q,var(--b,#2D3464)5em);p{--b:#0000;height:80;margin:80;+p{margin:-80;scale:-1
+<p><img><p><img><style>*{background:var(--b,#EBF6F0);p{+p{scale:-1;margin:0-3}img{--b:#D95362;padding:65;margin:12-3}width:387;height:142;margin:0;--b:radial-gradient(1q at 257px 100%,#0000 5em,#D95362 0 130px,#0000
