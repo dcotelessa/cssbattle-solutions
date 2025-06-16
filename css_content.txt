@@ -1,1 +1,2 @@
-<style>*{--a:#334F9F;--b:#97AE41;margin:0;background:linear-gradient(var(--a)90px,var(--b)0 130px,var(--a)0 170px,var(--b)0 70vh,var(--a)0);*{margin:0 40;--a:#97AE41;--b:#334F9F
+<p b><img><p><img b><p>
+<style>*{background:#D95362;+*{display:flex;flex-flow:wrap;margin:28 36}[b]{background:#D9D9D9}p{padding:37;margin:0}+p+p{padding:0;border:solid#0000;border-top-color:#D9D9D9;border-width:80 164}img{padding:45;border-radius:50%
