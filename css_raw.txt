@@ -1,5 +1,4 @@
 
 ```css
-<p b><img><p><img b><p>
-<style>*{background:#D95362;+*{display:flex;flex-flow:wrap;margin:28 36}[b]{background:#D9D9D9}p{padding:37;margin:0}+p+p{padding:0;border:solid#0000;border-top-color:#D9D9D9;border-width:80 164}img{padding:45;border-radius:50%
+<img><style>&{background:#F4DCBF;margin:110 100;border:solid#556D7F;border-width:10 80;img{color:3C342A;border:10px dashed#556D7F;margin:12 2;scale:2 1;box-shadow:-30px -5vw,-30px 5vw,30px -5vw,30px 5vw
 ```
