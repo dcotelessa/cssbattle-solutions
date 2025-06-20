@@ -404,8 +404,53 @@ jobs:
         run: |
           echo "✅ Creating success comment..."
           
-          # Calculate character count
-          CHAR_COUNT=$(sed 's|</style>||g' css_content.txt | tr -d '\n' | wc -c)
+          # Calculate character count for each version
+          CHAR_COUNT_DISPLAY=$(awk '
+            BEGIN { 
+              current_version = 1
+              version_content[current_version] = ""
+            }
+            /^---VERSION---$/ { 
+              current_version++
+              version_content[current_version] = ""
+              next 
+            }
+            { 
+              line = $0
+          
+              # Remove CSS block markers that are template artifacts
+              if (line ~ /^```css$/ || line ~ /^```$/) {
+                next
+              }
+          
+              # Trim leading and trailing whitespace from each line
+              gsub(/^[[:space:]]+/, "", line)
+              gsub(/[[:space:]]+$/, "", line)
+          
+              # Trim empty lines
+              if (line == "") {
+                  next
+              }
+          
+              # Add the cleaned line to current version
+              version_content[current_version] = version_content[current_version] line
+            }
+            END { 
+              display = ""
+              version_count = 0
+              for (v = 1; v <= current_version; v++) {
+                if (version_content[v] != "") {
+                  version_count++
+                  char_count = length(version_content[v])
+                  if (version_count == 1) {
+                    display = "⚡ **Character Count (Version " v "):** " char_count " chars"
+                  } else {
+                    display = display "<br>⚡ **Character Count (Version " v "):** " char_count " chars"
+                  }
+                }
+              }
+              print display
+          }' css_content.txt)
           
           # Create comment using echo statements (avoid heredoc issues)
           echo "# ✅ CSS Battle Solution Processed Successfully!" > comment.txt
@@ -417,7 +462,7 @@ jobs:
           echo "- 🎯 **CSS Versions:** $CSS_VERSION_COUNT" >> comment.txt
           echo "- 🖼️ **Images Found:** ${IMAGE_COUNT:-0}" >> comment.txt
           echo "- 📥 **Images Downloaded:** ${DOWNLOADED_COUNT:-0}" >> comment.txt
-          echo "- ⚡ **Character Count:** $CHAR_COUNT chars" >> comment.txt
+          echo "- $CHAR_COUNT_DISPLAY" >> comment.txt
           echo "- 📅 **Date:** $FORMATTED_DATE" >> comment.txt
           echo "" >> comment.txt
           echo "## 📄 Files Created" >> comment.txt
