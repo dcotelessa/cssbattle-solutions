@@ -1,20 +1,23 @@
 ### Date
 
-Jun 19, 2025
+Jun 20, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{border:var(--b,solid)var(--d,#5AA4B7);border-width:var(--c,20);*{--b:dotted;--c:0 100;padding:30;margin:80 50;p{--b:solid;--c:10;--d:#FFF;margin:0-100;padding:10 90;border-radius:1in;background:linear-gradient(90deg,#FFF 5vw,#5AA4B7 0)50px 0/60px
+<img><style>*{background:#fff;border:solid var(--t,#EEB850);border-width:var(--w,20 60 60 20);--t:#EEB850;margin:0;+*,img{--t:#6592CF;--w:0 0 0 60;img{margin:100 0 0;--w:30 130
+---VERSION---
+<style>*{background:#6592CF;border:solid var(--t,#EEB850);border-width:var(--w,20 60 60 20);--t:#EEB850;margin:0;+*{--t:#fff;--w:100 0 60;margin:0 0 0 60
 ```
 
 ### Comparison Images
 
-<img width="853" alt="Image" src="https://github.com/user-attachments/assets/b9242fc4-966a-4ff0-9afd-ba085bb1424d" />
+<img width="856" alt="Image" src="https://github.com/user-attachments/assets/95718f53-2684-436e-b298-1564381e3fb7" />
+<img width="857" alt="Image" src="https://github.com/user-attachments/assets/da04b6c5-a5a6-4a20-a554-cff9c44f38c2" />
 
 ### Additional Notes (Optional)
 
-Chain link.
+Trying multiple version github automation today, two solutions.
 
 ### Confirmation
 
