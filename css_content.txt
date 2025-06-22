@@ -1,1 +1,1 @@
-<p><p><p><p><p><p><style>&{background:#6592CF}p{border:80px solid#0000;border-top-color:var(--t,#F7CB71);width:0;margin:var(--m,150 92);+p{--m:-350 132;+p{scale:-1;--m:70 92;+p{--m:-190 132;+p{--t:#fff;scale:.25;--m:90 52;+p{scale:-.25;--m:-290 52
+<style>*{background:#48BF7D;*{border:50px solid#394257;margin:100 108;clip-path:polygon(23vw 0,39vh 25px,39vh 0,167px 50%,39vh 100%,39vh 25px,32vh 46px,32vh 3lh,39vh 75px,23vw 100%,42px 50%
