@@ -313,8 +313,8 @@ jobs:
           
           # Extract additional notes
           NOTES=$(sed -n '/### Additional Notes/,/### Confirmation/p' issue_body.txt | \
-                  sed '/### Additional Notes/d; /### Confirmation/,$d; /^[[:space:]]*$/d; /^- \[/d' | \
-                  head -3 | tr '\n' ' ' | xargs)
+            sed '/### Additional Notes/d; /### Confirmation/,$d; /^[[:space:]]*$/d; /^- \[/d' | \
+                  head -3 | tr '\n' ' ' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
           
           # Use default if no notes found
           [ -z "$NOTES" ] && NOTES="Another CSS challenge completed! 🎯"
