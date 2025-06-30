@@ -1,21 +1,20 @@
 ### Date
 
-Jun 29, 2025
+Jun 30, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{background:conic-gradient(#48BF7D 25%,#FADE8B 0 50%,#D24444 0 75%,#394257 0)}p{border-top:5em
-dotted#fff;margin:110 22;clip-path:polygon(0 50%,25%50%,50%-9%,75%50%,100%50%,99%100%,0 100%
+<p><style>*{background:#FADE8B;margin:50 45;border-inline:53q var(--c,dotted)#D24444;*,p{margin:0 15;border-color:#556D7F;p{padding:100 0;border-width:25;--c:dashed
 ```
 
 ### Comparison Images
 
-<img width="857" alt="Image" src="https://github.com/user-attachments/assets/8ed5a59a-9bc2-4ea2-8096-6ae9f0b29655" />
+<img width="855" alt="Image" src="https://github.com/user-attachments/assets/891b19c2-632a-41fe-999b-42aca947890b" />
 
 ### Additional Notes (Optional)
 
-Kaleidoscope.
+A grid of shapes.
 
 ### Confirmation
 
