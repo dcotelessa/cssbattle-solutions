@@ -501,3 +501,16 @@ jobs:
           rm -f issue_body.txt css_raw.txt css_content.txt image_urls.txt comment.txt
           
           echo "✅ Cleanup completed"
+
+      - name: 🚀 Trigger Astro Site Update
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          echo "🚀 Triggering Astro site update..."
+          
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.ASTRO_SITE_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/dcotelessa/dc-website/dispatches \
+            -d '{"event_type": "cssbattle-update", "client_payload": {"date": "'$FORMATTED_DATE'", "trigger": "new-solution"}}'
+          
+          echo "✅ Astro site update triggered"
