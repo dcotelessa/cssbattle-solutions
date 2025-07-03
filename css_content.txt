@@ -1,1 +1,1 @@
-<p><p><p><style>*{background:#EFF8FE;+*{margin:50 50 40 40;border:solid#4F77FF;border-width:0 0 10 10;display:flex}p{background:#4F77FF;margin:var(--t,60)0 0 30;width:60;+p{width:50;--t:0;+p{--t:100
+<p><style>html{background:#CE636F;border-top:10ch solid#F7BED9;p{margin:-168 72;padding:120;border-radius:5ch;background:repeating-conic-gradient(#B44141 0 25%,#F7BED9 0 50%)0 0/20ch 20ch
