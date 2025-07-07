@@ -1,20 +1,20 @@
 ### Date
 
-Jul 6, 2025
+Jul 7, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>&{color:556D7F;border:5vw solid}*{background:#FADE8B;margin:50 40;*{margin:10 65;box-shadow:0-5em,0 5em,-50vh 95px,50vh 95px,-50vh -95px,50vh -95px
+<p><style>&{background:#32295A;border-radius:3in;border:250px solid#48BF7D}p{border:5ch solid #32295A;margin:-298;width:370;height:270
 ```
 
 ### Comparison Images
 
-<img width="860" height="522" alt="Image" src="https://github.com/user-attachments/assets/dc1ba16f-b85e-415f-9c74-056db1c079df" />
+<img width="859" height="533" alt="Image" src="https://github.com/user-attachments/assets/a70c7c46-6635-48b9-b880-e78cc2af3cc3" />
 
 ### Additional Notes (Optional)
 
-Not bad for 15 minutes.
+Clipped circle.
 
 ### Confirmation
 
