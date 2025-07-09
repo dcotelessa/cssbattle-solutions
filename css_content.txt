@@ -1,1 +1,1 @@
-<style>*{--t:32q solid#8CB457;background:#085328}&{margin:30 50;border-block:var(--t);*{height:180;margin:0 30;border-inline:var(--t
+<style>*{color:#2E312B;background:#D9D9D9;box-shadow:30vw 30vw 0 5ch,-30vw 30vw 0 5ch,30vw -30vw 0 5ch,-30vw -30vw 0 5ch;*{background:#2E312B;padding:16;margin:110 40%;border:5vw solid#7AA70A
