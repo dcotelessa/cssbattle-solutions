@@ -1,20 +1,20 @@
 ### Date
 
-Jul 12, 2025
+Jul 13, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>&{outline:5ch solid#504B72}*{--a:#FFFBCC;--b:#504B72;margin:40;background:linear-gradient(var(--a)15vw,var(--b)0 5em)0 0/1q 5em;*{margin:0 100;--a:#504B72;--b:#FFFBCC
+<style>&{background:conic-gradient(at 30px 5em,#48BF7D 0 75%,#FFF 75%100%)5vh 5vh/42.5%95px
 ```
 
 ### Comparison Images
 
-<img width="867" height="532" alt="Image" src="https://github.com/user-attachments/assets/24b07ff5-b43e-4dad-bfda-892abf6716ab" />
+<img width="858" height="528" alt="Image" src="https://github.com/user-attachments/assets/8ab51e84-043c-4306-8df3-f55f64c17779" />
 
 ### Additional Notes (Optional)
 
-Alternating grids.
+Short and simple.
 
 ### Confirmation
 
