@@ -1,1 +1,1 @@
-<p><p><style>&,*+*{background:#B6EBE7;border:solid#9382E4;border-width:0 40 var(--b,0);position:fixed;margin:70 25;padding:80 var(--p,135);*{margin:-80;--p:40;--b:40}p{padding:40;margin:-40-175-40-175;background:#5E2BB7;+p{margin:-40;background:#B6EBE7;border:0
+<p><style>*{border-radius:1in;background:var(--b,radial-gradient(1q,#48BF7D 53q,#FADE8B 0)0-5vw);*{margin:135 130;height:40;box-shadow:0 42q#48BF7D;--b:#48BF7D}p{margin:62.5;height:15;box-shadow:42q 0#fff;--b:#fff;translate:-20.5q -14q
