@@ -1,20 +1,20 @@
 ### Date
 
-Jul 22, 2025
+Jul 23, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>*{background:var(--b,#EEE);border:solid#439E6B;border-width:var(--w,14 14 0);margin:var(--m,200 120);height:26;*{--m:-140 16;border-color:#246541;--w:65 50}p{--w:0;border-radius:50%;width:20;height:20;--b:#000;--m:-87-35;-webkit-box-reflect:left var(--t,-70px);+p{--w:0;--m:60-50;width:50;height:50;--b:linear-gradient(#439E6B 17px,#0000 0 29px,#EEE 0 33px,#439E6B 0);--t:-25vw
+<p><p><style>*{background:var(--t,#C05F6A);*{--t:#F2EAA8;margin:45 65 105}p{box-shadow:0 60px,-250px 30px,250px 30px,-230px 90px,230px 90px,0 40vh,-70vh 50vh,70vh 50vh;color:C05F6A;--t:#C05F6A;translate:0 30px;padding:15;margin:0;+p{margin:-60 70;width:0;height:180;box-shadow:25vw 0
 ```
 
 ### Comparison Images
 
-<img width="858" height="530" alt="Image" src="https://github.com/user-attachments/assets/9146cf7a-e8ac-40d2-b60c-17b98f9d734f" />
+<img width="855" height="525" alt="Image" src="https://github.com/user-attachments/assets/f1f335bc-0b98-4f7b-becf-a49cb31ad9c7" />
 
 ### Additional Notes (Optional)
 
-One Froggy Evening.
+Basket weave.
 
 ### Confirmation
 
