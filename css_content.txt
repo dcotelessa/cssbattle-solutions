@@ -1,1 +1,1 @@
-<p><p><style>*{background:var(--t,#C05F6A);*{--t:#F2EAA8;margin:45 65 105}p{box-shadow:0 60px,-250px 30px,250px 30px,-230px 90px,230px 90px,0 40vh,-70vh 50vh,70vh 50vh;color:C05F6A;--t:#C05F6A;translate:0 30px;padding:15;margin:0;+p{margin:-60 70;width:0;height:180;box-shadow:25vw 0
+<p><style>*{background:var(--b,#328FC1);padding:5;p{--b:#328FC1;margin:0;height:30;--t:1in 99q}border-radius:0 0 var(--t,12q 12q);*{--b:#3D2525;margin:93 170
