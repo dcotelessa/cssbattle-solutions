@@ -1,1 +1,1 @@
-<body bgcolor=23384B><p a><p b><p a><p b><style>[b]{border-width:0 50 0 0}[a]{border-width:0 50 50}p{color:F0CD48;margin:var(--t,20)102 80;height:80;border:dotted;+p+p{--t:-345;border:solid;+p{--t:-85
+<style>*{background:#3A335A;color:B6EBE7;border:6vh solid;*{border-width:18 164;margin:60 0;box-shadow:25ch -5em,-25ch 5em
