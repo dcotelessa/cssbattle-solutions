@@ -1,4 +1,4 @@
 
 ```css
-<p><p><dl><style>&{background:linear-gradient(#EBE77E)50%50%/50%80px no-repeat#D94E4E}p{margin:10 282 0 2;border:5vw solid#EBE77E;border-radius:55px 45px 45px 55px;height:240;+p{margin:-280 2 0 282;+dl{background:#D94E4E;margin:-160;width:550;height:40
+<p><b><style>&{background:#FEFF58;border-block:25vw solid#423F36;*{width:240;height:60;background:var(--b,#D94E4E);margin:20-115;border-radius:var(--a,50%);position:fixed;>*{--b:#3E5AA9;margin:0 390;>*{--b:#423F36;height:100;--a:5vw;rotate:45deg;margin:100-145
 ```
