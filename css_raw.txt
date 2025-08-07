@@ -1,4 +1,4 @@
 
 ```css
-<p><p><style>*{background:#23384B;margin:0 20 0 0;width:420;+*{display:flex}p{width:190;height:300;background:radial-gradient(1q at 179px 230px,#88EBF8 16q,#23384B 0 37q,#0000 0),linear-gradient(#88EBF8 35vw,#0000 0 40vw,#88EBF8 0)}+p{scale:-1
+<p><p><style>*{--t:#0000 16q,#fff 0 37q,#0000 0;margin:0 20 0 0;width:420;+&{display:flex}p{background:radial-gradient(1q at 94.2%23.3%,var(--t)),radial-gradient(1q at 5.8%76.7%,var(--t)),radial-gradient(1q at 94.2%76.7%,var(--t)),linear-gradient(#F88889 35vw,#0000 0 40vw,#F88889 0)}+p{scale:-1
 ```
