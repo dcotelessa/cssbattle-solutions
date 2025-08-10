@@ -1,20 +1,20 @@
 ### Date
 
-Aug 9, 2025
+Aug 10, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:#FADE8B;margin:17 72 17 42;*{background:radial-gradient(1q at 50%100%,#FADE8B 30px,#31938C 0 70px,#FADE8B)50px -45vw/25vw repeat-x,conic-gradient(at 40px 55vw,#0000 50%,#135853 0 75%,#31938C 0)30px/25vw;border-radius:0 70px 0 0
+<style>&{background:linear-gradient(45deg,#EBE77E 67q,#243D83 0 99q,#328FC1 0);margin:10 60 70 120;box-shadow:-32q 32q#243D83,0 0 0 2in#328FC1
 ```
 
 ### Comparison Images
 
-<img width="849" height="539" alt="Image" src="https://github.com/user-attachments/assets/739ea76d-209a-42e6-b859-2f4cf83dbdb8" />
+<img width="856" height="534" alt="Image" src="https://github.com/user-attachments/assets/cf82991f-5076-4483-99ec-7cc2f6d4b71d" />
 
 ### Additional Notes (Optional)
 
-Mmm.
+Right Angle.
 
 ### Confirmation
 
