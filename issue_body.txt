@@ -1,20 +1,20 @@
 ### Date
 
-Aug 13, 2025
+Aug 14, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{border-radius:var(--t,30px);background:#5A9F48;border:5vw solid#23384B;margin:110 90;height:120;*{--t:0;height:80;margin:40 50;border-width:20 20 0;p{--t:1in 1in 0 0 ;margin:-160-60;height:60
+<style>&{background:#F3AC3C;margin:92 112 32;*{--t:radial-gradient(1q,#000 5vw,#0000)50%;background:var(--t)/99%15vw,var(--t)-15vw/15vw,radial-gradient(1q at 50%0,#0000 5ch,#000 0 5pc,#0000)0 5vw
 ```
 
 ### Comparison Images
 
-<img width="865" height="537" alt="Image" src="https://github.com/user-attachments/assets/598cb319-0b01-499a-b783-a5b300464acd" />
+<img width="859" height="534" alt="Image" src="https://github.com/user-attachments/assets/5ed7fbfd-29bf-47bf-9db3-eb57c6409a48" />
 
 ### Additional Notes (Optional)
 
-Locked in.
+Dots and Half-Circles.
 
 ### Confirmation
 
