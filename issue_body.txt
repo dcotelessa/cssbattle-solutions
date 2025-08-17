@@ -1,20 +1,20 @@
 ### Date
 
-Aug 16, 2025
+Aug 17, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>*{background:radial-gradient(1q at 50% 135px,#F3EAD2 70px,#D96C7B 0 25vw,#4C455B);*{background:#D96C7B;margin:135 100 35;border:solid#F3EAD2;border-width:0 30px 30px
+<p><p a><p><style>*{background:var(--t,#41434B);margin:23.3-30 0 20;+*{display:flex}p{border-radius:6em 6em var(--h,0 6em);width:100;height:100;--t:radial-gradient(1q,#0000 5vh,#fff 0)-5vw;+p{--h:6em 0}+[a]{--t:conic-gradient(#D95F5B 34deg,#0000 0 326deg,#D95F5B 0);scale:1.2;translate:0 110%;font:0'
 ```
 
 ### Comparison Images
 
-<img width="868" height="548" alt="Image" src="https://github.com/user-attachments/assets/e9f12a7d-62b2-4133-bc66-912fc669a92c" />
+<img width="854" height="532" alt="Image" src="https://github.com/user-attachments/assets/a70dee78-966f-44af-acbd-e54d92caad97" />
 
 ### Additional Notes (Optional)
 
-Toy chest.
+Night Owl.
 
 ### Confirmation
 
