@@ -5,12 +5,12 @@ Aug 17, 2025
 ### CSS Solution(s)
 
 ```css
-<p><p a><p><style>*{background:var(--t,#41434B);margin:23.3-20 0 20;+*{display:flex}p{border-radius:6em 6em var(--h,0 6em);width:100;height:100;--t:radial-gradient(#0000 5vh,#fff 0)-5vw;+p{--h:6em 0}+[a]{translate:0 153q;scale:1 1.5;width:0;border:40px solid;border-color:#D95F5B#0000;font:0'
+<p><p a><p><style>*{background:#41434B;margin:23.3-20 0 20;+*{display:flex}p{border-radius:6em 6em var(--h,0 6em);width:100;height:100;background:radial-gradient(#0000 5vh,#fff 0)-5vw;+p{--h:6em 0}+[a]{translate:0 153q;scale:1 1.5;width:0;border:40px solid;border-color:#D95F5B#0000;font:0'
 ```
 
 ### Comparison Images
 
-<img width="864" height="537" alt="Image" src="https://github.com/user-attachments/assets/fa08d042-1648-4df5-bba6-eb4ad7a49213" />
+<img width="862" height="532" alt="Image" src="https://github.com/user-attachments/assets/2f78a550-b505-40fd-95a6-a69ec7d11450" />
 
 ### Additional Notes (Optional)
 
