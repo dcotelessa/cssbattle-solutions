@@ -1,4 +1,4 @@
 
 ```css
-<style>&{background:#FCEBEB;margin:140 170;color:DE6B67;box-shadow:0-5ch,0-5em,0-30vw,0 5ch,0 5em,0 30vw,-15vw -5vw,15vw -5vw,-15vw 5vw,15vw 5vw,-30vw 0,30vw 0
+<dt><p><p><dt a><p><p><style>*{background:#414B81;*{background:#FADE8B;margin:125 160;height:50}[a]{margin:-175 160;scale:1-1}p{border-radius:1in 1in 1in 0;width:50;translate:-430%-79q;scale:2;+p{margin:-25-20;scale:-2
 ```
