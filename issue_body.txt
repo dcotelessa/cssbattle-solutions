@@ -1,20 +1,20 @@
 ### Date
 
-Aug 21, 2025
+Aug 22, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>&{border:50px solid#B9C99F}*{background:radial-gradient(1q,#B9C99F 1.38lh,#0000 0)var(--t,)#526766;margin:-50 0 100;body{margin:50 0;background:#B9C99F;box-shadow:2.78lh 0#526766,-2.78lh 0#526766;p{--t:25px/50px;margin:0 100;width:100;height:50;+p{position:fixed;width:50;height:200;margin:-50 125;font:0'
+<style>&{background:linear-gradient(90deg,#fff 5pc,#F88889 0 130px,#fff 0)0 0/47.5%;*{border-top:53q solid;border-radius:1in;margin:125 50
 ```
 
 ### Comparison Images
 
-<img width="863" height="530" alt="Image" src="https://github.com/user-attachments/assets/c92e18d1-3573-4bda-bc43-9bbfb86f8f42" />
+<img width="860" height="536" alt="Image" src="https://github.com/user-attachments/assets/9a235f45-f7e2-4ab7-bb78-d9e1b1e13bdb" />
 
 ### Additional Notes (Optional)
 
-Symetrical pattern.
+Floating shelf.
 
 ### Confirmation
 
