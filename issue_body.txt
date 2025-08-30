@@ -1,20 +1,20 @@
 ### Date
 
-Aug 29, 2025
+Aug 30, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:#7C7565;color:F1E1BE;border:75px solid;margin:30 85;scale:1.13 1;box-shadow:-122q 15em,122q -15em
+<style>*{background:#A1E8A7;color:D2495C;border:53q solid;margin:50 75;+*{margin:25 99 99-25;scale:.5;box-shadow:25ch 0,0 25ch,25ch 25ch
 ```
 
 ### Comparison Images
 
-<img width="855" height="530" alt="Image" src="https://github.com/user-attachments/assets/05a4c597-bc6e-473f-9864-cbee9c1dd7d6" />
+<img width="859" height="535" alt="Image" src="https://github.com/user-attachments/assets/4b553748-944e-4b53-9c8a-bd73a3eb9dbd" />
 
 ### Additional Notes (Optional)
 
-Adventure Maze. (Avoid the dragon.)
+Tree.
 
 ### Confirmation
 
