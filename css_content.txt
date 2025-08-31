@@ -1,1 +1,1 @@
-<style>*{background:#A1E8A7;color:D2495C;border:53q solid;margin:50 75;+*{margin:25 99 99-25;scale:.5;box-shadow:25ch 0,0 25ch,25ch 25ch
+<stYle>&{backGround:#E8AD6D;boRDer:5ch solid;maRGin:50 100;boRDer-raDIus:0 73q;*{coLor:fff;scAle:.387;box-SHadow:69vh 69vh,-69vh -69vh
