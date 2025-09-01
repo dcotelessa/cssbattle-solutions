@@ -5,16 +5,16 @@ Sep 1, 2025
 ### CSS Solution(s)
 
 ```css
-<stYle>*{background:linear-GRAdient(#F4DA64 60%,#E25C57 0)0/1%53q;box-SHadow:inSet 50vw 0#E25C57;*{scale:-1;margin:150 0 0
+<stYle>*{background:linear-GRAdient(#F4DA64 60%,#E25C57 0)0/1%50px;box-SHadow:inSet 50vw 0#E25C57;*{scale:-1;margin:150 0 0
 ```
 
 ### Comparison Images
 
-<img width="866" height="533" alt="Image" src="https://github.com/user-attachments/assets/a497d17c-9116-4f16-9e94-02569e3504ac" />
+<img width="859" height="535" alt="Image" src="https://github.com/user-attachments/assets/fb0cdc56-5dfe-4ede-bc5e-4467367f3a77" />
 
 ### Additional Notes (Optional)
 
-Sunset Blinds.
+Sunset blinds.
 
 ### Confirmation
 

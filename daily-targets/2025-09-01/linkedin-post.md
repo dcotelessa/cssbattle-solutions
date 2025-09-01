@@ -4,7 +4,7 @@
 
 Today's CSSBattle solution:
 
-Sunset Blinds.
+Sunset blinds.
 
 https://github.com/dcotelessa/cssbattle-solutions/blob/main/daily-targets/2025-09-01/solutions.html
 
