@@ -1,1 +1,1 @@
-<style>&{background:radial-gradient(1q at 5pc,#0000 50vh,#FFFFCD 0 50vw,#0000),radial-gradient(1q at 50vw,#0000 50vh,#FFFFCD 0 50vw,#0000),linear-gradient(90deg,#5DBCF9 41%,#FFFFCD 0 59%,#5DBCF9 0);border:15vw solid#5DBCF9
+<stYle>*{margin:30 80;background:linear-gradient(#0000 41%,#243d83 0 60%,#0000 0),radial-gradient(1q,#fff 7.5ch,#243d83 0 25vw,#fff 0 15ch,#243d83)fixed;*{margin:0 96 0 98;font:0'
