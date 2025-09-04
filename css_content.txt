@@ -1,1 +1,1 @@
-<stYle>*{margin:30 80;background:linear-gradient(#0000 41%,#243d83 0 60%,#0000 0),radial-gradient(1q,#fff 7.5ch,#243d83 0 25vw,#fff 0 15ch,#243d83)fixed;*{margin:0 96 0 98;font:0'
+<p><p><style>*{background:#51A495;p{height:100;background:#fff;rotate:45deg;margin:60 252 0 32;--t:60q;box-shadow:var(--t)var(--t)#fff;+p{rotate:-45deg;translate:130%-120%;--t:67q
