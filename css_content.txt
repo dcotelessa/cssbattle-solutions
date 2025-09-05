@@ -1,1 +1,1 @@
-<p><p><style>*{background:#51A495;p{height:100;background:#fff;rotate:45deg;margin:60 252 0 32;--t:60q;box-shadow:var(--t)var(--t)#fff;+p{rotate:-45deg;translate:130%-120%;--t:67q
+<p><dt><style>&{color:FEFF58;margin:30%40%;rotate:15deg;box-shadow:0 0 0 74q,0 0 0 2in#CA8E75}p{rotate:-30deg;scale:1.849 1;box-shadow:-6px 19px 0 60px#414B81}dt{box-shadow:0-22px 0 32q;scale:.645-1
