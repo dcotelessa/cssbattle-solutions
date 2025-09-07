@@ -10,11 +10,11 @@ Sep 7, 2025
 
 ### Comparison Images
 
-<img width="863" height="539" alt="Image" src="https://github.com/user-attachments/assets/29ad4412-3cdd-4c2a-9509-f2e707e15eed" />
+<img width="860" height="541" alt="Image" src="https://github.com/user-attachments/assets/020eb170-0f64-41de-aad7-ca2f4b321377" />
 
 ### Additional Notes (Optional)
 
-8 bit Arc.
+8-bit Arc.
 
 ### Confirmation
 
