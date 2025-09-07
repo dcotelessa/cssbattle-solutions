@@ -1,20 +1,20 @@
 ### Date
 
-Sep 6, 2025
+Sep 7, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>*{background:#142932;border:4ch solid#00D47E;border-radius:4em;margin:35 45;height:56;+*{p{+p{width:30}position:fixed;margin:60 80;border-width:0 31 30 29;height:110}margin:-2-1;width:250;height:60;font:0'
+<p><p><style>*{background:#2D3464;border-inline:5pc solid#D95362;height:5pc;*{zoom:.999.99;margin:80-40}p{zoom:.5;translate:0 10pc;+p{zoom:.25;margin:80;border-width:240
 ```
 
 ### Comparison Images
 
-<img width="863" height="539" alt="Image" src="https://github.com/user-attachments/assets/07283355-637e-4077-a5da-1f42e382f7bb" />
+<img width="863" height="539" alt="Image" src="https://github.com/user-attachments/assets/29ad4412-3cdd-4c2a-9509-f2e707e15eed" />
 
 ### Additional Notes (Optional)
 
-Everything off by a hair.
+8 bit Arc.
 
 ### Confirmation
 

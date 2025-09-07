@@ -1,1 +1,1 @@
-<p><p><style>*{background:#142932;border:4ch solid#00D47E;border-radius:4em;margin:35 45;height:56;+*{p{+p{width:30}position:fixed;margin:60 80;border-width:0 31 30 29;height:110}margin:-2-1;width:250;height:60;font:0'
+<p><p><style>*{background:#2D3464;border-inline:5pc solid#D95362;height:5pc;*{zoom:.999.99;margin:80-40}p{zoom:.5;translate:0 10pc;+p{zoom:.25;margin:80;border-width:240
