@@ -1,20 +1,20 @@
 ### Date
 
-Sep 7, 2025
+Sep 8, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>*{background:#2D3464;border-inline:5pc solid#D95362;height:5pc;*{zoom:.999.99;margin:80-40}p{zoom:.5;translate:0 10pc;+p{zoom:.25;margin:80;border-width:240
+<p><p><p><style>&{zoom:10;background:#FAE29E}p{+p{margin:-29 1;+p{margin:16 4}}background:#4A9A86;width:3;height:10;margin:16-2;box-shadow:19px -2vh#4A9A86
 ```
 
 ### Comparison Images
 
-<img width="860" height="541" alt="Image" src="https://github.com/user-attachments/assets/020eb170-0f64-41de-aad7-ca2f4b321377" />
+<img width="854" height="541" alt="Image" src="https://github.com/user-attachments/assets/ed46428b-9f62-4aed-adf7-2c3bc2b3bad3" />
 
 ### Additional Notes (Optional)
 
-8-bit Arc.
+Skewed 8-bit.
 
 ### Confirmation
 
