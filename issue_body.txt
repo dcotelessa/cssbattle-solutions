@@ -1,20 +1,20 @@
 ### Date
 
-Sep 9, 2025
+Sep 10, 2025
 
 ### CSS Solution(s)
 
 ```css
-<img><img><img><style>*{background:#142032;color:0B1D4;*{margin:10%90;border:32q solid}img{zoom:10;outline:5px solid#142032;border:1vh double;margin:-3;+*{margin:-3 13;+*{margin:13-3-10
+<dl><p a><p b></dl><dl><p b><p a></dl><dl><style>*{background:#B0C1F0;*{margin:var(--t,100);color:#3E5AA9}dl{+dl{+dl{transform:skew(0);box-shadow:0 9ch;height:20;--t:-132 0}--t:-100 32}--t:0-187}p{--t:0 80;width:42;height:50;transform:skew(45deg);box-shadow:35vh 0,3em 0}[b]{scale:1}[a]{scale:1-1
 ```
 
 ### Comparison Images
 
-<img width="856" height="525" alt="Image" src="https://github.com/user-attachments/assets/3c9a1622-b4a5-4df9-9619-eaee9f1b7e3a" />
+<img width="863" height="542" alt="Image" src="https://github.com/user-attachments/assets/d859a9e5-d5dd-442e-816c-55cffe3363a4" />
 
 ### Additional Notes (Optional)
 
-QR Template.
+Either which way.
 
 ### Confirmation
 
