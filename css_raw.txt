@@ -1,4 +1,4 @@
 
 ```css
-<p><p b><p c><p d><p e><style>[b]{--t:135deg}[c]{--t:45deg}[d]{--t:90deg}[e]{width:60;height:60;margin:45 105;border-width:0 0 5vw 5vw}body{border-radius:50%}&{margin:7 57;background:#D24444;*{color:F3DA7A;border:5vw solid;p{width:20;height:190;margin:0 105-230;border-width:5vw 0;rotate:var(--t,0
+<p><p><style>&{background:linear-gradient(90deg,#240D29 35vh,#0000 0 312q,#240D29 0)0 35vw/80%5vw repeat-x#F1E1BE}p{margin:25 177 140;height:50;color:240D29;box-shadow:74q 10vh,-74q 10vh,inset 1in 0;+p{height:20vh;scale:-1
 ```

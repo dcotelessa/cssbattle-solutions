@@ -1,23 +1,23 @@
 ### Date
 
-Sep 12, 2025
+Sep 13, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p b><p c><p d><p e><style>[b]{--t:135deg}[c]{--t:45deg}[d]{--t:90deg}[e]{width:60;height:60;margin:45 105;border-width:0 0 5vw 5vw}body{border-radius:50%}&{margin:7 57;background:#D24444;*{color:F3DA7A;border:5vw solid;p{width:20;height:190;margin:0 105-230;border-width:5vw 0;rotate:var(--t,0
+<p><p><style>&{background:linear-gradient(90deg,#240D29 35vh,#0000 0 312q,#240D29 0)0 35vw/80%5vw repeat-x#F1E1BE}p{margin:25 177 140;height:50;color:240D29;box-shadow:74q 10vh,-74q 10vh,inset 1in 0;+p{height:20vh;scale:-1
 ```
 
 ### Comparison Images
 
-<img width="864" height="538" alt="Image" src="https://github.com/user-attachments/assets/db2f3d53-e2e6-4047-9e2c-2901f1631b4a" />
+<img width="859" height="536" alt="Image" src="https://github.com/user-attachments/assets/949f0c4a-e374-4215-8e9c-45adaa002e73" />
 
 ### Additional Notes (Optional)
 
-Time for timer.
+Got this solution under the wire.
 
 ### Confirmation
 
 - [x] I have tested my CSS solution and it renders correctly
 - [x] My CSS code blocks are properly formatted with opening and closing backticks
-- [ ] The comparison images (if any) clearly show the target vs my result
+- [x] The comparison images (if any) clearly show the target vs my result
