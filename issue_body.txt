@@ -1,20 +1,20 @@
 ### Date
 
-Sep 13, 2025
+Sep 14, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>&{background:linear-gradient(90deg,#240D29 35vh,#0000 0 312q,#240D29 0)0 35vw/80%5vw repeat-x#F1E1BE}p{margin:25 177 140;height:50;color:240D29;box-shadow:74q 10vh,-74q 10vh,inset 1in 0;+p{height:20vh;scale:-1
+<dl><dt></dl><dl><dt></dl><dl><dt><style>*{background:var(--t,#FFD)}dl,dt{--t:#D96C7B;border-radius:1in}dl{+dl{--r:-80;--t:#30383F;color:D96C7B;+dl{--r:-260}}color:30383F;padding:10;margin:var(--r,120)12}dt{margin:0 150;border:5vw solid;box-shadow:-50vh 0,50vh 0
 ```
 
 ### Comparison Images
 
-<img width="859" height="536" alt="Image" src="https://github.com/user-attachments/assets/949f0c4a-e374-4215-8e9c-45adaa002e73" />
+<img width="861" height="533" alt="Image" src="https://github.com/user-attachments/assets/e91d5259-4158-42ab-b49b-0ef1e112a4a8" />
 
 ### Additional Notes (Optional)
 
-Got this solution under the wire.
+3 x 3.
 
 ### Confirmation
 
