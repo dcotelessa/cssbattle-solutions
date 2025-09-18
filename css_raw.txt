@@ -1,4 +1,4 @@
 
 ```css
-<style>*{background:radial-gradient(1q,#4A9A86 70vh,#FAE29E);+&{-webkit-box-reflect:left -4in;background:129q radial-gradient(1q at 0 50%,#0000,110px,#FAE29E 0 35vw,#0000
+<p><p><style>*{background:repeating-conic-gradient(#00D47E 0 25%,#23384B 0 var(--t,0))0/5pc;p{--t:50%;width:360;height:80;margin:20 12;+p{margin:100 12;scale:-1
 ```
