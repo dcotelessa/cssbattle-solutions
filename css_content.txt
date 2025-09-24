@@ -1,1 +1,1 @@
-<p><style>*{background:#F7FCDC;border:2.5ch solid#9F6766;border-bottom:0;margin:20 60;*{margin:40 30;p{background:#8AB8B6;margin:-20-70;height:150;font:0'
+<p><p t=90><p t=180><p t=270><style>*{margin:35 40;background:#7DDDEB;p{color:9A5DCB;width:30;height:30;box-shadow:inset 5ch 0,5ch 0,0 5ch,5vw 5ch,5ch 5ch;+p{margin:60 80;rotate:attr(t deg);+p{margin:-50 170;+p{margin:-120 130
