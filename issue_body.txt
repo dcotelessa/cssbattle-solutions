@@ -1,20 +1,20 @@
 ### Date
 
-Sep 26, 2025
+Sep 27, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p y=-5><p x=-5><p x=5><p y=5><style>*{background:#4763B1;margin:29 54;p{+p+p{margin:-248 112 288}margin:-8-8 48;border:5ch solid#fff;width:0;box-shadow:attr(x vw,0)attr(y vw,0
+<style>*{*{margin:80 90;box-shadow:-35vw -5pc,0-5pc,35vw -5pc,-35vw 5pc,0 5pc,35vw 5pc}color:EDDF5A}&{border:solid;border-width:50 70;background:linear-gradient(#E8625E 50%,#333 0
 ```
 
 ### Comparison Images
 
-<img width="860" height="533" alt="Image" src="https://github.com/user-attachments/assets/0b05323c-d52d-4dc6-b141-ced7fb981b4a" />
+<img width="861" height="531" alt="Image" src="https://github.com/user-attachments/assets/04fa6cc6-4776-427d-b302-70e62bb8a759" />
 
 ### Additional Notes (Optional)
 
-Window with Tabs.
+Lego reflection.
 
 ### Confirmation
 

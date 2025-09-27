@@ -1,4 +1,4 @@
 
 ```css
-<p y=-5><p x=-5><p x=5><p y=5><style>*{background:#4763B1;margin:29 54;p{+p+p{margin:-248 112 288}margin:-8-8 48;border:5ch solid#fff;width:0;box-shadow:attr(x vw,0)attr(y vw,0
+<style>*{*{margin:80 90;box-shadow:-35vw -5pc,0-5pc,35vw -5pc,-35vw 5pc,0 5pc,35vw 5pc}color:EDDF5A}&{border:solid;border-width:50 70;background:linear-gradient(#E8625E 50%,#333 0
 ```
