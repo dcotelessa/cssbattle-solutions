@@ -1,21 +1,20 @@
 ### Date
 
-Sep 30, 2025
+Oct 1, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p x=70><p x=140><p x=210 y=277>
-<style>body{background:#9382E4}p{margin:30 attr(y q,234)-30 52;height:60;mask:conic-gradient(at 7vw 8vw,#0000 25%,#000 0);background:linear-gradient(90deg,#B6EBE7 74q,#3F595E 0);transform:translate(attr(x px
+<p><style>&{border-inline:110px solid#3F4869;background:linear-gradient(90deg,#E25C57 5vw,#3F4869 0)0/5pc;p{color:E25C57;scale:.61;height:160;border-radius:1in;box-shadow:-139q -151q,139q -151q,0 367q
 ```
 
 ### Comparison Images
 
-<img width="861" height="532" alt="Image" src="https://github.com/user-attachments/assets/295aaeb4-e899-444a-a749-cb70a1e991d4" />
+<img width="867" height="533" alt="Image" src="https://github.com/user-attachments/assets/61f74509-1bed-4a5e-837a-0e9401a40c97" />
 
 ### Additional Notes (Optional)
 
-Stairs.
+Lollipops.
 
 ### Confirmation
 
