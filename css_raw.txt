@@ -1,4 +1,4 @@
 
 ```css
-<dt><p><dt a><p><dt><p><style>*{background:#23384B;color:F0CD48;body{display:flex;margin:40 20}dt{p{margin:20 0;height:100;border-inline:5ch solid}border-block:5ch solid;width:100;margin:0 10}[a]{color:#0000
+<style>*{margin:40;border:2.5ch solid#4763B1;*{scale:.3.6;color:fff;box-shadow:564q 61vh,564q -61vh,-564q 61vh,-564q -61vh;font:5ch'
 ```
