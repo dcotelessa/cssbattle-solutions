@@ -1,4 +1,4 @@
 
 ```css
-<style>*{margin:40;border:2.5ch solid#4763B1;*{scale:.3.6;color:fff;box-shadow:564q 61vh,564q -61vh,-564q 61vh,-564q -61vh;font:5ch'
+<p><p><p a><p><p a><style>*{[a]{--b:linear-gradient(#222 10px,#0000 0)0 15vh;scale:.4 1}background:var(--b,#AC5353);*{p{+p{+p{+p{+p{rotate:90deg;--y:-50vh}scale:9;--y:11vw}--x:0;--y:5ch}--x:-15vw;--y:39vw}scale:3;height:100;--x:15vw;--y:68vw}translate:var(--x,0)var(--y,-65vw);--b:radial-gradient(1q,#222 10px,#0000
 ```
