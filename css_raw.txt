@@ -1,4 +1,4 @@
 
 ```css
-<style>*{*{box-shadow:-70q 5ch,-70q 201q,30ch 5ch,30ch 201q}color:0B2429;margin:-80 0 150-175}&{margin:95 175;background:#48BF7D;outline:5ch dotted
+<style>&{background:#F0CD48;border:15vw solid;margin:60 80;border-image:conic-gradient(at 50vw 15vw, #0000 90deg,#243D83 0)1;*{background:#5AA4B7;margin:-60-40 60 100;clip-path:polygon(0 0,99%50%,0 99%
 ```

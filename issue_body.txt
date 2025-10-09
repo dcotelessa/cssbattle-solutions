@@ -1,20 +1,20 @@
 ### Date
 
-Oct 8, 2025
+Oct 9, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>*{*{box-shadow:-70q 5ch,-70q 201q,30ch 5ch,30ch 201q}color:0B2429;margin:-80 0 150-175}&{margin:95 175;background:#48BF7D;outline:5ch dotted
+<style>&{background:#F0CD48;border:15vw solid;margin:60 80;border-image:conic-gradient(at 50vw 15vw, #0000 90deg,#243D83 0)1;*{background:#5AA4B7;margin:-60-40 60 100;clip-path:polygon(0 0,99%50%,0 99%
 ```
 
 ### Comparison Images
 
-<img width="856" height="534" alt="Image" src="https://github.com/user-attachments/assets/a9b5609b-b93a-4127-a08b-9fc679c78985" />
+<img width="858" height="538" alt="Image" src="https://github.com/user-attachments/assets/a91d2027-6d1a-426c-a518-c1db59da8a8e" />
 
 ### Additional Notes (Optional)
 
-Belt.
+Bendy Pencil.
 
 ### Confirmation
 
