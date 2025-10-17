@@ -1,20 +1,20 @@
 ### Date
 
-Oct 16, 2025
+Oct 17, 2025
 
 ### CSS Solution(s)
 
 ```css
-<stYle>*{margin:100 69;background:radial-gradient(1q at 31%0,#0000 6.25ch,#3B240C 0 5pc,#0000)no-repeat,#B67024;box-shadow:-77vh -25vw#3B240C;*{margin:0 110 70 81;font:0'
+<style>*{background:radial-gradient(1q,#E8AD6D 57q,#243D83 0)-15q/125q;box-shadow:inset 26q -32q 0 5lh#243D83;*{margin:120 65;border-block:5vw solid#E8AD6D;border-radius:0  34%0 0
 ```
 
 ### Comparison Images
 
-<img width="858" height="535" alt="Image" src="https://github.com/user-attachments/assets/1fc2a851-84a6-42d3-ae75-527a632c1467" />
+<img width="864" height="533" alt="Image" src="https://github.com/user-attachments/assets/9910c9e9-b19f-4f2e-8bda-7c0b526fc77d" />
 
 ### Additional Notes (Optional)
 
-Elephant.
+Testing the tolerances on this one.
 
 ### Confirmation
 
