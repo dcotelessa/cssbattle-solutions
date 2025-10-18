@@ -1,20 +1,20 @@
 ### Date
 
-Oct 17, 2025
+Oct 18, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>*{background:radial-gradient(1q,#E8AD6D 57q,#243D83 0)-15q/125q;box-shadow:inset 26q -32q 0 5lh#243D83;*{margin:120 65;border-block:5vw solid#E8AD6D;border-radius:0  34%0 0
+<dt><dd><dd><dd><style>&{margin:22;background:#FC06;color:4A9A86;*{dd{+dd{+dd{scale:.15 6;margin:45 20}margin:0 10}margin:0-20;font:34q''}height:30;border-inline:6.25ch solid
 ```
 
 ### Comparison Images
 
-<img width="864" height="533" alt="Image" src="https://github.com/user-attachments/assets/9910c9e9-b19f-4f2e-8bda-7c0b526fc77d" />
+<img width="862" height="532" alt="Image" src="https://github.com/user-attachments/assets/85d92409-2c41-4369-8169-2222735a34a0" />
 
 ### Additional Notes (Optional)
 
-Testing the tolerances on this one.
+8-bit Y.
 
 ### Confirmation
 
