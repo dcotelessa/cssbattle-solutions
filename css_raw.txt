@@ -1,4 +1,4 @@
 
 ```css
-<dt><dt a><p><dt><style>&{*{margin:0}background:#1A4341}dt{+dt{scale:-1}height:85;background:radial-gradient(1q at 78.8%90q,#0000 53q,#5A9F48 0 5em,#0000)}p{margin:45 135;box-shadow:inset 32q 32q#5A9F48;height:130}[a]{font:0'
+<stYle>&{color:A34D60;margin:20%30%20%200;border-radius:0 1in;box-shadow:inset 0 2in,-5ch 0#D8BEC4,-5pc 0,0 0 0 3in#D8BEC4
 ```
