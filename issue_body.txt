@@ -1,20 +1,20 @@
 ### Date
 
-Oct 25, 2025
+Oct 26, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>*{background:#e8ad6d;*{margin:62 110 0 30;color:3B240C;height:16;box-shadow:0 5em,0 10em,inset 0 2in;*{margin:0-80-33 290;+*{margin:0 0 0 307;padding:17 8
+<p><style>*{margin:5;height:70;background:repeat-x#3F4869 radial-gradient(1q at 50%var(--t,150%),#DE6B67 35vh,#0000);*{--t:50%;margin:0;*{--t:-50%}translate:0 157%
 ```
 
 ### Comparison Images
 
-M     I     N     U     S        plus.
+<img width="858" height="536" alt="Image" src="https://github.com/user-attachments/assets/17fb7d92-2d45-42ba-a162-82cb468562af" />
 
 ### Additional Notes (Optional)
 
-<img width="862" height="522" alt="Image" src="https://github.com/user-attachments/assets/f8a62ee3-3605-436a-aa5a-5d795a7be4b3" />
+Split egg.
 
 ### Confirmation
 
