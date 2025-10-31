@@ -1,1 +1,1 @@
-<p><style>&{background:conic-gradient(at 14%17%,#00B1D4 75%,#FADE8B 0)26q 26q;*{p{margin:-16;padding:24 174}border:1em solid;border-radius:1in;margin:10 310 10 10
+<style>*{margin:-20 220 170-20;outline:5ch solid;background:radial-gradient(1q at 80%110px,#0000 32q,#000 0 74q,#0000)space#37A76F;*{scale:-1;margin:0;translate:120%190px
