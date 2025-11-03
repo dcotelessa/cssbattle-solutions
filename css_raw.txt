@@ -1,4 +1,4 @@
 
 ```css
-<style>&{*{margin:0 140 80;box-shadow:0 5ch,-115px 5ch,115px 5ch}color:F0CD48;border-block:5ch solid;margin:50 40;background:space#243d83 repeating-linear-gradient(90deg,#0000 30px,#F0CD48 0 60px,#0000 0 145px
+<p t=270><p t=-121><p t=45.5><style>&{background:radial-gradient(1q,#E38F66 25vh,#62306d);p{+p+p{height:24}height:80;border-radius:1in;color:E38F66;margin:0 180;box-shadow:0 attr(t q),24q attr(t q),-24q attr(t q
 ```
