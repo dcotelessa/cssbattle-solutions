@@ -5,12 +5,12 @@ Nov 4, 2025
 ### CSS Solution(s)
 
 ```css
-<p t=62><p t=192><p t=322><dt s=22 ><dt s=172><dt s=322><style>*{position:fixed;background:var(--b,#00D47E)}dt{padding:8 20;margin:134 attr(s px);--b:#000}p{padding:126 195;--b:radial-gradient(1q at attr(t px),#0000 25px,#000 0 53q,#0000
+<style>*{background:radial-gradient(1q,#0000 25px,#000 0 53q,#00D47E)-3q 0/130px,conic-gradient(at 5ch 1pc,#00D47E 75%,#000 0)23q 142q/50vh
 ```
 
 ### Comparison Images
 
-<img width="858" height="535" alt="Image" src="https://github.com/user-attachments/assets/65bfff82-b5c5-4a0d-b99b-6a06a90f1c38" />
+<img width="865" height="534" alt="Image" src="https://github.com/user-attachments/assets/0cb0b7b2-5cbe-47fa-809e-54b9a4a4d6a9" />
 
 ### Additional Notes (Optional)
 
