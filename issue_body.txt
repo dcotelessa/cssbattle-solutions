@@ -1,20 +1,20 @@
 ### Date
 
-Nov 7, 2025
+Nov 8, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><P><style>&{background:#fc62;p{+p{color:DA6C8E;rotate:90deg}color:81D2B0;padding:45 10;border-radius:1in;position:fixed;margin:97 182;box-shadow:37Q -74Q 0 5vh,-37Q 74Q 0 5vh
+.<p><style>*{background:#FFE5AC;border-radius:1in;color:313131;box-shadow:0 55vh,0 90q}*{margin:0 140 250;>*{margin:95 70-110 0;box-shadow:74q 0#FFE5AC;p{height:30;margin:-93 10;box-shadow:74q 90q,0 90q
 ```
 
 ### Comparison Images
 
-<img width="863" height="541" alt="Image" src="https://github.com/user-attachments/assets/1abb7e75-b984-42ce-a2fc-2f7f8301b021" />
+<img width="864" height="526" alt="Image" src="https://github.com/user-attachments/assets/c82f320d-010f-4d86-a114-b06489406f50" />
 
 ### Additional Notes (Optional)
 
-Slack-esque.
+AH!
 
 ### Confirmation
 
