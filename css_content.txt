@@ -1,1 +1,1 @@
-<p><style>p{margin:-40 0;padding:20 130;border-inline:5vw solid#050044}&{background:#050044;margin:44q;>*{border-block:5ch solid#a4215d;background:radial-gradient(1Q at 50%25%,#0000 53Q,#f3ead2 0 5lh,#0000
+<p><p b><p c><style>&{background:#BDE4C1}p{border-left:5ch solid#9F6766;margin:16 8-16 290;height:100;background:0 0/99%70%conic-gradient(at 35%43%,#9F6766 25%,#0000 0)}[b]{background:#9F6766;margin:16 94-16;height:68}[c]{scale:-1;translate:-94vh
