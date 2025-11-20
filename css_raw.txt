@@ -1,4 +1,4 @@
 
 ```css
-<p><p a=116><style>&{background:#D86F45;margin:97 147}p{+p{rotate:90deg;margin:30 100}padding:35 25;margin:-60 0;border:solid#fff;border-width:20 20 0;-webkit-box-reflect:below attr(a q,32q
+<p><style>&{background:#A443;*{background:#C67455;color:668884;margin:125;width:50;height:50;border-radius:1in 0 0 1in;box-shadow:6.2ch -6.2ch,6.2ch 6.2ch;p{margin:100;scale:-1;font:0'
 ```
