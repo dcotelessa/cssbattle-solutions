@@ -1,1 +1,1 @@
-<style>&{background:conic-gradient(at 45mm 5pc,#FFF9C0 75%,#0000 0)0 30vw/2.4in 25vw repeat-x,radial-gradient(1q at 50%100%,#D95362.1in,#FFF9C0 0 32q,#D95362 0)0-201q
+<style>&{background:#AADBF7;color:243D83;margin:95 145;box-shadow:inset 2in 2in#328FC1,0 0 0 5vw,116q 5ch 0-5ch#328FC1,-116q 5ch 0-5ch#328FC1,116q 5ch 0-5vw,-116q 5ch 0-5vw
