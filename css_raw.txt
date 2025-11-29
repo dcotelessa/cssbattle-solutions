@@ -1,4 +1,4 @@
 
 ```css
-<style>*{background:#d86f45;margin:35 50;*{color:734939;box-shadow:inset 15vw -5vw 0 15vw#f5d6b4,-5ch 0 0-5vw,0-5ch 0-5vw,-5ch -5ch 0-5vw;border-radius:5vw
+<p><p x=-20><style>&{background:#FAE7DF}p{+p{margin:15 92 0 172}margin:15 232-75 92;height:60;color:BE6565;box-shadow:inset 1in 1in,attr(x vw,35vw)70px,0 35vw,attr(x vw,35vw)70vh
 ```
