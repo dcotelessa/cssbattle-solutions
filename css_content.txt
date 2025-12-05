@@ -1,1 +1,1 @@
-<style>&{background:#E8AD6D;*{color:DE6B67;margin:70 120;border:solid#2F5A76;border-width:30 60;box-shadow:96q 0 0-32q,-96q 0 0-32q
+<p a><p><style>*{background:#32955E}[a]{margin:160 92-50;height:140;background:radial-gradient(1q,#000 10px,#fff)5ch;--a:25ch 0 0}p{height:40;margin:0 0 0 242;border-radius:25vw var(--a,
