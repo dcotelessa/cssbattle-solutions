@@ -1,1 +1,1 @@
-<style>&{*{margin:100 90;border:solid#511818;border-width:0 70 60;background:0 10vh/25em 35vw radial-gradient(1q,#511818 5vw,#e3516e
+<style>*{color:2A4CAC;border:solid;background:#7DDDEB;border-width:0 var(--t,30);margin:40 30;*{margin:50-30 110;outline:5vw solid#7DDDEB;--t:170
