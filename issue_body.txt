@@ -1,20 +1,20 @@
 ### Date
 
-Dec 9, 2025
+Dec 10, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><style>p{color:EED9D9;margin:145 167;height:10;box-shadow:-116q 0,116q 0}&,p{background:-5vw 0/27.5%radial-gradient(1q,#EED9D9 5vw,#668884
+<p><style>&{color:#FFF6;margin:125 150;background:#202F8E;height:0;border:19pt solid;border-radius:1in;box-shadow:-138q 0#fff,138q 0}p{height:20;background:#fff;margin:35 97 35-163
 ```
 
 ### Comparison Images
 
-<img width="864" height="537" alt="Image" src="https://github.com/user-attachments/assets/66e1af68-f22a-4b11-9ce0-913d9d1c3c8c" />
+<img width="863" height="539" alt="Image" src="https://github.com/user-attachments/assets/286ff151-182d-4141-b181-803c7d1a7310" />
 
 ### Additional Notes (Optional)
 
-Almost RC in Morse.
+Select one.
 
 ### Confirmation
 
