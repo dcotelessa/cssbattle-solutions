@@ -1,1 +1,1 @@
-<p><style>&{color:#FFF6;margin:125 150;background:#202F8E;height:0;border:19pt solid;border-radius:1in;box-shadow:-138q 0#fff,138q 0}p{height:20;background:#fff;margin:35 97 35-163
+<style>*{background:#F7E5FB;border:32q solid#62306D;border-radius:1in;margin:70 120;height:100;*{scale:.5;height:50;margin:59 88;rotate:-45deg
