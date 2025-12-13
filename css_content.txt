@@ -1,1 +1,1 @@
-<style>*{background:#F7E5FB;border:32q solid#62306D;border-radius:1in;margin:70 120;height:100;*{scale:.5;height:50;margin:59 88;rotate:-45deg
+<style>&{background:#63B476;color:#fff;border-radius:1in;margin:100 110;box-shadow:inset -5em 0#243D83,inset -5em 0 0 37q#000E37,inset 5em 0,69q 0 0-37q,-69q 0 0-37q
