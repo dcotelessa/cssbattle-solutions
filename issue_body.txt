@@ -1,20 +1,20 @@
 ### Date
 
-Dec 20, 2025
+Dec 21, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:radial-gradient(1Q,#FEF7F5 74q,#E7772F 0 25vw,#1C204E);*{margin:120 150;border-inline:5vw solid#1C204E
+<style>*{margin:70 90 170;background:#2F5A76;border:solid#F3AC3C;border-width:var(--t,20 0);box-shadow:0-5vw#2F5A76;*{margin:0 60-120;--t:0 20 20;border-radius:0 0 5ch 5ch
 ```
 
 ### Comparison Images
 
-<img width="869" height="535" alt="Image" src="https://github.com/user-attachments/assets/f338e63d-d3b9-475e-b0e2-5e62e16e62e6" />
+<img width="866" height="543" alt="Image" src="https://github.com/user-attachments/assets/9295ca9d-c6ce-412b-b4ac-dfdebd546e4a" />
 
 ### Additional Notes (Optional)
 
-Outlet.
+Wings.
 
 ### Confirmation
 
