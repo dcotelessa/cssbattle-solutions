@@ -1,20 +1,20 @@
 ### Date
 
-Dec 21, 2025
+Dec 22, 2025
 
 ### CSS Solution(s)
 
 ```css
-<style>*{margin:70 90 170;background:#2F5A76;border:solid#F3AC3C;border-width:var(--t,20 0);box-shadow:0-5vw#2F5A76;*{margin:0 60-120;--t:0 20 20;border-radius:0 0 5ch 5ch
+<style>*{background:#FEF6E2;--t:#FEF6E2 0 90deg,#0000 90deg;>&{margin:25 0;background:radial-gradient(1q,#FEF6E2 25vw,#0000),conic-gradient(at 50%52%,var(--t)),conic-gradient(from -180deg at 50%48%,var(--t)),linear-gradient(90deg,#ED736E 0 30vw,#FEF6E2 0 70vw,#ED736E 0
 ```
 
 ### Comparison Images
 
-<img width="866" height="543" alt="Image" src="https://github.com/user-attachments/assets/9295ca9d-c6ce-412b-b4ac-dfdebd546e4a" />
+<img width="859" height="536" alt="Image" src="https://github.com/user-attachments/assets/8a6dfdc5-3d07-4e28-bcc6-f2a6144b4c05" />
 
 ### Additional Notes (Optional)
 
-Wings.
+Invisible Circle.
 
 ### Confirmation
 
