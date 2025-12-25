@@ -1,4 +1,4 @@
 
 ```css
-<p><style>*{background:#DACFA3;margin:0;*{p{color:2D3464;height:100;margin:-10 160;background:#2D3464;box-shadow:0 29mm,0 55vw}background:0 0/50vw radial-gradient(1q,#D95362 5ch,#0000
+<style>&{background:#302562}*{margin:50 160;height:150;color:0098D1;box-shadow:inset 1in 1in,74q 25px,-74q 25px,0 53q,-45px -10em,45px -10em,0 -10em,-45px 70vh,45px 70vh,0 70vh
 ```
