@@ -1,4 +1,4 @@
 
 ```css
-<style>&{background:#302562}*{margin:50 160;height:150;color:0098D1;box-shadow:inset 1in 1in,74q 25px,-74q 25px,0 53q,-45px -10em,45px -10em,0 -10em,-45px 70vh,45px 70vh,0 70vh
+<p><p b f=15><p c f=10><p b f=5><p c f=0><style>&{background:#11092D}[b]{--t:#1BBC63}[c]{--t:#0F6B38}p{margin:60 122-40;height:20;background:var(--t,#FFCA00);border-inline:#11092D solid attr(f vh,20vh
 ```
