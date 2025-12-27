@@ -1,20 +1,20 @@
 ### Date
 
-Dec 26, 2025
+Dec 27, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p t=80 b=98 r=-10><p><style>&{background:#A82973;p{width:60;height:60;color:EEC8EA;margin:attr(t px,-60)122;rotate:attr(r deg,10deg);box-shadow:inset 1in 1in,69q attr(b q,-98q
+<p><style>*{*{p{margin:80-120}width:60;height:60;margin:50 200;border:5vw solid#F9DDC6}background:radial-gradient(1q,#594C94 15vw,#E955
 ```
 
 ### Comparison Images
 
-<img width="856" height="540" alt="Image" src="https://github.com/user-attachments/assets/d002c583-0eb4-44d0-a959-6066fb28da3b" />
+<img width="856" height="532" alt="Image" src="https://github.com/user-attachments/assets/5edd8981-bdab-4707-ad46-dbc5b9343dbf" />
 
 ### Additional Notes (Optional)
 
-Boxing Day!
+Slices.
 
 ### Confirmation
 
