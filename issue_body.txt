@@ -1,20 +1,20 @@
 ### Date
 
-Dec 25, 2025
+Dec 26, 2025
 
 ### CSS Solution(s)
 
 ```css
-<p><p b f=15><p c f=10><p b f=5><p c f=0><style>&{background:#11092D}[b]{--t:#1BBC63}[c]{--t:#0F6B38}p{margin:60 122-40;height:20;background:var(--t,#FFCA00);border-inline:#11092D solid attr(f vh,20vh
+<p t=80 b=98 r=-10><p><style>&{background:#A82973;p{width:60;height:60;color:EEC8EA;margin:attr(t px,-60)122;rotate:attr(r deg,10deg);box-shadow:inset 1in 1in,69q attr(b q,-98q
 ```
 
 ### Comparison Images
 
-<img width="864" height="539" alt="Image" src="https://github.com/user-attachments/assets/ebffc899-7f16-4fdc-bfb5-2973365b8e86" />
+<img width="856" height="540" alt="Image" src="https://github.com/user-attachments/assets/d002c583-0eb4-44d0-a959-6066fb28da3b" />
 
 ### Additional Notes (Optional)
 
-Hang a star upon the highest bough...
+Boxing Day!
 
 ### Confirmation
 
