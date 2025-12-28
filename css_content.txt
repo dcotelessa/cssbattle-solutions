@@ -1,1 +1,1 @@
-<p><style>*{*{p{margin:80-120}width:60;height:60;margin:50 200;border:5vw solid#F9DDC6}background:radial-gradient(1q,#594C94 15vw,#E955
+<style>*{background:#74B15C;color:1A552B;margin:-60 90;border:15vw solid;*{margin:10-195 200-5;scale:.5;box-shadow:0 40vw,0 80vw,-95vw 0,-95vw 40vw,-95vw 80vw
