@@ -1,4 +1,4 @@
 
 ```css
-<p a><p b><style>[a]{border-inline:64q solid#f3ead2}[b]{margin:0;padding:70 130;border-block:32q solid#8ab8b6}&{background:#4c455b;*{p{background:0;position:fixed;padding:120 60;margin:-5%20}background:#8ab8b6;margin:50 60
+<style>&{color:EFEB99;margin:0 340 130 4;box-shadow:inset 0 2in,7ch 138Q,14ch 0,21ch 138Q,28ch 0,35ch 138Q,42ch 0,0 0 0 4in#8647E6
 ```
