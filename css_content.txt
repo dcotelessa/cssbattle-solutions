@@ -1,1 +1,1 @@
-<style>&{color:EFEB99;margin:0 340 130 4;box-shadow:inset 0 2in,7ch 138Q,14ch 0,21ch 138Q,28ch 0,35ch 138Q,42ch 0,0 0 0 4in#8647E6
+<style>&{margin:120 170;color:F3EAD2;box-shadow:inset 70q 0#38483C,25vw 25vw 0 53q,25vw -25vw 0 53q,-25vw 25vw 0 53q,-25vw -25vw 0 53q,0 0 0 60px#C36768,0 0 0 25vw#38483C,0 0 0 4in
