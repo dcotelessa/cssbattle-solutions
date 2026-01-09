@@ -1,1 +1,1 @@
-<style>&{background:conic-gradient(at 5lh 5lh,#F2EAA8 75%,#0000 0)37q 5ch/60vw 130px,conic-gradient(at 50vw 35vw,#0000 75%,#F2EAA8 0)25vw 5pc/60vw 45vw,linear-gradient(#EE7667 50% ,#84BE8D 0
+<style>&{background:#2B2A4A;border-inline:70px solid#ECE3DF;*{background:#ECE3DF;color:2B2A4A;margin:125-70;box-shadow:-74q 25px,74q -25px
