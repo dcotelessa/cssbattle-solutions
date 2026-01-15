@@ -1,20 +1,20 @@
 ### Date
 
-Jan 14, 2026
+Jan 15, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{--t:conic-gradient(at 53Q 30vw,#0000 75%,#ffd0fa 0);background:var(--t)5lh 5lh/180Q,var(--t)10vh 5lh/307Q,radial-gradient(1Q,#ffd0fa 25px,#a82973)-18%-36%/2.4in 201Q
+<style>*{margin:75 125;background:#2B2A4A;color:5AA4B7;box-shadow:74q 0,50vh 0,74q 5pc,50vh 5pc,55vw 5pc#2B2A4A,0 0 0 8ic;*{margin:10 160 90-60;border-radius:1in;font:0'
 ```
 
 ### Comparison Images
 
-<img width="857" height="538" alt="Image" src="https://github.com/user-attachments/assets/79626a74-8275-49dd-9091-a2c335322850" />
+<img width="865" height="532" alt="Image" src="https://github.com/user-attachments/assets/c7db21b0-c9d3-4ea0-925b-65eb62d6e381" />
 
 ### Additional Notes (Optional)
 
-This felt similar to yesterday's solution, with gradients for the win. 
+2 guests, 4 plates.
 
 ### Confirmation
 
