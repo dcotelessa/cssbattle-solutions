@@ -1,20 +1,20 @@
 ### Date
 
-Jan 19, 2026
+Jan 20, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{margin:110 40;background:#DE9473;border:3.5ex solid#394257;box-shadow:0 0 0 1.87em#F9EAF1;*{p{color:DE9473;padding:15 50;box-shadow:-25px 5pc,-25px -10vh,90q.26in,-45vh.26in}margin:-25 55;font:0'
+.<p><style>&,p{border:var(--t,30vh)solid#fef6e2}*{margin:0-90;background:linear-gradient(var(--a,)#ac342e 2.5ch,#fef6e2 0)0 0/53q 53q;*{margin:-200 140;--a:90deg,;p{margin:152-30 0;border-radius:1in;height:60;--t:20vh;font:9em'
 ```
 
 ### Comparison Images
 
-<img width="860" height="533" alt="Image" src="https://github.com/user-attachments/assets/7f5cc485-938d-4328-ada7-30d3eaaf7f66" />
+<img width="861" height="526" alt="Image" src="https://github.com/user-attachments/assets/d1e172c4-f5a6-42f7-8e3c-ef9ccb5bd528" />
 
 ### Additional Notes (Optional)
 
-Padded clips?
+Target Practice.
 
 ### Confirmation
 
