@@ -1,20 +1,20 @@
 ### Date
 
-Feb 5, 2026
+Feb 6, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>*{--u:5pc;margin:220-80-80;background:linear-gradient(90deg,#E25C57 var(--u),#3F4869 0)0/115px}&{margin:0;--u:37q;border:solid#3F4869;border-width:0 125 80
+<p r=-30><p r=-60><style>&{background:#37B4BD;*{background:#FAE29E;margin:220 160 0;rotate:attr(r deg);p{padding:20;translate:-35vw -5pc;+p{padding:10;translate:-138q -25pc
 ```
 
 ### Comparison Images
 
-<img width="860" height="532" alt="Image" src="https://github.com/user-attachments/assets/70128efd-bc6d-4b7a-961b-99de83738685" />
+<img width="858" height="538" alt="Image" src="https://github.com/user-attachments/assets/07a20fad-7664-40b2-b361-1ca33d614aa6" />
 
 ### Additional Notes (Optional)
 
-Reversed Lines.
+Floating Boxes.
 
 ### Confirmation
 
