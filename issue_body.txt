@@ -1,20 +1,20 @@
 ### Date
 
-Feb 7, 2026
+Feb 8, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>*{border:solid#192865;border-width:var(--t,0)30 0;margin:50 25;outline:7ex solid#87D;background:2pt -5ch/95px radial-gradient(1q,#FFE08A 32q,#87D 0);*{font:0 a;margin:0 20 140;--t:
+<style>*{background:radial-gradient(1q at var(--t,50%50vh,#644 5lh),#D77);*{margin:150 100 60 200;--t:45%50%,#644 5ch
 ```
 
 ### Comparison Images
 
-<img width="863" height="531" alt="Image" src="https://github.com/user-attachments/assets/a9496636-0706-4eeb-a4ca-72ad9aa92675" />
+<img width="858" height="532" alt="Image" src="https://github.com/user-attachments/assets/56f73680-fbd3-48b7-97c6-1a3161d28d78" />
 
 ### Additional Notes (Optional)
 
-Mirror lights.
+Puck-Man.
 
 ### Confirmation
 
