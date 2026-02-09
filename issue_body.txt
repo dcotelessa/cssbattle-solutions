@@ -1,20 +1,20 @@
 ### Date
 
-Feb 8, 2026
+Feb 9, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>*{background:radial-gradient(1q at var(--t,50%50vh,#644 5lh),#D77);*{margin:150 100 60 200;--t:45%50%,#644 5ch
+.<p><style>&{background:#8BFA94;*{margin:75 20;background:radial-gradient(#D76159 5vh,#0000 0)0/20vh 20vh,conic-gradient(at 10vh 10vh,#8BFA94 75%,#D76159 0)4.7em 0/30vw 30vw;p{height:30;margin:42 0;font:20%'
 ```
 
 ### Comparison Images
 
-<img width="858" height="532" alt="Image" src="https://github.com/user-attachments/assets/56f73680-fbd3-48b7-97c6-1a3161d28d78" />
+<img width="852" height="532" alt="Image" src="https://github.com/user-attachments/assets/aa75ecd9-c199-47e7-b39c-105469a7f6a6" />
 
 ### Additional Notes (Optional)
 
-Puck-Man.
+dot-dash-dot...
 
 ### Confirmation
 
