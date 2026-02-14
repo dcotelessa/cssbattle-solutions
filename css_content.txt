@@ -1,1 +1,1 @@
-<p><p><style>*{background:#2F434E}body{display:flex;margin:26 80}p{margin:14 35;width:50;background:0-11q/100%30vw radial-gradient(1q at 0 50%,var(--t,#0098D1 90q),#0000);+p{--t:#0000 5vw,#0098D1 0 53q
+<style>&{background:#FA31;margin:145 160;color:030504;box-shadow:-116q 0 0 10vh#F40D,116q 0 0 10vh#2869FE,0 .1in,0-.1in,inset.9in 0
