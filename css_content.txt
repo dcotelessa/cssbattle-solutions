@@ -1,1 +1,1 @@
-.<style>*{background:#2B2E81;color:B5BD49;margin:80 170-180-200;border-radius:15vw}&{margin:140-50 80 120;box-shadow:inset 0 0 0 1in,0 5pc
+<p><p a><p><style>&{background:#11092d;margin:16 27;*{float:left;p{+[a]{background:#4a9a86;color:FFCA00;margin-top:126}background:#FFCA00;width:50;height:50;color:4A9A86;border:10vh solid
