@@ -1,4 +1,4 @@
 
 ```css
-<p><style>&{background:conic-gradient(at 40vw 60vw,#D8D8D8 75%,#D99795 0)30vw 10vh;p{margin:110 112;height:80;color:558C90;box-shadow:20vw 20vw,-20vw -20vw
+<p><p b><p c><p c d><style>[b]{scale:-1}[c]{--t:}[d]{margin:-160}body{background:#2F434E;display:flex;margin:14 80}p{width:80;background:0 0/200%var(--t,50%)conic-gradient(from 233deg at 50%,#6AC09E 74deg,#0000 0
 ```
