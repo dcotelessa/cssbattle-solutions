@@ -1,20 +1,20 @@
 ### Date
 
-Feb 24, 2026
+Feb 25, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>*{background:#4c4c6b;color:FAE29E;+*{margin:50 60;border-radius:1in;border:32Q solid;width:0;height:30;box-shadow:116Q 0,0 116Q,116Q 116Q,233Q 0
+<style>&{background:#9F6766;*{margin:0;background:linear-gradient(90deg,#BDE4C1 50vh,#0000 0 45mm,#BDE4C1 0 230px,#0000 0 250px,#BDE4C1 0);clip-path:polygon(57.5%0,57.5%36%,67.6%50%,50%73.5%,32.4%50%,42.5%36%,42.5%0
 ```
 
 ### Comparison Images
 
-<img width="857" height="535" alt="Image" src="https://github.com/user-attachments/assets/a13134ce-7648-4306-a4e5-d0f7d2ef29cc" />
+<img width="855" height="533" alt="Image" src="https://github.com/user-attachments/assets/3c72be6c-6dbd-4aea-95f9-86c0ced0d233" />
 
 ### Additional Notes (Optional)
 
-One missing.
+Down Arrow.
 
 ### Confirmation
 
