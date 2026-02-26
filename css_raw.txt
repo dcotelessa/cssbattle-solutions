@@ -1,4 +1,4 @@
 
 ```css
-<style>&{background:#9F6766;*{margin:0;background:linear-gradient(90deg,#BDE4C1 50vh,#0000 0 45mm,#BDE4C1 0 230px,#0000 0 250px,#BDE4C1 0);clip-path:polygon(57.5%0,57.5%36%,67.6%50%,50%73.5%,32.4%50%,42.5%36%,42.5%0
+<style>&{--t:radial-gradient(1q,#DB5EAD 25px,#0000);--u:conic-gradient(at 53q 53q,#0000 75%,#70CCDB 0);background:var(--t)11q -35vh/201q,var(--u)5vw 5vw/82mm,var(--t)-116q 35vh/82mm,var(--u)5pc 243q/201q,#129
 ```
