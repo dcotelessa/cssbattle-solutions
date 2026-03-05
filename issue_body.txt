@@ -1,20 +1,20 @@
 ### Date
 
-Mar 4, 2026
+Mar 5, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{background:#3C8B98;*{margin:130 55 40;background:#BFFFAE;;p{translate:130%-5lh;width:50;height:80;color:3C8B98;box-shadow:-15vw 0#FFF,15vw 0#FFF,-15vw 85q 0 10px,15vw 85q 0 10px
+<style>*{margin:0;background:radial-gradient(1q at 50%var(--t,50%,#000 5lh,#983C50));*{translate:0 50vh;--t:0,#000 5ch,#fff 0 74q,#000 0 5lh,#fff 0 30vw,#0000
 ```
 
 ### Comparison Images
 
-<img width="861" height="533" alt="Image" src="https://github.com/user-attachments/assets/a125a5c3-70c0-43b3-b7d8-dba94b7d232f" />
+<img width="849" height="545" alt="Image" src="https://github.com/user-attachments/assets/4e510829-22e5-4db5-afa0-1bbadbd9798a" />
 
 ### Additional Notes (Optional)
 
-Square Face.
+Drowsy eye.
 
 ### Confirmation
 
