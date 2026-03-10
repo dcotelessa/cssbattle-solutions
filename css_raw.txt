@@ -1,4 +1,4 @@
 
 ```css
-<style>*{margin:50 85%50 30;border-radius:1in 1in 0 0;color:#7E6293;box-shadow:90vh 0,5pc 0,0 0 0 30em#EBE77E,inset 1in 0;*{margin:0-310 0 310;scale:-1;color:DE817E;font:0'
+<style>*{color:#fff;margin:100 140;box-shadow:inset 2in 0,-64q 0 0-32q,64q 0 0-32q,0 0 0 9em#243D83;*{margin:0;rotate:90deg;font:0'
 ```
