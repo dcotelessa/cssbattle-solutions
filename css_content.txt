@@ -1,1 +1,1 @@
-<style>&{margin:120 260 0 0;color:323138;box-shadow:0-30vw,65vw -45vw,65vw 15vw,inset 0-30vw;*{margin:-50 70;width:120;height:20;border:70px solid#328FC1
+<style>&{background:#2936;margin:62 47;*{background:repeating-conic-gradient(at 10vh 10vh,#3F4869 0 25%,#0000 0 50%)0 0/130px 130px,linear-gradient(#3F4869 10vh,#0000 0)0 65px
