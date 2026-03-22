@@ -1,1 +1,1 @@
-<style>&{background:#983c50;*{margin:15 65;background:conic-gradient(at 110px 10vh,#0000 75%,#3D101A 0)5pc 30vw,conic-gradient(at 30vw 30vw,#0000 75%,#983C50 0)0 0/50vh 50vh,radial-gradient(#fff 5vh,#0000 0)-5q/5ch 5ch
+<p><p><style>&{background:#f3ac3c;margin:127 120;*{border:5vh solid#2d696f;p{+p{margin:-250-133;scale:-1}margin:-15 107;width:80;height:80;background:#fcf3f0;border-width:30;border-radius:0 50%50%50%
