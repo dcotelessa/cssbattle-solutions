@@ -1,1 +1,1 @@
-.<p><p><p><style>&{background:#18ab;*{background:radial-gradient(4q 1.1q,#2b2a4a 6.1lh,#0000),conic-gradient(at 53q 25%,#0000 75%,#f4da64 0)185q 30vw;margin:110 0;height:200;p{margin:-88 0;+p{margin:-270 0;+p{font:0'
+<p t=100><h1><style>*{background:radial-gradient(at 50%100%,#F5DB78 attr(t %,45%),#7A60A1 0)}*{margin:0-30;border:2.5ch solid#7A60A1}h1{width:20;color:7A60A1;box-shadow:50vh 25vw,110vh 25vw}p{margin:0 175;border-radius:1in;}p,h1{height:70;font:0'
