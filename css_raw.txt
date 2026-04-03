@@ -1,4 +1,4 @@
 
 ```css
-<p><h1><style>&{background:#F2EAA8;margin:22 72}p,h1{margin:0;width:80;height:80}p{color:73AB7C;box-shadow:10pc 5pc,5pc 10pc,0 5pc,5pc 0,0 5pc}h1{scale:.75;border-radius:1in;color:#E76;box-shadow:113q 0,226q -113q,0 113q,inset 0 1in#73AB7C
+<style>*{margin:25 75;background:conic-gradient(#8BB248)25vh 74q/5ch 25vw no-repeat,#262D80;border:4.2ex solid#8BB248;border-radius:50%;+*{margin:20 75 130;font:11q'
 ```
