@@ -1,20 +1,20 @@
 ### Date
 
-Apr 5, 2026
+Apr 6, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:conic-gradient(at 5ch 74q,#8885 75%,#457D81 0)5ch 0/35ch 230px;*{margin:100 40;background:conic-gradient(at 6.1lh 43%,#C47F7D 75%,#0000 0)0 0/70vh 70%
+<p><p><p><style>*{background:#ffca00;margin:20 60 240;box-shadow:0 110px#4a9a86,0 0 0 20em#1f1446;border-radius:var(--t,1in);*{p{+p{+p{--t:;margin:-130-150;padding:25;color:1F1446;box-shadow:-201Q 0,-75vw 0}--t:11Q;margin:-20 40;color:FFCA00;box-shadow:-15vw 0,-30vw 0}margin:-20 220;scale:-1 1}position:fixed;margin:220 240-220 0;padding:20;--t:1in 32Q 32Q 1in;font:0"
 ```
 
 ### Comparison Images
 
-<img width="861" height="541" alt="Image" src="https://github.com/user-attachments/assets/990114dd-fa43-4aaa-95fa-97a3b29922d1" />
+<img width="863" height="533" alt="Image" src="https://github.com/user-attachments/assets/0389e967-d854-4975-8aff-903274f3f79f" />
 
 ### Additional Notes (Optional)
 
-Southwest pattern.
+Solid, dashes, dots.
 
 ### Confirmation
 
