@@ -1,1 +1,1 @@
-<body bgcolor=594C94><style>*{margin:210 170-90 50;border-radius:1in;box-shadow:0 0 0 5ch,0-25ch 0-5ch;*{margin:0-120 0 120;color:#fff
+<style>*{background:radial-gradient(1q,#F0CD48 74q,#394257 0);*{margin:100 180 130 150;color:394257;box-shadow:inset 1in 0,10vh 10vh,58q 58q 0-5vh,-25px -25px 0-5v
