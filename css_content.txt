@@ -1,1 +1,1 @@
-<style>&{margin:60 95 150;background:#E76;border:solid#F2EAA8;border-radius:0 1in 1in 0;border-width:30 30 30 0;*{margin:0 60-120 90;background:#F2EAA8
+<style>&{margin:87 232 87 42;background:#2FAA8B;*{color:17405B;box-shadow:inset 2in 0,95px -69q,95px 69q,201q 0,60vw -50vh 0 5ch,245px 50vh 0 5ch
