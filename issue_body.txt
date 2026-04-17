@@ -1,20 +1,20 @@
 ### Date
 
-Apr 16, 2026
+Apr 17, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>&{background:#E8AD6D;margin:35 32;p{+p{color:A84A4B;scale:1-1}margin:10 0;border-radius:5vw;width:100;height:100;color:#fff;box-shadow:inset 0 25vw,29mm 29mm,55vw 0
+<style>&{background:radial-gradient(1q,#B5BD49 53q,#3F4869 0 95px,#0000),conic-gradient(at 45vh 42vh,#3F4869 75%,#B5BD49 0)90q 37q
 ```
 
 ### Comparison Images
 
-<img width="860" height="531" alt="Image" src="https://github.com/user-attachments/assets/558a93df-e8c7-411f-a30d-8cf03fc522a8" />
+<img width="871" height="530" alt="Image" src="https://github.com/user-attachments/assets/2263612c-1984-49d4-a3bc-e7efa3b10131" />
 
 ### Additional Notes (Optional)
 
-Six buttons.
+Eye.
 
 ### Confirmation
 
