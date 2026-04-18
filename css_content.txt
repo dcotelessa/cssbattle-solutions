@@ -1,1 +1,1 @@
-<style>&{background:radial-gradient(1q,#B5BD49 53q,#3F4869 0 95px,#0000),conic-gradient(at 45vh 42vh,#3F4869 75%,#B5BD49 0)90q 37q
+<style>*{margin:125 70;height:50;background:#E75044;color:E5E5E3;border-radius:1in 1in 0 0;box-shadow:0 6.25em#E75044,0 0 0 10em,-116q 10pc,116q 10pc,-32q -53q;*{height:250;margin:-100 90 80;font:0'
