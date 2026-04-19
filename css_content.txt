@@ -1,1 +1,1 @@
-<style>*{margin:125 70;height:50;background:#E75044;color:E5E5E3;border-radius:1in 1in 0 0;box-shadow:0 6.25em#E75044,0 0 0 10em,-116q 10pc,116q 10pc,-32q -53q;*{height:250;margin:-100 90 80;font:0'
+<p><h1><style>&{background:#2f5c24;margin:57 72 0 114;*{height:5ch;color:EBCB58;border:3.75ch solid;border-left:0;border-radius:0 54em 54em 0;p{scale:-1;margin:40 20 0-42}h1{margin:-120 49;height:74Q;box-shadow:62Q 95Q,-75Q -95Q;font:0"
