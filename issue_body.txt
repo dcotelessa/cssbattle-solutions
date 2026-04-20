@@ -1,20 +1,21 @@
 ### Date
 
-Apr 19, 2026
+Apr 20, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><h1><style>&{background:#2f5c24;margin:57 72 0 114;*{height:5ch;color:EBCB58;border:3.75ch solid;border-left:0;border-radius:0 54em 54em 0;p{scale:-1;margin:40 20 0-42}h1{margin:-120 49;height:74Q;box-shadow:62Q 95Q,-75Q -95Q;font:0"
+<style>*{
+  background:radial-gradient(1q at top,#0000 5ch,#38051E 0 110px,#0000)0 var(--t,95px#DE387B);*{--t:150q
 ```
 
 ### Comparison Images
 
-<img width="863" height="534" alt="Image" src="https://github.com/user-attachments/assets/653f91d6-80e2-49cc-aee2-55960ee09fe6" />
+<img width="859" height="529" alt="Image" src="https://github.com/user-attachments/assets/b5749d14-152f-48c6-9a46-e9822d30e056" />
 
 ### Additional Notes (Optional)
 
-Pipe drain.
+Stacked Bowls.
 
 ### Confirmation
 
