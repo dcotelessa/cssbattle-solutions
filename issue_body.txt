@@ -1,20 +1,20 @@
 ### Date
 
-Apr 23, 2026
+Apr 24, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:#4C4C6B;*{border-radius:1in;background:#FAE29E;color:4A9A86;margin:130 180;box-shadow:0 0 0 10vh,-140px 0,140px 0,-35vw 0 0 10vh#FAE29E,35vw 0 0 10vh#FAE29E
+<style>&{background:radial-gradient(1q,#111 15vw,#F7CB71 0 25vw,#A34F50);*{background:repeating-conic-gradient(#fff 0 25%,#0000 0 50%);clip-path:circle(25vw
 ```
 
 ### Comparison Images
 
-<img width="857" height="535" alt="Image" src="https://github.com/user-attachments/assets/af825121-6111-44ea-86f5-c20db551817b" />
+<img width="862" height="529" alt="Image" src="https://github.com/user-attachments/assets/e1ca3858-8c2f-472a-986e-b1d098fed176" />
 
 ### Additional Notes (Optional)
 
-Targets.
+Button Eye.
 
 ### Confirmation
 
