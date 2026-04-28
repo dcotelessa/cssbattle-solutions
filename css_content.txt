@@ -1,1 +1,1 @@
-<p><p><p><p><p><p><style>body{background:#E955;display:flex;flex-wrap:wrap;gap:5ch 15vw;margin:70 30}p{margin:0;width:60;height:40;color:594C94;box-shadow:inset 5ch 5vw,5ch 5vw
+<p b><p><style>&{background:#6592CF;[b]{border-radius:50%}p{+p{color:6592CF;width:70;height:15;box-shadow:0 8vw,0 59vh,-5lh 7em,5lh 7em}margin:auto;width:30;height:30;color:282342;box-shadow:-37q 50q,37q 50q,-37q 69vh,37q 69vh,-132q 134q,132q 134q,-58q 134q,58q 134q
