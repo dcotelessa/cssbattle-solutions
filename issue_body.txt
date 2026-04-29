@@ -1,20 +1,20 @@
 ### Date
 
-Apr 28, 2026
+Apr 29, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p t=92><p a><p t=252><style>&{background:#C72C}[a]{rotate:90deg}p{position:fixed;width:20;height:220;margin:22 attr(t px,172);background:#D9D9D9;border:11q solid
+<style>&{background:#E3DCD1}*+*{margin:120 30 40;border:10vh solid#0D2A58;background:radial-gradient(1q at 50%116q,#0D2A58 74q,#0000),linear-gradient(90deg,#D95F5B 50%,#5CF2F7 0);-webkit-mask:radial-gradient(5ch at 50%100%,#0000 98%,#000
 ```
 
 ### Comparison Images
 
-<img width="860" height="527" alt="Image" src="https://github.com/user-attachments/assets/92381614-9e1e-4e31-9479-c8e3efbe54c1" />
+<img width="857" height="547" alt="Image" src="https://github.com/user-attachments/assets/82f6e035-5474-460b-9d46-0375b85cfd1f" />
 
 ### Additional Notes (Optional)
 
-Layered H.
+3-d glasses.
 
 ### Confirmation
 
