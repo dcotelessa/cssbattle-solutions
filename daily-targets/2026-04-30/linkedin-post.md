@@ -4,7 +4,7 @@
 
 Today's CSSBattle solution:
 
-_No response_
+8 bits.
 
 https://github.com/dcotelessa/cssbattle-solutions/blob/main/daily-targets/2026-04-30/solutions.html
 
