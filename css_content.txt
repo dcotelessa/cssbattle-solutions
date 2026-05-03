@@ -1,1 +1,1 @@
-<style>*{background:linear-gradient(90deg,#525142 15%,#E25C57 0 30%,#525142 0 70%,#84BE8D 0 85%,#525142 0);*{margin:50 170 190 80;border-radius:1in;background:#E25C57;box-shadow:5lh 74q#84BE8D
+<p><p t=55><style>&{background:#F8D2D1}p{+p{transform-origin:58q 55vh;rotate:90deg}margin:10 162-90;height:80;background:radial-gradient(1q,#0000 5vh,#529CAF)0 5px/99%5ch;box-shadow:0 5ch#529CAF;-webkit-box-reflect:below attr(t vw,30vw
