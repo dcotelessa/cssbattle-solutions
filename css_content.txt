@@ -1,1 +1,1 @@
-<style>*{background:radial-gradient(1q,#4C4C6B 25vw,#EBF6F0);*{margin:10 100;background:conic-gradient(#0000 25%,#4A9A86 0 50%,#0000 0 75%,#4A9A86 0
+<style>*{*{margin:65 115;width:74q;height:74q;border-radius:1in;color:E25C57;box-shadow:inset 25vw 0,0 25vw#3F4869,25vw 0#3F4869,25vw 25vw}background:50%50%/50%50vw no-repeat#C0D6E7 conic-gradient(#E25C57 25%,#3F4869 0 50%,#E25C57 0 75%,#3F4869 0
