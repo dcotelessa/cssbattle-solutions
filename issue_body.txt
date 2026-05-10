@@ -1,20 +1,20 @@
 ### Date
 
-May 9, 2026
+May 10, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{*{margin:120 100 70;border:32q solid#0088CA;border-top:0}--t:40%,#0088CA 5vh,#A6CE39 0 35px,#0000;background:radial-gradient(1q at 115px var(--t)),radial-gradient(1q at 95vh var(--t))#09A1
+<style>&{background:conic-gradient(at 5em 15vw,#E2AD56 25%,#E25C57 0 50%,#222 0 75%,#E25C57 0)53q 0/55vw 15em
 ```
 
 ### Comparison Images
 
-<img width="857" height="533" alt="Image" src="https://github.com/user-attachments/assets/8bd57bf8-dea4-4644-bb4c-088ca1cae7ab" />
+<img width="856" height="538" alt="Image" src="https://github.com/user-attachments/assets/f27d7cdc-4a99-47d6-86c7-3ad1af100a41" />
 
 ### Additional Notes (Optional)
 
-Circuit.
+Plaid-ish.
 
 ### Confirmation
 
