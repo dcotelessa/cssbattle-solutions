@@ -1,1 +1,1 @@
-<style>&{border:64q solid#556D7F;background:conic-gradient(#556D7F 25%,#F4DCBF 0)0 5vw/100%5ch
+<p><p><style>*{box-shadow:var(--t,349q 0#eee,0 0 0 4in#6592CF,inset 2in 0#eee);margin:50 350 50 20;*{p{+p{margin:-60-5 0;height:40;--t:115px 0#eee,215px 0}height:140;--t:5em 63q#eee,265q 63q#eee}margin:0 0 30;color:173889;--t:5ch 32q,307q 32q
