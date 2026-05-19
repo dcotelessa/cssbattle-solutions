@@ -1,4 +1,4 @@
 
 ```css
-<style>&{border:10vh solid#9ff0fb;background:radial-gradient(1Q,#9ff0fb 50px,#0000)-70px 0/60vw 90vw,radial-gradient(1Q,#3f8ba6 50px,#9ff0fb)-10px 0/30vw 30vw;*{margin:105 155;color:3F8BA6;box-shadow:inset 1in 0,-15vw -15vw,15vw -15vw
+<style>*{margin:110 160;color:B29DF7;box-shadow:inset 10lh 0,7.5ch 7.5ch,-7.5ch 7.5ch,7.5ch -7.5ch,-7.5ch -7.5ch,0 0 0 1.1lh#B29DF7,0 0 0 9lh#EFEADE;*{margin:20;color:594F7C;font:8pt/0'
 ```
