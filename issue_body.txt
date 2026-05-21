@@ -1,20 +1,20 @@
 ### Date
 
-May 20, 2026
+May 21, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{background:#30383F;margin:100 20;border:solid#F4DCBF;border-width:var(--t,25px 0);*{p{--t:0;height:230}margin:-75 50;--t:53q
+<style>&{margin:90 140;background:conic-gradient(#E8AD6D 270deg,#32360E 0);color:32360E;box-shadow:-15vw -15vw 0 15vw,15vw 15vw#A84A4B,0 0 0 15vw#E8AD6D,0 0 0 2in
 ```
 
 ### Comparison Images
 
-<img width="860" height="541" alt="Image" src="https://github.com/user-attachments/assets/962fb243-41d7-41c8-9ff3-4f7359157172" />
+<img width="857" height="533" alt="Image" src="https://github.com/user-attachments/assets/60238612-2a7c-416f-9d41-e58ac2d42574" />
 
 ### Additional Notes (Optional)
 
-Square Brackets.
+Staircase.
 
 ### Confirmation
 

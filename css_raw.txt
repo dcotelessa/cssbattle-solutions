@@ -1,4 +1,4 @@
 
 ```css
-<p><style>*{background:#30383F;margin:100 20;border:solid#F4DCBF;border-width:var(--t,25px 0);*{p{--t:0;height:230}margin:-75 50;--t:53q
+<style>&{margin:90 140;background:conic-gradient(#E8AD6D 270deg,#32360E 0);color:32360E;box-shadow:-15vw -15vw 0 15vw,15vw 15vw#A84A4B,0 0 0 15vw#E8AD6D,0 0 0 2in
 ```
