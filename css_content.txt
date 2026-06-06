@@ -1,1 +1,1 @@
-<style>&{background:#fff;color:332168;border:11Q solid;outline:2in solid#9c85e2;border-radius:5vw;margin:115 50;*{background:radial-gradient(1Q,#332168 10px,#fff)69Q/10vh;margin:0 115 0 5
+<p><p><style>&{background:linear-gradient(90deg,#d9d9d9 32q,#0000 0 25vw,#5A9F48 0)50%/138q 243q no-repeat#0d2a58}p{+p{--t:#5a9f48;color:D9D9D9;scale:-1;translate:280q}margin:35 267-265 2;height:170;color:5A9F48;border:32q solid;border-right:0;border-radius:40vw 0 0 40vw;background:linear-gradient(90deg,#0000 58q,var(--t,#d9d9d9)0
