@@ -1,20 +1,20 @@
 ### Date
 
-Jun 8, 2026
+Jun 9, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>*{background:var(--u,fixed)radial-gradient(1q at 50%var(--t))}&{--t:45px,#2D3464 37q,#8FC5EF;margin:0 165 130;box-shadow:0 30vw#2D3464;*{--u:;margin:90-35-60;border:5vw solid#fff;border-bottom:0;--t:-5vw,#fff 74q,#0000
+<style>&{background:#EBF6F0;*{background:radial-gradient(1q,#0000 5ch,#4C4C6B 0 74q,#4A9A86 0 25vw,#0000);clip-path:polygon(50%50%,14%99%,0 0,99%0,86%99%
 ```
 
 ### Comparison Images
 
-<img width="858" height="537" alt="Image" src="https://github.com/user-attachments/assets/fbe50250-737d-472a-99c2-98d5553a20d2" />
+<img width="863" height="543" alt="Image" src="https://github.com/user-attachments/assets/bf336421-aa77-40af-bf73-910eb848fb06" />
 
 ### Additional Notes (Optional)
 
-Blue Apron.
+Green sunrise.
 
 ### Confirmation
 
