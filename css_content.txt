@@ -1,1 +1,1 @@
-<style>&{background:#EBF6F0;*{background:radial-gradient(1q,#0000 5ch,#4C4C6B 0 74q,#4A9A86 0 25vw,#0000);clip-path:polygon(50%50%,14%99%,0 0,99%0,86%99%
+<p a><p c><p b c><p a b><style>*+*{background:#4C4C6B;margin:37 20;display:flex;flex-flow:wrap;p{margin:13 20 17;width:140;height:85;background:conic-gradient(at 32q 90q,#335D,#FAE29E 0 25%,#4C4C6B 0)58q}[a]{border-radius:1in 1in 0 0}[b]{scale:-1}[c]{height:45;border-top:5ch solid#FAE29E
