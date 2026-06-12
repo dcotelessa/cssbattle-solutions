@@ -1,1 +1,1 @@
-<p a><p c><p b c><p a b><style>*+*{background:#4C4C6B;margin:37 20;display:flex;flex-flow:wrap;p{margin:13 20 17;width:140;height:85;background:conic-gradient(at 32q 90q,#335D,#FAE29E 0 25%,#4C4C6B 0)58q}[a]{border-radius:1in 1in 0 0}[b]{scale:-1}[c]{height:45;border-top:5ch solid#FAE29E
+<dl><dl><style>*{dl{border-inline:var(--t,40px solid#FFF);--u:10;dl{--t:5vw solid#333}height:110}border:11.9ch solid#55C085;background:linear-gradient(#333 1.1lh,#55C085 0)0 0/1%30px;margin:0 var(--u,-85);*{--u:100;font:0'
