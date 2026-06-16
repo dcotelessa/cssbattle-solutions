@@ -1,20 +1,20 @@
 ### Date
 
-Jun 15, 2026
+Jun 16, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:#2D696F;*{margin:50 100;border-radius:0 50%;--t:radial-gradient(1q,#2D696F 5vh,#0000);background:var(--t)-58q -58q,var(--t)58q 58q,0 0/110px 110px conic-gradient(at 82%82%,#0000 75%,#81A5A9 0
+<p><style>&{background:conic-gradient(at 40vw 40vw,#7C3219 75%,#F7CB71 0)30vw 74q;*{p{rotate:90deg;height:200;margin:0}margin:50 180;border-radius:5vw;background:linear-gradient(#F7CB71 5vw,#7C3219 0 74q,#F7CB71 0 130px,#7C3219 0 45vw,#F7CB71 0
 ```
 
 ### Comparison Images
 
-<img width="863" height="534" alt="Image" src="https://github.com/user-attachments/assets/4a50b854-67bc-4b16-abe3-e580f9e54052" />
+<img width="861" height="540" alt="Image" src="https://github.com/user-attachments/assets/204720ca-1001-4d0a-ac2e-7a42496551b3" />
 
 ### Additional Notes (Optional)
 
-Holed leaf.
+Checkerboard Table Top.
 
 ### Confirmation
 
