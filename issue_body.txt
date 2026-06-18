@@ -1,20 +1,20 @@
 ### Date
 
-Jun 16, 2026
+Jun 17, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>&{background:conic-gradient(at 40vw 40vw,#7C3219 75%,#F7CB71 0)30vw 74q;*{p{rotate:90deg;height:200;margin:0}margin:50 180;border-radius:5vw;background:linear-gradient(#F7CB71 5vw,#7C3219 0 74q,#F7CB71 0 130px,#7C3219 0 45vw,#F7CB71 0
+<style>&{background:conic-gradient(at 115px 115px,#A84A4B 75%,#E8AD6D 0)0 0/145px 145px;margin:-50 0;border:70px solid#E8AD6D;*{margin:20;border-radius:2in;border:5vw solid#A84A4B;background:conic-gradient(at 25vh 25vh,#FFF 75%,#E8AD6D 0)0 0/35vh 35vh
 ```
 
 ### Comparison Images
 
-<img width="861" height="540" alt="Image" src="https://github.com/user-attachments/assets/204720ca-1001-4d0a-ac2e-7a42496551b3" />
+<img width="862" height="528" alt="Image" src="https://github.com/user-attachments/assets/3c792e3c-ee61-448b-99b3-bb8c2ba8eedc" />
 
 ### Additional Notes (Optional)
 
-Checkerboard Table Top.
+Target.
 
 ### Confirmation
 
