@@ -1,20 +1,20 @@
 ### Date
 
-Jun 17, 2026
+Jun 18, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:conic-gradient(at 115px 115px,#A84A4B 75%,#E8AD6D 0)0 0/145px 145px;margin:-50 0;border:70px solid#E8AD6D;*{margin:20;border-radius:2in;border:5vw solid#A84A4B;background:conic-gradient(at 25vh 25vh,#FFF 75%,#E8AD6D 0)0 0/35vh 35vh
+<style>&{margin:60 110;border:53q solid#fff;border-radius:32q}*{background:#81BE48;*{margin:15-99;rotate:45deg
 ```
 
 ### Comparison Images
 
-<img width="862" height="528" alt="Image" src="https://github.com/user-attachments/assets/3c792e3c-ee61-448b-99b3-bb8c2ba8eedc" />
+<img width="871" height="544" alt="Image" src="https://github.com/user-attachments/assets/9cd43cff-e845-486c-9f16-7d8cf4315907" />
 
 ### Additional Notes (Optional)
 
-Target.
+Slashed Box.
 
 ### Confirmation
 
