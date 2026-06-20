@@ -1,20 +1,20 @@
 ### Date
 
-Jun 19, 2026
+Jun 20, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><p><style>&{background:#AF6A8A;p{+p{margin:0 90 0 175;scale:-1}height:120;margin:90 175-120 90;rotate:45deg;background:conic-gradient(from 180deg,#444 25%,#fff 0
+<style>&{background:#F3AC3C;color:F3AC3C;margin:111 161;box-shadow:5ch -5ch 0 11px,-79px 79px,0 0 0 51px#000
 ```
 
 ### Comparison Images
 
-<img width="863" height="537" alt="Image" src="https://github.com/user-attachments/assets/1bae9a84-244b-4091-852d-08afbacceb6f" />
+<img width="864" height="535" alt="Image" src="https://github.com/user-attachments/assets/ec8c4fda-7ae2-44c9-a37c-79d56dbb5648" />
 
 ### Additional Notes (Optional)
 
-X and Corners.
+Broken borders.
 
 ### Confirmation
 

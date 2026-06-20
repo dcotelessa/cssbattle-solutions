@@ -1,1 +1,1 @@
-<p><p><style>&{background:#AF6A8A;p{+p{margin:0 90 0 175;scale:-1}height:120;margin:90 175-120 90;rotate:45deg;background:conic-gradient(from 180deg,#444 25%,#fff 0
+<style>&{background:#F3AC3C;color:F3AC3C;margin:111 161;box-shadow:5ch -5ch 0 11px,-79px 79px,0 0 0 51px#000
