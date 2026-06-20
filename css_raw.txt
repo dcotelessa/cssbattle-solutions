@@ -1,4 +1,4 @@
 
 ```css
-<style>&{margin:60 110;border:53q solid#fff;border-radius:32q}*{background:#81BE48;*{margin:15-99;rotate:45deg
+<p><p><style>&{background:#AF6A8A;p{+p{margin:0 90 0 175;scale:-1}height:120;margin:90 175-120 90;rotate:45deg;background:conic-gradient(from 180deg,#444 25%,#fff 0
 ```
