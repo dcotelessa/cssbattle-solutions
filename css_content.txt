@@ -1,1 +1,1 @@
-<style>&{background:#F3AC3C;color:F3AC3C;margin:111 161;box-shadow:5ch -5ch 0 11px,-79px 79px,0 0 0 51px#000
+<style>&{margin:60 110;border:32q solid#EC1D25;*{color:#FFF;margin:45;box-shadow:0 25vh,0-25vh,25vh 0,-25vh 0,inset 0 1in#004B8E,0 0 0 5vh#004B8E

@@ -1,20 +1,20 @@
 ### Date
 
-Jun 20, 2026
+Jun 21, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{background:#F3AC3C;color:F3AC3C;margin:111 161;box-shadow:5ch -5ch 0 11px,-79px 79px,0 0 0 51px#000
+<style>&{margin:60 110;border:32q solid#EC1D25;*{color:#FFF;margin:45;box-shadow:0 25vh,0-25vh,25vh 0,-25vh 0,inset 0 1in#004B8E,0 0 0 5vh#004B8E
 ```
 
 ### Comparison Images
 
-<img width="864" height="535" alt="Image" src="https://github.com/user-attachments/assets/ec8c4fda-7ae2-44c9-a37c-79d56dbb5648" />
+<img width="857" height="539" alt="Image" src="https://github.com/user-attachments/assets/7d75bce2-7a1e-4553-ac4b-a55bedb60677" />
 
 ### Additional Notes (Optional)
 
-Broken borders.
+Blip.
 
 ### Confirmation
 
