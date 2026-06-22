@@ -1,1 +1,1 @@
-<style>&{margin:60 110;border:32q solid#EC1D25;*{color:#FFF;margin:45;box-shadow:0 25vh,0-25vh,25vh 0,-25vh 0,inset 0 1in#004B8E,0 0 0 5vh#004B8E
+<p><style>*{background:conic-gradient(at 60%5vw,#F0CD48 25%,#38506F 0)-30vw 196q;*{margin:55 120 125;background:#F0CD48;border-radius:5vw;p{color:F0CD48;padding:5vh;box-shadow:-5vw 40vw,-5lh 40vw
