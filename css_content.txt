@@ -1,1 +1,1 @@
-<p><style>p{margin:-280 30;border-width:20 15;box-shadow:40vw 35vw,-180q 35vw,40vw 25pc,-180q 25pc,5pc 70vh,-5lh 70vh,5pc 110vh,-5lh 110vh}*{background:#394257;color:FAE29E;border:32q solid;margin:40 50
+<p r=0><p r=90><p r=180><p r=270><style>*{margin:0;p{height:60;background:radial-gradient(1q at 25%100%,#FFF 5vw,#328FC1 0 15vw,#0000);offset:ray(attr(r deg))/15vw 5lh

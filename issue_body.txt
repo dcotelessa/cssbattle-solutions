@@ -1,20 +1,20 @@
 ### Date
 
-Jun 24, 2026
+Jun 25, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>p{margin:-280 30;border-width:20 15;box-shadow:40vw 35vw,-180q 35vw,40vw 25pc,-180q 25pc,5pc 70vh,-5lh 70vh,5pc 110vh,-5lh 110vh}*{background:#394257;color:FAE29E;border:32q solid;margin:40 50
+<p r=0><p r=90><p r=180><p r=270><style>*{margin:0;p{height:60;background:radial-gradient(1q at 25%100%,#FFF 5vw,#328FC1 0 15vw,#0000);offset:ray(attr(r deg))/15vw 5lh
 ```
 
 ### Comparison Images
 
-<img width="863" height="540" alt="Image" src="https://github.com/user-attachments/assets/864325d6-e6e8-42e5-8436-07b0ffd479e1" />
+<img width="872" height="543" alt="Image" src="https://github.com/user-attachments/assets/3983b6df-deb9-4380-9fb8-8191e0b30587" />
 
 ### Additional Notes (Optional)
 
-Box^2.
+Pinwheel.
 
 ### Confirmation
 
