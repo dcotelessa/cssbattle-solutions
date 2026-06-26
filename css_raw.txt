@@ -1,4 +1,4 @@
 
 ```css
-<p r=0><p r=90><p r=180><p r=270><style>*{margin:0;p{height:60;background:radial-gradient(1q at 25%100%,#FFF 5vw,#328FC1 0 15vw,#0000);offset:ray(attr(r deg))/15vw 5lh
+<style>*{background:#d8f581;*{margin:40 255 205 90;color:#222;box-shadow:55vh 55vh,29q 8.6em 0 29q,8.6em 29q 0 29q,inset 1in 0
 ```
