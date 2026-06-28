@@ -1,4 +1,4 @@
 
 ```css
-<p><style>*{background:#E3E46F}&{box-shadow:inset 0 0 0 138q#5DBCF9;*{margin:35 160;border-radius:1in;rotate:45deg;*{height:230;margin:0;rotate:90deg
+<style>&{background:#284A5B;*{margin:50 25%;border-radius:7pc 2in 2in;corner-top-left-shape:bevel;rotate:135deg;background:conic-gradient(#F1F271 75%,#BE6B6C 0
 ```
