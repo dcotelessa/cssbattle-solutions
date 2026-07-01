@@ -1,4 +1,4 @@
 
 ```css
-<style>*{background:radial-gradient(1Q,#62306d 74Q,#f7bed9 0)50vw 0/50ch 75vw;*{background:linear-gradient(#62306d 10px,#0000 0)0 18Q/1Q 5vw,radial-gradient(1Q,#62306d 74Q,#f7bed9 0)50vw 0/50ch 75vw;clip-path:inset(99Q 0
+<dt b><p b><dt a><p a b><style>&{margin:142 202}p{translate:32q -32q;rotate:90deg}[a]{background:#D9BB61}[b]{scale:-1 1}dt,p{width:120;height:60;border-radius:1in 0;background:#394257;+*{margin:-76-140
 ```
