@@ -1,1 +1,1 @@
-<dt b><p b><dt a><p a b><style>&{margin:142 202}p{translate:32q -32q;rotate:90deg}[a]{background:#D9BB61}[b]{scale:-1 1}dt,p{width:120;height:60;border-radius:1in 0;background:#394257;+*{margin:-76-140
+<p><style>*{--t:repeating-linear-gradient(#000 0 6vw,#0000 0 36q)no-repeat;background:var(--t)50%/5lh 92px,var(--t)39q/60px 92px,var(--t)287px/60px 6pc#FADE8B}p{margin:60 107;height:120;border:32q solid
