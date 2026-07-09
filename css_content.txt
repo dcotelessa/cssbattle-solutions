@@ -1,1 +1,1 @@
-<p><style>*{background:#993576;*{margin:25 160;background:#5ADAB8;border-radius:6em;border:5vw solid;p{margin:-20-30;height:30;box-shadow:inset 1in 0,-53q 25px 0-25px,53q 25px 0-25px;font:0'
+<style>&{margin:90 55 150;background:#4A9A86;outline:2in solid#FAE29E}*{border:11q solid#4C4C6B;*{position:fixed;margin:-10 25;padding:100
