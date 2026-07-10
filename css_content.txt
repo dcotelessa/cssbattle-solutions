@@ -1,1 +1,1 @@
-<style>&{margin:90 55 150;background:#4A9A86;outline:2in solid#FAE29E}*{border:11q solid#4C4C6B;*{position:fixed;margin:-10 25;padding:100
+<style>&{margin:80 40;border-block:5ch solid#C0FFAD}*{background:40vw/70vh 340%radial-gradient(1q,#C0FFAD 6.25ch,#0A3156);*{margin:0 110-40;font:0'
