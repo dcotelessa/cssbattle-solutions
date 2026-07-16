@@ -1,4 +1,4 @@
 
 ```css
-<p><p b><p><p b><p><p b><style>body{background:#F48B26;margin:54 66;display:flex;flex-wrap:wrap;gap:4vw 50px}p{padding:28;background:#F5E3B5}[b]{rotate:15deg
+<style>&{--t:radial-gradient(1q,#742020 90q,#0000);background:var(--t)-55px,var(--t)55px#AF6A8A;*{margin:65 60;background:conic-gradient(at 53q 15vw,#0000 25%,#af6a8a 0 75%)15vw 0/275px 110px repeat-y
 ```
