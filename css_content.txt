@@ -1,1 +1,1 @@
-<style>*{background:linear-gradient(90deg,#F7EC7D 2.5ch,#2D3464 0)0/40px;border:32q solid#2D3464;*{margin:20;font:0'
+<style>&{background:conic-gradient(at 4q,#FEF6E2 75%,#3F3642 0)0 0/1%5ch;*{margin:70 120;background:radial-gradient(1q,#FEF6E2 60px,#3F3642 0
