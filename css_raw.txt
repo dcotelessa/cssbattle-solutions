@@ -1,4 +1,4 @@
 
 ```css
-<style>&{background:conic-gradient(at 4q,#FEF6E2 75%,#3F3642 0)0 0/1%5ch;*{margin:70 120;background:radial-gradient(1q,#FEF6E2 60px,#3F3642 0
+<p><p r=45><p r=135><p r=180><p r=225><p r=315><dl><style>*{margin:0;position:fixed}dl{width:400;height:300;background:radial-gradient(1Q,#94b31f 90px,#0000 0 30vw,#94b31f)}p{offset:ray(attr(r deg,0deg));offset-distance:1in;padding:15 30;background:#5f5f1e
 ```
