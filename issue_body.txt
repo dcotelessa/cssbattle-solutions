@@ -1,20 +1,20 @@
 ### Date
 
-Jul 27, 2026
+Jul 28, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><p t=1><p t=2><p t=3><style>&{background:#3450ae;margin:72;color:3450AE;p{box-shadow:inset calc(attr(t vw)*7)0,inset calc(attr(t vw)*-5)0;height:40;margin:0-20;background:linear-gradient(#0000 0 5vw,#3450AE 0),linear-gradient(90deg,#0000 30vw,#3450AE 0 130px,#22d16a 0),linear-gradient(90deg,#22d16a 0 5vw,#0000 0)0/30px
+<style>&{background:conic-gradient(at 32q 4in,#0000 75%,#4a9a86 0)49mm,radial-gradient(1q at 50%5vw,#4a9a86 74q,#ebf6f0 0 5lh,#0000)0 60px,conic-gradient(at 60vw 5pc,#4c4c6b 75%,#0000 0)5pc,conic-gradient(at 50vw 60px,#ebf6f0 75%,#4a9a86 0)25vw
 ```
 
 ### Comparison Images
 
-<img width="871" height="538" alt="Image" src="https://github.com/user-attachments/assets/e171597e-187c-48b9-9d3f-b9bdf70b634e" />
+<img width="864" height="533" alt="Image" src="https://github.com/user-attachments/assets/399590d5-91dc-4b4f-8612-81768a7069ac" />
 
 ### Additional Notes (Optional)
 
-Spliced Wires.
+Faucet.
 
 ### Confirmation
 
