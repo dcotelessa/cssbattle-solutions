@@ -1,4 +1,4 @@
 
 ```css
-<style>&{background:#a82973;*{margin:120 54;background:conic-gradient(at 55Q 5vw,#0000 25%,#ea9a52 0)0 0/5pc 5ch;transform:skew(15deg
+<style>&{margin:12 52;background:#2E8DA6;*{--t:at 7ch 5ch,#0000 75%,;background:conic-gradient(var(--t)#FFF1F1 0)0 0/7em 60vh,conic-gradient(var(--t)#E5969E 0)7ch 5ch/7em 60vh
 ```
