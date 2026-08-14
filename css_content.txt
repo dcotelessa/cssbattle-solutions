@@ -1,1 +1,1 @@
-<style>*{margin:90 175;background:#4c4c6b;color:4A9A86;font:132q/25vh"";box-shadow:-1em -1lh,1em 1lh,-1em 1lh#fae29e,1em -1lh#fae29e;*{margin:35 15;scale:1-1;font:30vh/10vw"
+<style>&{margin:110 160;background:#6D1477;color:F5E3B5;border-radius:1in}*{*{margin:20;color:6D1477;--t:0 0 0 5vw#F5E3B5}box-shadow:-95q 0,95q 0,var(--t,inset 0 0 0 5vw
