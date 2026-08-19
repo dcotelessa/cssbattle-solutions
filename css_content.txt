@@ -1,1 +1,1 @@
-<style>&{border-radius:1in}*{background:#F1E1BE;color:7C7565;margin:75 75 75 175;box-shadow:inset 0 2in var(--t,);*{margin:0 0 75 75;--t:#F1E1BE,0-25vh,25vh 0
+<p><style>*{background:#284a5b;color:E38F66;margin:100 95 40;border:solid;border-width:var(--t,0 30);*{margin:-20 0;--t:0 45;height:180;p{--t:10 10 0;margin:0-10;translate:0-5ch;border-radius:1in 1in 0 0
