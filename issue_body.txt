@@ -1,20 +1,20 @@
 ### Date
 
-Aug 19, 2026
+Aug 20, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{background:#284a5b;color:E38F66;margin:100 95 40;border:solid;border-width:var(--t,0 30);*{margin:-20 0;--t:0 45;height:180;p{--t:10 10 0;margin:0-10;translate:0-5ch;border-radius:1in 1in 0 0
+<style>&{background:conic-gradient(at 5ch 50vw,#EED9D9 75%,#6D8178 0)45vw 53q;*{margin:90 140;border-radius:1in;background:conic-gradient(#6D8178 75%,#394257 0)0 0/5em 5em
 ```
 
 ### Comparison Images
 
-<img width="872" height="537" alt="Image" src="https://github.com/user-attachments/assets/d9bf2f97-f552-4710-8365-7c1c08ac3db3" />
+<img width="871" height="535" alt="Image" src="https://github.com/user-attachments/assets/d1803348-1c8f-4ce6-af9b-143e7abc8d28" />
 
 ### Additional Notes (Optional)
 
-Mission Doors.
+Cross Tab.
 
 ### Confirmation
 
