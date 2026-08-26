@@ -1,1 +1,1 @@
-<p><p><style>&{border:75px solid}*,p{margin:-50 0;color:#3e6d43}*{background:#e5ca72;*{margin:-25 100;border:11q solid;p{+p{background:conic-gradient(at 25%25%,#e5ca72 75%,#3e6d43 0)40%40%/5ch 5ch;width:90;height:90;color:#0000}width:30;height:280;offset:ray(0deg
+<style>&{margin:100-110;scale:.5;background:#BBB54E;border:53q dashed#fff;*{margin:-180 80;border-radius:99%;outline:9q solid#BBB54E;background:conic-gradient(at 40vw,#566713 50%,#0000 0)25vw
