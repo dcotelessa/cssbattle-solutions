@@ -1,20 +1,20 @@
 ### Date
 
-Aug 26, 2026
+Aug 27, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{margin:100-110;scale:.5;background:#BBB54E;border:53q dashed#fff;*{margin:-180 80;border-radius:99%;outline:9q solid#BBB54E;background:conic-gradient(at 40vw,#566713 50%,#0000 0)25vw
+<style>&{border:solid#4E53BB;border-width:70 110 100;border-bottom-color:#DBDDFF;background:#4E53BB;box-shadow:inset 0 30vw#DBDDFF;*{margin:60 70 0;border-radius:1in 1in 0 0;height:60;background:#4D4A18
 ```
 
 ### Comparison Images
 
-<img width="875" height="537" alt="Image" src="https://github.com/user-attachments/assets/231f693f-1cd0-454d-a0ff-1d5bc26cba58" />
+<img width="874" height="535" alt="Image" src="https://github.com/user-attachments/assets/83fc82f7-d44b-4fd6-bcab-29521c95902c" />
 
 ### Additional Notes (Optional)
 
-Strung shells.
+House and Shadow.
 
 ### Confirmation
 
