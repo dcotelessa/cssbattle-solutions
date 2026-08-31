@@ -1,1 +1,1 @@
-<style>&{margin:110 120;color:57C4C4;box-shadow:inset 0 5pc,5ch 5ch,-5ch -5ch,5ch 5ch,-5ch -5ch,0 0 0 5vw#243D83,5ch 5ch 0 5vw#243D83,-5ch -5ch 0 5vw#243D83,0 0 0 2in
+<style>*{background:conic-gradient(at 5ch 5ch,#655220 75%,#F1D36F 0)74q 74q/55vw 30vw;*{margin:70 130 190;font:9pc'
