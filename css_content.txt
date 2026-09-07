@@ -1,1 +1,1 @@
-<p><p><p><style>p{+p{--t:at 50%47%0deg;--u:5vw;+p{--t:at 81.2%47%15deg;--u:}}background:linear-gradient(#fff var(--u,),#6D57C4 0)0 37q;width:90;height:90;border-radius:11q;offset:ray(var(--t,at 76q 47%-15deg
+<style>&{border:5px solid#84B9EF;background:radial-gradient(1q at 50%0,#2F6193 50px,#0000)0 30vw,radial-gradient(1q at 50%100%,#FFFFFF 53q,#84B9EF)-15vh -5q/60vw 185q
