@@ -1,1 +1,1 @@
-<style>&{margin:80 105;color:3B3F58;border:solid;border-width:0 10 10;background:#328FC1;*{margin:-50 50 90;box-shadow:0 37mm,-5lh 11q,5lh 11q
+<style>*{margin:70 150;border-radius:12em 12em 0 0;border:2.5ch solid#333;*{margin:60-50-60;box-shadow:53q 32q#fff;scale:-1;font:3em'
