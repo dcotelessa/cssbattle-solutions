@@ -1,20 +1,20 @@
 ### Date
 
-Sep 17, 2026
+Sep 18, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{margin:32 82;background:#7EC3E8;*{background:linear-gradient(90deg,#333 0 10px,#0000 0 32q,#333 0 5ch,#0000 0 5lh)48q/5lh;border:solid#333;border-width:100 0 40;clip-path:polygon(50%0,100%50%,100%100%,0 100%,0 50%
+<style>&{margin:40 70 40 120;background:#4C4C6B;border:5vw solid#FAE29E;border-radius:5ch;*{margin:80 0 80 30;background:#FAE29E;color:4C4C6B;box-shadow:25vw 5pc 0 32q,25vw -5pc 0 32q
 ```
 
 ### Comparison Images
 
-<img width="864" height="535" alt="Image" src="https://github.com/user-attachments/assets/a48b543e-a7c3-44ae-9f3d-40855aad1aab" />
+<img width="873" height="521" alt="Image" src="https://github.com/user-attachments/assets/3c77fe33-ba25-4977-873e-d1fbd494e6ee" />
 
 ### Additional Notes (Optional)
 
-House.
+C T.
 
 ### Confirmation
 
