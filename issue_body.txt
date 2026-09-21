@@ -1,20 +1,20 @@
 ### Date
 
-Sep 20, 2026
+Sep 21, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{border:solid#fee190;border-width:0 40;margin:-60-40-70}&{background:#51a499;border-width:40;margin:70 80;p{position:fixed;width:200;height:10;margin:200-60
+<style>&{background:radial-gradient(1q at 100%50%,#1D025E 5pc,#469DBA 0 25vw,#1D025E)-132q;*{margin:120 155 120 125;border-block:5vw solid#469DBA
 ```
 
 ### Comparison Images
 
-<img width="875" height="531" alt="Image" src="https://github.com/user-attachments/assets/b96bddd4-07e2-441e-9b1a-88e030bfd75b" />
+<img width="864" height="530" alt="Image" src="https://github.com/user-attachments/assets/ef77f4b6-46da-4772-8a3e-33a9b7c8606f" />
 
 ### Additional Notes (Optional)
 
-Hurdle.
+Euro.
 
 ### Confirmation
 
