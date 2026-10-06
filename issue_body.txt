@@ -1,20 +1,20 @@
 ### Date
 
-Oct 5, 2026
+Oct 6, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><style>*{background:#f7cb71;+&{background:conic-gradient(at 73q,#d16161 75%,#F7CB71 0)480%-.3in/8em 89pt;margin:90 240 90 40;p{margin:0 200;border-radius:1in;width:50;height:50;color:D16161;box-shadow:inset 0 1in#4d52d0,0 74Q#4d52d0,74Q 0,74Q 74Q
+<style>&{background:radial-gradient(1q,#8B4646 5em,#fff 0 25vw,#E98F6B);*{margin:110 170;color:E98F6B;box-shadow:-5vw 0#fff,5vw 0#fff,9ch 0,-9ch 0
 ```
 
 ### Comparison Images
 
-<img width="870" height="541" alt="Image" src="https://github.com/user-attachments/assets/b638cf7e-5bb5-4b2c-9330-567b0dc18a6c" />
+<img width="872" height="558" alt="Image" src="https://github.com/user-attachments/assets/01ac5624-4963-4f21-849d-20a61e6a090f" />
 
 ### Additional Notes (Optional)
 
-Controller.
+Neat Button.
 
 ### Confirmation
 
