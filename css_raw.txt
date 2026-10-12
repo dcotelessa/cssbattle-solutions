@@ -1,4 +1,4 @@
 
 ```css
-<style>*{background:conic-gradient(at 7.5%55%,#FAE29E var(--t,75%),#D16161 0)196q 5ch;*{--t:;margin:140 140 40;rotate:45deg;border:32q solid#3F4869;clip-path:polygon(0 100%,100%0,100%100%
+<p><p><style>&{background:radial-gradient(at 0%0,#1D5260 60px,#0000 0)space,radial-gradient(at 100%100%,#1D5260 60px,#84B9C7 0)space;margin:70 120;color:ECD5E4;box-shadow:0 0 0 2in#84B9C7;p{margin:-58 152-58-38;height:260;box-shadow:inset 0 3in,201q 0;+p{margin:-355 57;rotate:90deg
 ```
