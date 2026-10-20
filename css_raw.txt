@@ -1,4 +1,4 @@
 
 ```css
-<style>*{margin:-20 24;border:5vw solid#E8BA79;background:radial-gradient(1q,#E8BA79 60px,#7E6293)52vh 50vh/50ch text;*{margin:70 36
+<p><style>&{--t:radial-gradient(1q,#42A8E4 53q,#0000);background:var(--t)53q 53q,var(--t)-53q -53q,radial-gradient(1q,#42A8E4 90q,#F0F0F3);*{margin:100 160;color:F0F0F3;border:5w solid;background:linear-gradient(#F0F0F3 5vw,#0000 0)0 0/1%5ch;p{padding:10;box-shadow:-40vw 5vw,-25vw 15vw
 ```
