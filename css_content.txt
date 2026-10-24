@@ -1,1 +1,1 @@
-<h1><h4><style>*{background:radial-gradient(1Q,#173c46 var(--c,8mm,#30acce))fixed;margin:10 40 10 95;*{--c:;*{margin:20;padding:55;--c:.8lh,#fff
+<img><style>&{margin:100 60;color:CBCDB7;border:5vw solid;background:#5065ab}*{border-radius:11q;*{margin:10 110;box-shadow:-5lh 0,5lh 0;img{margin:-60 0;padding:80 10;font:0/36q'
