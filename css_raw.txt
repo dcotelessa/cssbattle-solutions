@@ -1,4 +1,4 @@
 
 ```css
-<p a><p><p><img><style>&{--t:radial-gradient(1q,#0000 32q,#2834BA 0 53q,#0000);background:var(--t)-5ch -5pc,var(--t)5ch 5pc#479582;[a]{box-shadow:inset 0 2in,-5pc 0,5pc 0}p{margin:70 182;height:160;color:2834BA;+p{margin:-90 242 0 82;height:40;border-radius:2in 2in 0 0;background:#2834ba;+p{translate:20ch -110px;scale:-1;img{padding:10;border-inline:11q solid;translate:11q 5ch;filter:drop-shadow(20ch -55vw
+<style>*{margin:60 0 0 60;background:linear-gradient(45deg,#72374D 25%,#FFF 0 var(--t,75%),#72374D 0)space#72374D}&{margin:120 140 60;*{--t:
 ```
