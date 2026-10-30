@@ -1,1 +1,1 @@
-<p><p><style>&{background:#E9C282;*{margin:190 40 110;background:#444F52;border-radius:12ch;p{+p{position:fixed;margin:-20 120;width:40;height:40}margin:-80 80;height:60;border:solid#E9C282;border-width:0 20 20 20;font:0'
+<style>&{background:radial-gradient(1q,#CBCC58 85vw,#394257 0 var(--t,50ch),#CBCC58)50pc 1217q/300%75pc;*{margin:0 170;background:#394257;border:solid#CBCC58;border-width:130 10
