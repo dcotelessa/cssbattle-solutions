@@ -1,1 +1,1 @@
-<style>&{background:radial-gradient(1q,#CBCC58 85vw,#394257 0 var(--t,50ch),#CBCC58)50pc 1217q/300%75pc;*{margin:0 170;background:#394257;border:solid#CBCC58;border-width:130 10
+<p><style>&{background:radial-gradient(1Q,#62306d 53Q,#f7ec7d 0 5pc,#62306d);*{margin:150 200 0 50;background:conic-gradient(at 74Q 74Q,#f7ec7d 75%,#0000 0)0-5vw/75pt 75pt;p{margin:0;height:150;scale:-1;translate:50vh -50vh
