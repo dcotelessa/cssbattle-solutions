@@ -1,4 +1,4 @@
 
 ```css
-<style>&{margin:125 75 35;background:#1D025E;border:solid 53q#469DBA;*{margin:-150 40 40;background:radial-gradient(1q at 50%125px,#469DBA 25px,#0000 0),conic-gradient(at 53q 5lh,#1D025E 75%,#469DBA 0)11q
+<style>&{border-radius:74q;corner-shape:notch;box-shadow:0 0 0 2in#E76}*{margin:40 90;background:linear-gradient(#F2EAA8 32q,#E76 0)0 0/1%1em;rotate:45deg;*{margin:-10 95;font:70vh'
 ```
