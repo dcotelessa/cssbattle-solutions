@@ -1,4 +1,4 @@
 
 ```css
-<style>&{border-radius:74q;corner-shape:notch;box-shadow:0 0 0 2in#E76}*{margin:40 90;background:linear-gradient(#F2EAA8 32q,#E76 0)0 0/1%1em;rotate:45deg;*{margin:-10 95;font:70vh'
+<p><p><style>*{background:#411C56;p{margin:40 92;border:48q solid#B7D7CD;border-radius:35%/0 53q;corner-shape:notch;outline:11q solid#C06C88;+p{scale:1-1
 ```
