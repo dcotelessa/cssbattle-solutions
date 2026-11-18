@@ -1,20 +1,20 @@
 ### Date
 
-Nov 16, 2026
+Nov 18, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p><p><p><p><p><p><p><p><style>*{background:#c36271;p{position:fixed;border-radius:1in 0 0;background:#F2E09F;inset:13ch 180q;transform:rotate(calc(sibling-index()*45deg))translateY(58q
+<p t><p><p><style>&{background:#F2EAA8;[t]{box-shadow:50vh 0,0 15vw,0 15ch,50vh 15vw,50vh 15ch}p{margin:75 227 0 77;color:4760B6;background:#4760B6;height:30;border-radius:2em;+p{margin:30 177;font:27%a;+p{rotate:45deg;box-shadow:-90q -90q
 ```
 
 ### Comparison Images
 
-<img width="867" height="524" alt="Screenshot 2026-11-16 at 1 19 02 AM" src="https://github.com/user-attachments/assets/51603864-9136-45be-80f2-5e3ee9741f16" />
+<img width="877" height="537" alt="Screenshot 2026-11-17 at 11 21 36 PM" src="https://github.com/user-attachments/assets/6dd94609-8865-42c3-9558-ca99a7d972bd" />
 
 ### Additional Notes (Optional)
 
-Iris.
+Dashes and Dots.
 
 ### Confirmation
 
