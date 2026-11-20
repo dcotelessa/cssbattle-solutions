@@ -1,20 +1,20 @@
 ### Date
 
-Nov 18, 2026
+Nov 19, 2026
 
 ### CSS Solution(s)
 
 ```css
-<p t><p><p><style>&{background:#F2EAA8;[t]{box-shadow:50vh 0,0 15vw,0 15ch,50vh 15vw,50vh 15ch}p{margin:75 227 0 77;color:4760B6;background:#4760B6;height:30;border-radius:2em;+p{margin:30 177;font:27%a;+p{rotate:45deg;box-shadow:-90q -90q
+<style>&{margin:115 165;border-radius:1in;background:#6C6C6C;box-shadow:inset 0 1in#4B4D88,0 5ch#fff;*{margin:-35 5 45;border-radius:50%50%0;background:#B0E1FB;rotate:45deg
 ```
 
 ### Comparison Images
 
-<img width="877" height="537" alt="Screenshot 2026-11-17 at 11 21 36 PM" src="https://github.com/user-attachments/assets/6dd94609-8865-42c3-9558-ca99a7d972bd" />
+<img width="879" height="534" alt="Screenshot 2026-11-19 at 3 55 30 PM" src="https://github.com/user-attachments/assets/85f78ba5-51bb-4f87-bbb4-53f562fb9719" />
 
 ### Additional Notes (Optional)
 
-Dashes and Dots.
+Drip.
 
 ### Confirmation
 
