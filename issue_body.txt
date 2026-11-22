@@ -1,20 +1,20 @@
 ### Date
 
-Nov 19, 2026
+Nov 21, 2026
 
 ### CSS Solution(s)
 
 ```css
-<style>&{margin:115 165;border-radius:1in;background:#6C6C6C;box-shadow:inset 0 1in#4B4D88,0 5ch#fff;*{margin:-35 5 45;border-radius:50%50%0;background:#B0E1FB;rotate:45deg
+<h1><style>*{margin:23 2.06em -6in;background:radial-gradient(1q at 50%100%,#024817 26q,#90D3A6)-3%-99q/74q 50%;*{height:8.75em
 ```
 
 ### Comparison Images
 
-<img width="879" height="534" alt="Screenshot 2026-11-19 at 3 55 30 PM" src="https://github.com/user-attachments/assets/85f78ba5-51bb-4f87-bbb4-53f562fb9719" />
+<img width="874" height="473" alt="Screenshot 2026-11-21 at 4 34 51 PM" src="https://github.com/user-attachments/assets/f97abcbf-34f4-4f57-86d0-7e55f3b24ca8" />
 
 ### Additional Notes (Optional)
 
-Drip.
+Bumps.
 
 ### Confirmation
 
