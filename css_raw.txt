@@ -1,4 +1,4 @@
 
 ```css
-<style>&{box-shadow:0 0 0 9in#F8B140}*{margin:80 165;border-radius:1in;background:radial-gradient(1q,#CF6939 5px,#2F434E 0 5vh,#CF6939);*{margin:0;rotate:90deg
+<p><p><p><p><style>&{background:#0D1335;p{position:fixed;margin:72 182;padding:20 10;border-block:solid 53q#FBFAE2;+*{rotate:calc((sibling-index() + 3)*45deg
 ```
